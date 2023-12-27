@@ -31,11 +31,14 @@ export default async function ExpensesTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/6">Category</TableHead>
-          <TableHead className="w-1/6">Amount</TableHead>
-          <TableHead className="w-1/6">Date</TableHead>
-          <TableHead className="w-1/6">Note</TableHead>
-          <TableHead className="w-1/6">Location</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead>Note</TableHead>
+          <TableHead>Location</TableHead>
+          <TableHead>
+            <span className="sr-only">Edit or Remove</span>
+          </TableHead>
         </TableRow>
       </TableHeader>
 
@@ -47,7 +50,7 @@ export default async function ExpensesTable({
             <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
             <TableCell>{expense.note}</TableCell>
             <TableCell>{expense.location}</TableCell>
-            <TableCell className="flex gap-3 items-center">
+            <TableCell className="flex gap-3 items-center justify-end">
               <EditExpense id={expense.id} />
               <DeleteExpense id={expense.id} />
             </TableCell>
