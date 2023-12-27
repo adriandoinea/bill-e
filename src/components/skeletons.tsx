@@ -26,7 +26,7 @@ function TransactionsRowSkeleton() {
       <TableCell>
         <Skeleton className="h-6" />
       </TableCell>
-      <TableCell>
+      <TableCell className="flex justify-end">
         <Skeleton className="h-6 w-16" />
       </TableCell>
     </TableRow>
