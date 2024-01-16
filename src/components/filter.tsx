@@ -15,19 +15,60 @@ export default function Filter() {
 
   const filterBy = searchParams.get("filterBy");
 
-  const datePickerDefaultValue = params.get("date")
-    ? dayjs(params.get("date"), "DD-MM-YYYY")
-    : dayjs();
+  const getDatePickerDefaultValue = () => {
+    if (!params.get("date")) return dayjs();
+
+    const filterBy = params.get("filterBy");
+
+    if (filterBy === "day") {
+      return dayjs(params.get("date"), "DD-MM-YYYY");
+    }
+    if (filterBy === "month") {
+      return dayjs(params.get("date"), "MM");
+    }
+    if (filterBy === "year") {
+      return dayjs(params.get("date"), "YYYY");
+    }
+
+    return dayjs();
+  };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    params.set("filterBy", e.target.value);
-    router.replace(`${pathname}?${params.toString()}`);
+    const { value: filterBy } = e.target;
+    if (filterBy === "day" || filterBy === "month" || filterBy === "year") {
+      const data = {
+        day: dayjs().format("DD-MM-YYYY"),
+        month: dayjs().format("MM"),
+        year: dayjs().format("YYYY"),
+      };
+
+      params.set("filterBy", filterBy);
+      params.set("date", data[filterBy]);
+
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+
+    return;
   };
 
   const handleDatePick = (value: Dayjs | null) => {
     if (!value) return null;
-    const formattedData = value.format("DD-MM-YYYY");
-    params.set("date", formattedData);
+    const formattedDate = value.format("DD-MM-YYYY");
+    params.set("date", formattedDate);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleMonthViewChange = (value: Dayjs | null) => {
+    if (!value) return null;
+    const formattedDate = value.format("MM");
+    params.set("date", formattedDate);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleYearViewChange = (value: Dayjs | null) => {
+    if (!value) return null;
+    const formattedDate = value.format("YYYY");
+    params.set("date", formattedDate);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
@@ -38,7 +79,7 @@ export default function Filter() {
           className="bg-white rounded-sm"
           format="DD MMM YYYY"
           views={["day"]}
-          defaultValue={datePickerDefaultValue}
+          defaultValue={getDatePickerDefaultValue()}
           onChange={handleDatePick}
           slotProps={{
             textField: {
@@ -54,8 +95,8 @@ export default function Filter() {
           className="bg-white rounded-sm"
           format="YYYY"
           views={["year"]}
-          defaultValue={datePickerDefaultValue}
-          onChange={handleDatePick}
+          defaultValue={getDatePickerDefaultValue()}
+          onChange={handleYearViewChange}
           slotProps={{
             textField: {
               size: "small",
@@ -69,8 +110,8 @@ export default function Filter() {
         className="bg-white rounded-sm"
         format="MMMM"
         views={["month"]}
-        defaultValue={datePickerDefaultValue}
-        onChange={handleDatePick}
+        defaultValue={getDatePickerDefaultValue()}
+        onChange={handleMonthViewChange}
         slotProps={{
           textField: {
             size: "small",

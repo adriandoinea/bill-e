@@ -1,39 +1,48 @@
 import prisma from "@/db";
 import { revalidatePath } from "next/cache";
+import { validateFilter } from "./utils";
 
 export async function fetchFilteredExpenses(
   query: string,
-  filter: { filterBy: "day" | "month" | "year" | string; date: string }
+  filter: { filterBy?: "day" | "month" | "year" | string; date?: string }
 ) {
-  const dateArray = filter.date.split("-");
-  const day = dateArray[0];
-  const month = dateArray[1];
-  const year = dateArray[2];
+  let filterData;
+  const currentYear = new Date().getFullYear();
+  const { filterBy, date } = validateFilter(filter);
 
-  let filterData = {
-    gte: new Date(`${year}-${month}-${day}T00:00:00.000`),
-    lte: new Date(`${year}-${month}-${day}T23:59:59.999`),
-  };
+  if (filterBy === "day") {
+    const dateArray = date.split("-");
+    const day = dateArray[0];
+    const month = dateArray[1];
+    const year = dateArray[2];
 
-  if (filter.filterBy === "month") {
-    if (month === "12") {
+    filterData = {
+      gte: new Date(`${year}-${month}-${day}T00:00:00.000`),
+      lte: new Date(`${year}-${month}-${day}T23:59:59.999`),
+    };
+  } else if (filterBy === "year") {
+    filterData = {
+      gte: new Date(`${date}-01-01`),
+      lte: new Date(`${date}-12-31`),
+    };
+  } else if (filterBy === "month") {
+    if (date === "12") {
       filterData = {
-        gte: new Date(`${year}-${month}-01`),
-        lte: new Date(`${parseInt(year) + 1}-01-01`),
+        gte: new Date(`${currentYear}-${date}-01`),
+        lte: new Date(`${currentYear + 1}-01-01`),
       };
     } else {
       filterData = {
-        gte: new Date(`${year}-${month}-01`),
+        gte: new Date(`${currentYear}-${date}-01`),
         lte: new Date(
-          `${year}-${(parseInt(month) + 1).toString().padStart(2, "0")}-01`
+          `${currentYear}-${(parseInt(date) + 1)
+            .toString()
+            .padStart(2, "0")}-01`
         ),
       };
     }
-  } else if (filter.filterBy === "year") {
-    filterData = {
-      gte: new Date(`${year}-01-01`),
-      lte: new Date(`${year}-12-31`),
-    };
+  } else {
+    throw new Error(`Filter by options can only be 'day', 'month' or 'year'`);
   }
 
   try {

@@ -1,5 +1,3 @@
-import { fetchFilteredExpenses } from "@/lib/data";
-import dayjs from "dayjs";
 import ExpensesOperations from "@/components/ui/expenses/operations";
 import ExpensesTable from "@/components/ui/expenses/table";
 import { Suspense } from "react";
@@ -11,8 +9,8 @@ export default async function Page({
   searchParams: { [key: string]: string | undefined };
 }) {
   const query = searchParams.query || "";
-  const filterBy = searchParams.filterBy || "month";
-  const date = searchParams.date || dayjs().format("DD-MM-YYYY");
+  const filterBy = searchParams.filterBy;
+  const date = searchParams.date;
 
   return (
     <div className="pl-10 pr-5 h-full flex flex-col gap-6">

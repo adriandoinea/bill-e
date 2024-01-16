@@ -13,8 +13,8 @@ import { fetchFilteredExpenses } from "@/lib/data";
 
 interface ExpensesTableProps {
   query: string;
-  filterBy: "day" | "month" | "year" | string;
-  date: string;
+  filterBy?: string;
+  date?: string;
 }
 
 export default async function ExpensesTable({
