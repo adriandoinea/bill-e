@@ -1,3 +1,4 @@
+import prisma from "@/db";
 import { type ClassValue, clsx } from "clsx";
 import dayjs from "dayjs";
 import { twMerge } from "tailwind-merge";
@@ -44,4 +45,53 @@ export const validateFilter = (filter: {
     default:
       return { filterBy: "month", date: date || currentMonth };
   }
+};
+
+export const queryTransactions = async (
+  type: "expense" | "income",
+  filterData: { gte: Date; lte: Date },
+  query: string
+) => {
+  if (type === "expense") {
+    return await prisma.expense.findMany({
+      where: query
+        ? {
+            AND: [
+              {
+                date: filterData,
+              },
+              {
+                OR: [
+                  { category: { contains: query } },
+                  { note: { contains: query } },
+                  { location: { contains: query } },
+                  { amount: Number(query) * 100 || 0 },
+                ],
+              },
+            ],
+          }
+        : { date: filterData },
+      orderBy: { date: "desc" },
+    });
+  }
+
+  return await prisma.income.findMany({
+    where: query
+      ? {
+          AND: [
+            {
+              date: filterData,
+            },
+            {
+              OR: [
+                { category: { contains: query } },
+                { note: { contains: query } },
+                { amount: Number(query) * 100 || 0 },
+              ],
+            },
+          ],
+        }
+      : { date: filterData },
+    orderBy: { date: "desc" },
+  });
 };

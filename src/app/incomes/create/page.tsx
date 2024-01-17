@@ -1,15 +1,15 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import Form from "@/components/ui/expenses/create-form";
+import Form from "@/components/ui/incomes/create-form";
 import { fetchTransactionCategories } from "@/lib/data";
 
 export default async function Page() {
-  const categories = await fetchTransactionCategories("expense");
+  const categories = await fetchTransactionCategories("income");
   return (
     <>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Expenses", href: "/expenses" },
-          { label: "Create Expense", href: "/expenses/create", active: true },
+          { label: "Incomes", href: "/incomes" },
+          { label: "Create Income", href: "/incomes/create", active: true },
         ]}
       />
       <Form categories={categories} />

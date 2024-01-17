@@ -1,11 +1,11 @@
-import Breadcrumbs from "@/components/ui/expenses/breadcrumbs";
+import Breadcrumbs from "@/components/breadcrumbs";
 import EditForm from "@/components/ui/expenses/edit-form";
-import { fetchExpenseById, fetchTransactionCategories } from "@/lib/data";
+import { fetchTransactionById, fetchTransactionCategories } from "@/lib/data";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const categories = await fetchTransactionCategories("expense");
-  const expense = await fetchExpenseById(params.id);
+  const expense = await fetchTransactionById(params.id, "income");
 
   if (!expense) notFound();
 

@@ -1,10 +1,11 @@
 import prisma from "@/db";
 import { revalidatePath } from "next/cache";
-import { validateFilter } from "./utils";
+import { queryTransactions, validateFilter } from "./utils";
 
-export async function fetchFilteredExpenses(
+export async function fetchFilteredTransactions(
   query: string,
-  filter: { filterBy?: "day" | "month" | "year" | string; date?: string }
+  filter: { filterBy?: "day" | "month" | "year" | string; date?: string },
+  type: "expense" | "income"
 ) {
   let filterData;
   const currentYear = new Date().getFullYear();
@@ -22,22 +23,22 @@ export async function fetchFilteredExpenses(
     };
   } else if (filterBy === "year") {
     filterData = {
-      gte: new Date(`${date}-01-01`),
-      lte: new Date(`${date}-12-31`),
+      gte: new Date(`${date}-01-01T00:00:00.000`),
+      lte: new Date(`${date}-12-31T23:59:59.999`),
     };
   } else if (filterBy === "month") {
     if (date === "12") {
       filterData = {
-        gte: new Date(`${currentYear}-${date}-01`),
-        lte: new Date(`${currentYear + 1}-01-01`),
+        gte: new Date(`${currentYear}-${date}-01T00:00:00.000`),
+        lte: new Date(`${currentYear + 1}-01-01T23:59:59.999`),
       };
     } else {
       filterData = {
-        gte: new Date(`${currentYear}-${date}-01`),
+        gte: new Date(`${currentYear}-${date}-01T00:00:00.000`),
         lte: new Date(
           `${currentYear}-${(parseInt(date) + 1)
             .toString()
-            .padStart(2, "0")}-01`
+            .padStart(2, "0")}-01T23:59:59.999`
         ),
       };
     }
@@ -46,41 +47,29 @@ export async function fetchFilteredExpenses(
   }
 
   try {
-    const expenses = await prisma.expense.findMany({
-      where: query
-        ? {
-            AND: [
-              {
-                date: filterData,
-              },
-              {
-                OR: [
-                  { category: { contains: query } },
-                  { note: { contains: query } },
-                  { location: { contains: query } },
-                  { amount: Number(query) * 100 || 0 },
-                ],
-              },
-            ],
-          }
-        : { date: filterData },
-      orderBy: { date: "desc" },
-    });
+    const transactions = await queryTransactions(type, filterData, query);
 
-    revalidatePath("/expenses");
-    return expenses;
+    revalidatePath(`/${type}s`);
+    return transactions;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch expenses.");
   }
 }
 
-export async function fetchExpenseById(id: string) {
+export async function fetchTransactionById(
+  id: string,
+  type: "expense" | "income"
+) {
   try {
-    const data = await prisma.expense.findUnique({ where: { id } });
+    const data =
+      type === "expense"
+        ? await prisma.expense.findUnique({ where: { id } })
+        : await prisma.income.findUnique({ where: { id } });
+
     if (data) {
       const expense = { ...data, amount: data.amount / 100 };
-      revalidatePath(`/expense/${id}/edit`);
+      revalidatePath(`/${type}/${id}/edit`);
       return expense;
     }
   } catch (error) {

@@ -1,4 +1,4 @@
-import { IExpense } from "@/types";
+import { IIncome } from "@/types";
 import {
   Table,
   TableBody,
@@ -8,27 +8,27 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import dayjs from "dayjs";
-import { DeleteExpense, EditExpense } from "./buttons";
+import { DeleteIncome, EditIncome } from "./buttons";
 import { fetchFilteredTransactions } from "@/lib/data";
 
-interface ExpensesTableProps {
+interface IncomesTableProps {
   query: string;
   filterBy?: string;
   date?: string;
 }
 
-export default async function ExpensesTable({
+export default async function IncomesTable({
   query,
   date,
   filterBy,
-}: ExpensesTableProps) {
-  const expenses = await fetchFilteredTransactions(
+}: IncomesTableProps) {
+  const incomes = await fetchFilteredTransactions(
     query,
     {
       filterBy,
       date,
     },
-    "expense"
+    "income"
   );
 
   return (
@@ -39,7 +39,6 @@ export default async function ExpensesTable({
           <TableHead>Amount</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Note</TableHead>
-          <TableHead>Location</TableHead>
           <TableHead>
             <span className="sr-only">Edit or Remove</span>
           </TableHead>
@@ -47,16 +46,15 @@ export default async function ExpensesTable({
       </TableHeader>
 
       <TableBody>
-        {expenses.map((expense: IExpense) => (
-          <TableRow key={expense.id}>
-            <TableCell>{expense.category}</TableCell>
-            <TableCell>{expense.amount / 100}</TableCell>
-            <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
-            <TableCell>{expense.note}</TableCell>
-            <TableCell>{expense.location}</TableCell>
+        {incomes.map((income: IIncome) => (
+          <TableRow key={income.id}>
+            <TableCell>{income.category}</TableCell>
+            <TableCell>{income.amount / 100}</TableCell>
+            <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
+            <TableCell>{income.note}</TableCell>
             <TableCell className="flex gap-3 items-center justify-end">
-              <EditExpense id={expense.id} />
-              <DeleteExpense id={expense.id} />
+              <EditIncome id={income.id} />
+              <DeleteIncome id={income.id} />
             </TableCell>
           </TableRow>
         ))}

@@ -23,7 +23,7 @@ export default function Filter() {
     if (filterBy === "day") {
       return dayjs(params.get("date"), "DD-MM-YYYY");
     }
-    if (filterBy === "month") {
+    if (filterBy === "month" || !filterBy) {
       return dayjs(params.get("date"), "MM");
     }
     if (filterBy === "year") {
@@ -79,7 +79,7 @@ export default function Filter() {
           className="bg-white rounded-sm"
           format="DD MMM YYYY"
           views={["day"]}
-          defaultValue={getDatePickerDefaultValue()}
+          value={getDatePickerDefaultValue()}
           onChange={handleDatePick}
           slotProps={{
             textField: {
@@ -95,7 +95,7 @@ export default function Filter() {
           className="bg-white rounded-sm"
           format="YYYY"
           views={["year"]}
-          defaultValue={getDatePickerDefaultValue()}
+          value={getDatePickerDefaultValue()}
           onChange={handleYearViewChange}
           slotProps={{
             textField: {
@@ -110,7 +110,7 @@ export default function Filter() {
         className="bg-white rounded-sm"
         format="MMMM"
         views={["month"]}
-        defaultValue={getDatePickerDefaultValue()}
+        value={getDatePickerDefaultValue()}
         onChange={handleMonthViewChange}
         slotProps={{
           textField: {

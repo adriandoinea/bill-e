@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "./ui/skeleton";
 
-function TransactionsRowSkeleton() {
+function TransactionsRowSkeleton({ type }: { type: "expense" | "income" }) {
   return (
     <TableRow>
-      <TableCell>
-        <Skeleton className="h-6" />
-      </TableCell>
+      {type === "expense" ? (
+        <TableCell>
+          <Skeleton className="h-6" />
+        </TableCell>
+      ) : null}
       <TableCell>
         <Skeleton className="h-6" />
       </TableCell>
@@ -33,7 +35,11 @@ function TransactionsRowSkeleton() {
   );
 }
 
-export function TransactionsTableSkeleton() {
+export function TransactionsTableSkeleton({
+  type,
+}: {
+  type: "expense" | "income";
+}) {
   return (
     <Table>
       <TableHeader>
@@ -42,7 +48,7 @@ export function TransactionsTableSkeleton() {
           <TableHead>Amount</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Note</TableHead>
-          <TableHead>Location</TableHead>
+          {type === "expense" ? <TableHead>Location</TableHead> : null}
           <TableHead>
             <span className="sr-only">Edit or Remove</span>
           </TableHead>
@@ -50,14 +56,14 @@ export function TransactionsTableSkeleton() {
       </TableHeader>
 
       <TableBody>
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
-        <TransactionsRowSkeleton />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
+        <TransactionsRowSkeleton type={type} />
       </TableBody>
     </Table>
   );
