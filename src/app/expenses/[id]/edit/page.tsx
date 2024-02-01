@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const categories = await fetchTransactionCategories("expense");
-  const expense = await fetchTransactionById(params.id, "income");
+  const expense = await fetchTransactionById(params.id, "expense");
 
   if (!expense) notFound();
 
