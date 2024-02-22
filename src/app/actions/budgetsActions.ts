@@ -84,6 +84,15 @@ export async function editBudget(id: string, formData: FormData) {
   const { category, amount, resetPeriod } = validatedFields.data;
   const amountInCents = amount * 100;
 
+  const alreadyExisting = await prisma.budget.findFirst({
+    where: { category, resetPeriod },
+  });
+
+  if (alreadyExisting) {
+    //TODO: Implement message that the budget already exists
+    redirect("/budgets");
+  }
+
   try {
     await prisma.budget.update({
       where: {
