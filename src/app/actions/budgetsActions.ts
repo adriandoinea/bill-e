@@ -90,12 +90,10 @@ export async function editBudget(id: string, formData: FormData) {
         id,
       },
       data: {
-        id: uuid(),
         category,
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,
-        color: generateRandomBgColor(),
       },
     });
   } catch (error) {
