@@ -20,7 +20,7 @@ model Expense {
 }
 
 model Income {
-  id       String   @id
+  id       String   @id @default(uuid())
   category String
   amount   Int
   date     DateTime
@@ -34,9 +34,10 @@ model Category {
 }
 
 model Budget {
-  id            String   @id
+  id            String @id @default(uuid())
   category      String
-  initialAmount Int
+  initAmount    Int
   currentAmount Int
-  lastAccessed  DateTime
+  resetPeriod   String
+  color         String
 }

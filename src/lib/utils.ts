@@ -1,4 +1,3 @@
-import prisma from "@/db";
 import { type ClassValue, clsx } from "clsx";
 import dayjs from "dayjs";
 import { twMerge } from "tailwind-merge";
@@ -47,51 +46,21 @@ export const validateFilter = (filter: {
   }
 };
 
-export const queryTransactions = async (
-  type: "expense" | "income",
-  filterData: { gte: Date; lte: Date },
-  query: string
-) => {
-  if (type === "expense") {
-    return await prisma.expense.findMany({
-      where: query
-        ? {
-            AND: [
-              {
-                date: filterData,
-              },
-              {
-                OR: [
-                  { category: { contains: query } },
-                  { note: { contains: query } },
-                  { location: { contains: query } },
-                  { amount: Number(query) * 100 || 0 },
-                ],
-              },
-            ],
-          }
-        : { date: filterData },
-      orderBy: { date: "desc" },
-    });
-  }
+export const generateRandomBgColor = () => {
+  const colors = [
+    "rgba(255, 165, 0, 0.7)",
+    "rgba(0, 120, 255, 0.7)",
+    "rgba(0, 128, 0, 0.7)",
+    "rgba(128, 0, 128, 0.7)",
+    "rgba(255, 0, 0, 0.7)",
+    "rgba(220, 250, 100, 0.7)",
+    "rgba(75, 0, 130, 0.7)",
+    "rgba(255, 200, 180, 0.7)",
+    "rgba(0, 128, 128, 0.7)",
+    "rgba(0, 200, 255, 0.7)",
+    "rgba(165, 42, 42, 0.7)",
+  ];
 
-  return await prisma.income.findMany({
-    where: query
-      ? {
-          AND: [
-            {
-              date: filterData,
-            },
-            {
-              OR: [
-                { category: { contains: query } },
-                { note: { contains: query } },
-                { amount: Number(query) * 100 || 0 },
-              ],
-            },
-          ],
-        }
-      : { date: filterData },
-    orderBy: { date: "desc" },
-  });
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
 };

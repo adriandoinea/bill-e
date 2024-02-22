@@ -15,6 +15,15 @@ export interface IIncome {
   note?: string | null;
 }
 
+export interface IBudget {
+  id: string;
+  category: string;
+  initAmount: number;
+  resetPeriod: "daily" | "weekly" | "monthly" | "yearly" | string;
+  currentAmount: number;
+  color: string;
+}
+
 export interface ITransactionCategory {
   id: string;
   type: "expense" | "income" | string;

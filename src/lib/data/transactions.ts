@@ -1,6 +1,7 @@
 import prisma from "@/db";
 import { revalidatePath } from "next/cache";
-import { queryTransactions, validateFilter } from "./utils";
+import { validateFilter } from "../utils";
+import { IExpense } from "@/types";
 
 export async function fetchFilteredTransactions(
   query: string,
@@ -80,3 +81,66 @@ export async function fetchTransactionById(
 export async function fetchTransactionCategories(type: "expense" | "income") {
   return prisma.category.findMany({ where: { type } });
 }
+
+export const queryTransactions = async (
+  type: "expense" | "income",
+  filterData: { gte: Date; lte: Date },
+  query: string,
+  category?: string
+) => {
+  if (type === "expense") {
+    return await prisma.expense.findMany({
+      where: query
+        ? {
+            AND: [
+              {
+                date: filterData,
+                category,
+              },
+              {
+                OR: [
+                  { category: { contains: query } },
+                  { note: { contains: query } },
+                  { location: { contains: query } },
+                  { amount: Number(query) * 100 || 0 },
+                ],
+              },
+            ],
+          }
+        : { date: filterData, category },
+      orderBy: { date: "desc" },
+    });
+  }
+
+  return await prisma.income.findMany({
+    where: query
+      ? {
+          AND: [
+            {
+              date: filterData,
+            },
+            {
+              OR: [
+                { category: { contains: query } },
+                { note: { contains: query } },
+                { amount: Number(query) * 100 || 0 },
+              ],
+            },
+          ],
+        }
+      : { date: filterData },
+    orderBy: { date: "desc" },
+  });
+};
+
+export const sumOfExpenses = (expenses?: IExpense[]) => {
+  let s = 0;
+  if (expenses && expenses.length > 0) {
+    for (let expense of expenses) {
+      s += expense.amount;
+    }
+
+    return s;
+  }
+  return 0;
+};

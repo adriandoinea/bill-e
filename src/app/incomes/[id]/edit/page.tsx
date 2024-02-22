@@ -1,6 +1,9 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import EditForm from "@/components/ui/incomes/edit-form";
-import { fetchTransactionById, fetchTransactionCategories } from "@/lib/data";
+import {
+  fetchTransactionById,
+  fetchTransactionCategories,
+} from "@/lib/data/transactions";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {

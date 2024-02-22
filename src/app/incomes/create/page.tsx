@@ -1,6 +1,6 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import Form from "@/components/ui/incomes/create-form";
-import { fetchTransactionCategories } from "@/lib/data";
+import { fetchTransactionCategories } from "@/lib/data/transactions";
 
 export default async function Page() {
   const categories = await fetchTransactionCategories("income");

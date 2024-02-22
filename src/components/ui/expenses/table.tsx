@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import dayjs from "dayjs";
 import { DeleteExpense, EditExpense } from "./buttons";
-import { fetchFilteredTransactions } from "@/lib/data";
+import { fetchFilteredTransactions } from "@/lib/data/transactions";
 
 interface ExpensesTableProps {
   query: string;
