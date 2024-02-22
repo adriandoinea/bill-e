@@ -11,7 +11,7 @@ export default function EditForm({
   categories: ITransactionCategory[];
   budget: IBudget;
 }) {
-  const editBudgetWithId = editBudget.bind(null, budget.id);
+  const editBudgetWithId = editBudget.bind(null, budget.id, budget.resetPeriod);
   return (
     <form action={editBudgetWithId}>
       <div className="rounded-md bg-accent p-4 md:p-6">
