@@ -1,9 +1,7 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import EditForm from "@/components/ui/budgets/edit-form";
-import {
-  fetchBudgetById,
-  fetchTransactionCategories,
-} from "@/lib/data/transactions";
+import { fetchTransactionCategories } from "@/lib/data/transactions";
+import { fetchBudgetById } from "@/lib/data/budgets";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
