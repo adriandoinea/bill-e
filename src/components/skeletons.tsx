@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "./ui/skeleton";
+import { CreateBudget } from "./ui/budgets/buttons";
 
 function TransactionsRowSkeleton({ type }: { type: "expense" | "income" }) {
   return (
@@ -66,5 +67,23 @@ export function TransactionsTableSkeleton({
         <TransactionsRowSkeleton type={type} />
       </TableBody>
     </Table>
+  );
+}
+
+export function BudgetsDashboardSkeleton() {
+  return (
+    <>
+      <div className="flex items-center gap-8 w-full">
+        <Skeleton className="w-64 h-52 rounded-full" />
+        <Skeleton className="w-full h-52" />
+      </div>
+
+      <div className="flex flex-wrap gap-5">
+        <CreateBudget />
+        <Skeleton className="w-56 h-40" />
+        <Skeleton className="w-56 h-40" />
+        <Skeleton className="w-56 h-40" />
+      </div>
+    </>
   );
 }

@@ -12,7 +12,7 @@ export default async function ProgressPanel({
   return (
     <div
       className={cn(
-        "flex flex-col gap-1 border-secondary border-2 px-4 py-5 rounded-md",
+        "max-h-52 flex flex-col gap-1 border-secondary border-2 px-4 py-5 rounded-md overflow-auto",
         className
       )}
     >
