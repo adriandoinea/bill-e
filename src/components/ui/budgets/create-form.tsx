@@ -22,6 +22,7 @@ export default function Form({
               className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               id="category"
               name="category"
+              defaultValue=""
             >
               <option value="" disabled>
                 Select a category
