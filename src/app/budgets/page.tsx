@@ -1,6 +1,6 @@
 import { BudgetsDashboardSkeleton } from "@/components/skeletons";
-import BudgetsDashboard from "@/components/ui/budgets/budgets-dashboard";
-import Filter from "@/components/ui/budgets/filter";
+import BudgetsDashboard from "@/components/budgets/budgets-dashboard";
+import Filter from "@/components/budgets/filter";
 import { fetchFilteredBudgets } from "@/lib/data/budgets";
 import { Suspense } from "react";
 

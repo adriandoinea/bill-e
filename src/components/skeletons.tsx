@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "./ui/skeleton";
-import { CreateBudget } from "./ui/budgets/buttons";
+import { CreateBudget } from "./budgets/buttons";
 
 function TransactionsRowSkeleton({ type }: { type: "expense" | "income" }) {
   return (

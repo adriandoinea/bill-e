@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import EditForm from "@/components/ui/expenses/edit-form";
+import EditForm from "@/components/expenses/edit-form";
 import {
   fetchTransactionById,
   fetchTransactionCategories,

@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import EditForm from "@/components/ui/budgets/edit-form";
+import EditForm from "@/components/budgets/edit-form";
 import { fetchTransactionCategories } from "@/lib/data/transactions";
 import { fetchBudgetById } from "@/lib/data/budgets";
 import { notFound } from "next/navigation";

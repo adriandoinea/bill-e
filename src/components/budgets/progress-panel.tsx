@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Progress } from "../progress";
+import { Progress } from "../ui/progress";
 import { IBudget } from "@/types";
 
 export default async function ProgressPanel({

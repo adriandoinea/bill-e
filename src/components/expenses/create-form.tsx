@@ -1,6 +1,6 @@
-import { createIncome } from "@/app/actions/incomesActions";
+import { createExpense } from "@/app/actions/expensesActions";
 import { ITransactionCategory } from "@/types";
-import { Button } from "../button";
+import { Button } from "../ui/button";
 import Link from "next/link";
 import { CircleDollarSign, List, MapPin, StickyNote } from "lucide-react";
 import dayjs from "dayjs";
@@ -11,7 +11,7 @@ export default function Form({
   categories: ITransactionCategory[];
 }) {
   return (
-    <form action={createIncome}>
+    <form action={createExpense}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
@@ -77,6 +77,24 @@ export default function Form({
         </div>
 
         <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium" htmlFor="location">
+            Provide a location
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                className="block w-full rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                type="text"
+                name="location"
+                id="location"
+                placeholder="Enter a location"
+              />
+              <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-4">
           <label className="mb-2 block text-sm font-medium" htmlFor="date">
             Choose a date
           </label>
@@ -95,7 +113,7 @@ export default function Form({
       <div className="w-full mt-5 flex gap-4 justify-end items-center">
         <Link
           className="flex h-10 items-center rounded-md bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-          href="/incomes"
+          href="/expenses"
         >
           Cancel
         </Link>
@@ -103,7 +121,7 @@ export default function Form({
           className="bg-customAccent hover:bg-customAccent-foreground transition duration-300"
           type="submit"
         >
-          Create income
+          Create expense
         </Button>
       </div>
     </form>

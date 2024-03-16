@@ -1,7 +1,7 @@
 import TransactionsOperations from "@/components/transactions-operations";
 import { Suspense } from "react";
 import { TransactionsTableSkeleton } from "@/components/skeletons";
-import IncomesTable from "@/components/ui/incomes/table";
+import IncomesTable from "@/components/incomes/table";
 
 export default async function Page({
   searchParams,

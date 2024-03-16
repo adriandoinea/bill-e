@@ -1,8 +1,9 @@
+import { createIncome } from "@/app/actions/incomesActions";
 import { ITransactionCategory } from "@/types";
-import { CircleDollarSign, List, RotateCcw } from "lucide-react";
+import { Button } from "../ui/button";
 import Link from "next/link";
-import { Button } from "../button";
-import { createBudget } from "@/app/actions/budgetsActions";
+import { CircleDollarSign, List, MapPin, StickyNote } from "lucide-react";
+import dayjs from "dayjs";
 
 export default function Form({
   categories,
@@ -10,7 +11,7 @@ export default function Form({
   categories: ITransactionCategory[];
 }) {
   return (
-    <form action={createBudget}>
+    <form action={createIncome}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
@@ -58,36 +59,43 @@ export default function Form({
         </div>
 
         <div className="mb-4">
-          <label
-            htmlFor="resetPeriod"
-            className="mb-2 block text-sm font-medium"
-          >
-            Choose reset period
+          <label className="mb-2 block text-sm font-medium" htmlFor="note">
+            Leave a note
           </label>
-          <div className="relative">
-            <select
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                className="block w-full rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                type="text"
+                name="note"
+                id="note"
+                placeholder="Enter a note"
+              />
+              <StickyNote className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium" htmlFor="date">
+            Choose a date
+          </label>
+          <div className="mt-2 rounded-md">
+            <input
               required
-              className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="resetPeriod"
-              name="resetPeriod"
-            >
-              <option value="" disabled>
-                Select a period
-              </option>
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-            <RotateCcw className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              className="block w-full rounded-md py-2 pl-2 pr-2 text-sm outline-2 placeholder:text-gray-500"
+              type="date"
+              name="date"
+              id="date"
+              defaultValue={dayjs().format("YYYY-MM-DD")}
+            />
           </div>
         </div>
       </div>
-
       <div className="w-full mt-5 flex gap-4 justify-end items-center">
         <Link
           className="flex h-10 items-center rounded-md bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-          href="/budgets"
+          href="/incomes"
         >
           Cancel
         </Link>
@@ -95,7 +103,7 @@ export default function Form({
           className="bg-customAccent hover:bg-customAccent-foreground transition duration-300"
           type="submit"
         >
-          Create budget
+          Create income
         </Button>
       </div>
     </form>
