@@ -47,12 +47,14 @@ export default async function ExpensesTable({
       </TableHeader>
 
       <TableBody>
-        {expenses.map((expense: IExpense) => (
+        {expenses.map((expense) => (
           <TableRow key={expense.id}>
-            <TableCell>{expense.category}</TableCell>
+            {/*@ts-ignore */}
+            <TableCell>{expense.category.name}</TableCell>
             <TableCell>{expense.amount / 100}</TableCell>
             <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
             <TableCell>{expense.note}</TableCell>
+            {/*@ts-ignore */}
             <TableCell>{expense.location}</TableCell>
             <TableCell className="flex gap-3 items-center justify-end">
               <EditExpense id={expense.id} />

@@ -2,21 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/db";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
 
 const FormSchema = z.object({
   id: z.string(),
   name: z.string(),
-  type: z.string(),
 });
 const CreateCategory = FormSchema.omit({ id: true });
 
-export async function createCategory(formData: FormData) {
+export async function createCategory(type: string, formData: FormData) {
   const validatedFields = CreateCategory.safeParse({
     name: formData.get("name"),
-    type: formData.get("type"),
   });
 
   if (!validatedFields.success) {
@@ -26,13 +23,11 @@ export async function createCategory(formData: FormData) {
     };
   }
 
-  const { name, type } = validatedFields.data;
-
   try {
     await prisma.category.create({
       data: {
         id: uuid(),
-        name,
+        name: validatedFields.data.name,
         type,
       },
     });

@@ -2,7 +2,7 @@ import { editIncome } from "@/app/actions/incomesActions";
 import { IIncome, ITransactionCategory } from "@/types";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { CircleDollarSign, List, MapPin, StickyNote } from "lucide-react";
+import { CircleDollarSign, List, StickyNote } from "lucide-react";
 import dayjs from "dayjs";
 
 export default function EditForm({
@@ -26,7 +26,7 @@ export default function EditForm({
               className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               id="category"
               name="category"
-              defaultValue={income.category}
+              defaultValue={income.category.name}
             >
               <option value="" disabled>
                 Select a category

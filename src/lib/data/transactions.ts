@@ -65,13 +65,19 @@ export async function fetchTransactionById(
   try {
     const data =
       type === "expense"
-        ? await prisma.expense.findUnique({ where: { id } })
-        : await prisma.income.findUnique({ where: { id } });
+        ? await prisma.expense.findUnique({
+            where: { id },
+            include: { category: { select: { name: true } } },
+          })
+        : await prisma.income.findUnique({
+            where: { id },
+            include: { category: { select: { name: true } } },
+          });
 
     if (data) {
       const expense = { ...data, amount: data.amount / 100 };
       revalidatePath(`/${type}/${id}/edit`);
-      return expense;
+      return expense as IExpense;
     }
   } catch (error) {
     console.error(error);
@@ -86,7 +92,7 @@ export const queryTransactions = async (
   type: "expense" | "income",
   filterData: { gte: Date; lte: Date },
   query: string,
-  category?: string
+  categoryName?: string
 ) => {
   if (type === "expense") {
     return await prisma.expense.findMany({
@@ -95,11 +101,11 @@ export const queryTransactions = async (
             AND: [
               {
                 date: filterData,
-                category,
+                category: { name: categoryName },
               },
               {
                 OR: [
-                  { category: { contains: query } },
+                  { category: { name: { contains: query } } },
                   { note: { contains: query } },
                   { location: { contains: query } },
                   { amount: Number(query) * 100 || 0 },
@@ -107,7 +113,8 @@ export const queryTransactions = async (
               },
             ],
           }
-        : { date: filterData, category },
+        : { date: filterData, category: { name: categoryName } },
+      include: { category: { select: { name: true } } },
       orderBy: { date: "desc" },
     });
   }
@@ -121,7 +128,11 @@ export const queryTransactions = async (
             },
             {
               OR: [
-                { category: { contains: query } },
+                {
+                  category: {
+                    name: { contains: query },
+                  },
+                },
                 { note: { contains: query } },
                 { amount: Number(query) * 100 || 0 },
               ],
@@ -129,6 +140,7 @@ export const queryTransactions = async (
           ],
         }
       : { date: filterData },
+    include: { category: { select: { name: true } } },
     orderBy: { date: "desc" },
   });
 };

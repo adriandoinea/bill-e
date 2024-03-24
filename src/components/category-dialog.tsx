@@ -26,6 +26,8 @@ export default function CategoryDialog({
   description,
   type,
 }: Props) {
+  const createCategoryForType = createCategory.bind(null, type);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -34,29 +36,10 @@ export default function CategoryDialog({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
-        <form action={createCategory}>
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <label htmlFor="name">Name</label>
-              <Input name="name" id="name" placeholder="Category name" />
-            </div>
-
-            <div className="flex items-center gap-6">
-              <label htmlFor="type">Type</label>
-              <select
-                className="w-full h-10 rounded-md bg-paper border-secondary border-[1px] pl-2 text-sm"
-                name="type"
-                id="type"
-                placeholder="Category type"
-                defaultValue={type}
-              >
-                <option value="" disabled>
-                  Select a category type
-                </option>
-                <option value="expense">Expense</option>
-                <option value="income">Income</option>
-              </select>
-            </div>
+        <form action={createCategoryForType}>
+          <div className="flex items-center gap-4">
+            <label htmlFor="name">Name</label>
+            <Input name="name" id="name" placeholder="Category name" />
           </div>
 
           <DialogFooter className="mt-6">

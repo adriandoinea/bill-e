@@ -22,7 +22,7 @@ export default async function ProgressPanel({
         );
         return (
           <div key={budget.id} className="flex items-center justify-between">
-            <div className="w-48 truncate">{budget.category}</div>
+            <div className="w-48 truncate">{budget.category.name}</div>
             <div className="relative w-full flex items-center">
               <Progress value={value} color={budget.color} />
               <div className="absolute left-1/2 text-primary">{value}%</div>

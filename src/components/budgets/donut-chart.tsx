@@ -40,14 +40,14 @@ export default function DonutChart({
 
       const total = data.datasets[0].data.reduce((acc, current) => {
         return (acc += current);
-      });
+      }, 0);
 
       ctx.save();
       ctx.fillStyle = resolvedTheme === "light" ? "black" : "white";
       ctx.font = "normal 1.5rem sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(`$${total}`, chartData.x, chartData.y);
+      ctx.fillText(`$${total}`, chartData?.x, chartData?.y);
     },
   };
 

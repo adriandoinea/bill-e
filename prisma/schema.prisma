@@ -11,33 +11,39 @@ datasource db {
 }
 
 model Expense {
-  id       String   @id @default(uuid())
-  category String
-  amount   Int
-  date     DateTime
-  note     String?
-  location String?
+  id         String   @id @default(uuid())
+  category   Category @relation(fields: [categoryId], references: [id])
+  amount     Int
+  date       DateTime
+  note       String?
+  location   String?
+  categoryId String
 }
 
 model Income {
-  id       String   @id @default(uuid())
-  category String
-  amount   Int
-  date     DateTime
-  note     String?
-}
-
-model Category {
-  id   String @id @default(uuid())
-  type String
-  name String
+  id         String   @id @default(uuid())
+  category   Category @relation(fields: [categoryId], references: [id])
+  amount     Int
+  date       DateTime
+  note       String?
+  categoryId String
 }
 
 model Budget {
-  id            String @id @default(uuid())
-  category      String
+  id            String   @id @default(uuid())
+  category      Category @relation(fields: [categoryId], references: [id])
   initAmount    Int
   currentAmount Int
   resetPeriod   String
   color         String
+  categoryId    String
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  type     String
+  name     String
+  Expenses Expense[]
+  Incomes  Income[]
+  Budgets  Budget[]
 }

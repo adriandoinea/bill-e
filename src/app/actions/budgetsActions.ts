@@ -37,7 +37,7 @@ export async function createBudget(formData: FormData) {
   const amountInCents = amount * 100;
 
   const alreadyExisting = await prisma.budget.findFirst({
-    where: { category, resetPeriod },
+    where: { category: { name: category }, resetPeriod },
   });
 
   if (alreadyExisting) {
@@ -45,11 +45,15 @@ export async function createBudget(formData: FormData) {
     redirect("/budgets");
   }
 
+  const dbCategory = await prisma.category.findFirstOrThrow({
+    where: { name: category },
+  });
+
   try {
     await prisma.budget.create({
       data: {
         id: uuid(),
-        category,
+        category: { connect: { id: dbCategory.id } },
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,
@@ -91,7 +95,7 @@ export async function editBudget(
   const alreadyExisting =
     currentResetPeriod !== resetPeriod &&
     (await prisma.budget.findFirst({
-      where: { category, resetPeriod },
+      where: { category: { name: category }, resetPeriod },
     }));
 
   if (alreadyExisting) {
@@ -99,13 +103,17 @@ export async function editBudget(
     redirect("/budgets");
   }
 
+  const dbCategory = await prisma.category.findFirstOrThrow({
+    where: { name: category },
+  });
+
   try {
     await prisma.budget.update({
       where: {
         id,
       },
       data: {
-        category,
+        category: { connect: { id: dbCategory.id } },
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,

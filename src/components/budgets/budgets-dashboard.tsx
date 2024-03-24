@@ -13,20 +13,24 @@ export default async function BudgetsDashboard({
 
   const donutChartData = budgets.map((budget) => budget.initAmount / 100);
   const backgroundColors = budgets.map((budget) => budget.color);
-  const labels = budgets.map((budget) => budget.category);
+  const labels = budgets.map((budget) => budget.category.name);
 
   return (
-    <>
-      <div className="flex items-center gap-8 w-full">
-        <DonutChart
-          className="h-52 w-52"
-          data={donutChartData}
-          backgroundColors={backgroundColors}
-          labels={labels}
-        />
+    <div className="flex flex-col gap-10">
+      {budgets.length > 0 ? (
+        <div className="flex items-center gap-8 w-full">
+          <DonutChart
+            className="h-52 w-52"
+            data={donutChartData}
+            backgroundColors={backgroundColors}
+            labels={labels}
+          />
 
-        <ProgressPanel budgets={budgets} className="w-full" />
-      </div>
+          <ProgressPanel budgets={budgets} className="w-full" />
+        </div>
+      ) : (
+        <div className="font-medium">No {period} budgets added yet.</div>
+      )}
 
       <div className="flex flex-wrap gap-5">
         <CreateBudget />
@@ -34,13 +38,13 @@ export default async function BudgetsDashboard({
           <BudgetCard
             key={budget.id}
             id={budget.id}
-            category={budget.category}
+            category={budget.category.name}
             initialAmount={budget.initAmount / 100}
             currentAmount={budget.currentAmount / 100}
             color={budget.color}
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }

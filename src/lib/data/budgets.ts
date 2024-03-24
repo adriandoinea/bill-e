@@ -3,6 +3,7 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import { queryTransactions, sumOfExpenses } from "./transactions";
 import prisma from "@/db";
 import { revalidatePath } from "next/cache";
+import { IBudget } from "@/types";
 
 dayjs.extend(weekOfYear);
 export async function fetchFilteredBudgets(
@@ -47,32 +48,44 @@ export async function fetchFilteredBudgets(
 
   const budgets = await prisma.budget.findMany({
     where: { resetPeriod: resetPeriod || "monthly" },
+    include: { category: { select: { name: true } } },
   });
 
-  let expenses: Record<string, any> = {};
+  let expenses: Record<string, any[]> = {};
   for (let budget of budgets) {
     const tempExpenses = await queryTransactions(
       "expense",
       filterData,
       "",
-      budget.category
+      budget.category.name
     );
     if (tempExpenses.length > 0) {
-      expenses = { ...expenses, [budget.category]: tempExpenses };
+      expenses = { ...expenses, [budget.category.name]: tempExpenses };
     }
   }
 
-  for (let budget of budgets) {
-    const expensesForBudget = expenses[budget.category];
+  const tempBudgets = [...budgets];
+
+  for (let budget of tempBudgets) {
+    const expensesForBudget = expenses[budget.category.name];
     budget.currentAmount = budget.initAmount - sumOfExpenses(expensesForBudget);
-    await prisma.budget.update({ where: { id: budget.id }, data: budget });
+
+    const { category, ...rest } = budget;
+
+    await prisma.budget.update({
+      where: { id: budget.id },
+      data: rest,
+    });
   }
 
-  return budgets;
+  return tempBudgets as IBudget[];
 }
 export async function fetchBudgetById(id: string) {
   try {
-    const data = await prisma.budget.findUnique({ where: { id } });
+    const data = await prisma.budget.findUnique({
+      where: { id },
+      include: { category: { select: { name: true } } },
+    });
 
     if (data) {
       const budget = {
@@ -81,7 +94,7 @@ export async function fetchBudgetById(id: string) {
         currentAmount: data.currentAmount / 100,
       };
       revalidatePath(`/budgets/${id}/edit`);
-      return budget;
+      return budget as IBudget;
     }
   } catch (error) {
     console.error(error);

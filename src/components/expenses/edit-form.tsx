@@ -26,7 +26,7 @@ export default function EditForm({
               className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               id="category"
               name="category"
-              defaultValue={expense.category}
+              defaultValue={expense.category.name}
             >
               <option value="" disabled>
                 Select a category

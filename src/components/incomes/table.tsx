@@ -46,9 +46,10 @@ export default async function IncomesTable({
       </TableHeader>
 
       <TableBody>
-        {incomes.map((income: IIncome) => (
+        {incomes.map((income) => (
           <TableRow key={income.id}>
-            <TableCell>{income.category}</TableCell>
+            {/* @ts-ignore */}
+            <TableCell>{income.category.name}</TableCell>
             <TableCell>{income.amount / 100}</TableCell>
             <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
             <TableCell>{income.note}</TableCell>
