@@ -78,7 +78,7 @@ export async function fetchFilteredBudgets(
     });
   }
 
-  return tempBudgets as IBudget[];
+  return tempBudgets;
 }
 export async function fetchBudgetById(id: string) {
   try {
@@ -94,7 +94,7 @@ export async function fetchBudgetById(id: string) {
         currentAmount: data.currentAmount / 100,
       };
       revalidatePath(`/budgets/${id}/edit`);
-      return budget as IBudget;
+      return budget;
     }
   } catch (error) {
     console.error(error);

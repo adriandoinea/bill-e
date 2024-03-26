@@ -39,16 +39,12 @@ export async function createExpense(formData: FormData) {
   const { category, amount, date, note, location } = validatedFields.data;
   const amountInCents = amount * 100;
 
-  const dbCategory = await prisma.category.findFirstOrThrow({
-    where: { name: category },
-  });
-
   try {
     await prisma.expense.create({
       data: {
         id: uuid(),
         category: {
-          connect: { id: dbCategory.id },
+          connect: { type_name: { type: "expense", name: category } },
         },
         amount: amountInCents,
         date,
@@ -86,14 +82,15 @@ export async function editExpense(id: string, formData: FormData) {
     amount: validatedFields.data.amount * 100,
   };
 
-  const dbCategory = await prisma.category.findFirstOrThrow({
-    where: { name: data.category },
-  });
-
   try {
     await prisma.expense.update({
       where: { id },
-      data: { ...data, category: { connect: { id: dbCategory.id } } },
+      data: {
+        ...data,
+        category: {
+          connect: { type_name: { type: "expense", name: data.category } },
+        },
+      },
     });
   } catch (error) {
     console.error(error);

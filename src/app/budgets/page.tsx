@@ -1,7 +1,6 @@
 import { BudgetsDashboardSkeleton } from "@/components/skeletons";
 import BudgetsDashboard from "@/components/budgets/budgets-dashboard";
 import Filter from "@/components/budgets/filter";
-import { fetchFilteredBudgets } from "@/lib/data/budgets";
 import { Suspense } from "react";
 
 export default async function Page({
@@ -10,7 +9,6 @@ export default async function Page({
   searchParams: { [key: string]: string | undefined };
 }) {
   const period = searchParams.period;
-  const budgets = await fetchFilteredBudgets(period);
 
   return (
     <div className="pl-10 pr-5 h-full flex flex-col gap-6">

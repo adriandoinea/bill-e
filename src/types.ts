@@ -5,7 +5,6 @@ export interface IExpense {
   date: Date;
   note?: string | null;
   location?: string | null;
-  categoryId: string;
 }
 
 export interface IIncome {
@@ -14,21 +13,18 @@ export interface IIncome {
   amount: number;
   date: Date;
   note?: string | null;
-  categoryId: string;
 }
 
 export interface IBudget {
   id: string;
-  category: { id: string; type: string; name: string };
+  category: { type?: string; name: string };
   initAmount: number;
   resetPeriod: "daily" | "weekly" | "monthly" | "yearly" | string;
   currentAmount: number;
   color: string;
-  categoryId: string;
 }
 
 export interface ITransactionCategory {
-  id: string;
   type: "expense" | "income" | string;
   name: string;
 }

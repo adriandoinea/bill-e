@@ -57,7 +57,7 @@ export default function Form({
                 </option>
                 <option value="new">New category</option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
+                  <option key={category.name} value={category.name}>
                     {category.name}
                   </option>
                 ))}

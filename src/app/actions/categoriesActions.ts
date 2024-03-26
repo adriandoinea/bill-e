@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/db";
 import { z } from "zod";
-import { v4 as uuid } from "uuid";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -26,7 +25,6 @@ export async function createCategory(type: string, formData: FormData) {
   try {
     await prisma.category.create({
       data: {
-        id: uuid(),
         name: validatedFields.data.name,
         type,
       },

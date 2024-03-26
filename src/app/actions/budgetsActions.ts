@@ -45,15 +45,13 @@ export async function createBudget(formData: FormData) {
     redirect("/budgets");
   }
 
-  const dbCategory = await prisma.category.findFirstOrThrow({
-    where: { name: category },
-  });
-
   try {
     await prisma.budget.create({
       data: {
         id: uuid(),
-        category: { connect: { id: dbCategory.id } },
+        category: {
+          connect: { type_name: { name: category, type: "expense" } },
+        },
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,
@@ -103,17 +101,15 @@ export async function editBudget(
     redirect("/budgets");
   }
 
-  const dbCategory = await prisma.category.findFirstOrThrow({
-    where: { name: category },
-  });
-
   try {
     await prisma.budget.update({
       where: {
         id,
       },
       data: {
-        category: { connect: { id: dbCategory.id } },
+        category: {
+          connect: { type_name: { name: category, type: "expense" } },
+        },
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,
