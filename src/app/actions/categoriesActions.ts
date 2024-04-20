@@ -24,7 +24,7 @@ export async function updateCategories(
     (category) =>
       category.isUpdated && !category.isDeletedLocally && !category.isAdded
   );
-  for (let updatedCateg of updatedCategories) {
+  for (const updatedCateg of updatedCategories) {
     try {
       await prisma.category.update({
         where: { type_name: { type, name: updatedCateg.oldVal } },
@@ -69,5 +69,5 @@ export async function updateCategories(
       message: `Database Error: Failed to delete categories.`,
     };
   }
-  revalidatePath(`/${type}s/create`);
+  revalidatePath(`/${type}s`);
 }
