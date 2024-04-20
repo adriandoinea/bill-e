@@ -1,9 +1,8 @@
+import prisma from "@/db";
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { queryTransactions, sumOfExpenses } from "./transactions";
-import prisma from "@/db";
 import { revalidatePath } from "next/cache";
-import { IBudget } from "@/types";
+import { queryTransactions, sumOfExpenses } from "./transactions";
 
 dayjs.extend(weekOfYear);
 export async function fetchFilteredBudgets(
@@ -48,10 +47,10 @@ export async function fetchFilteredBudgets(
 
   const budgets = await prisma.budget.findMany({
     where: { resetPeriod: resetPeriod || "monthly" },
-    include: { category: { select: { name: true } } },
+    include: { category: true },
   });
 
-  let expenses: Record<string, any[]> = {};
+  const expenses: Record<string, any[]> = {};
   for (let budget of budgets) {
     const tempExpenses = await queryTransactions(
       "expense",
@@ -60,7 +59,7 @@ export async function fetchFilteredBudgets(
       budget.category.name
     );
     if (tempExpenses.length > 0) {
-      expenses = { ...expenses, [budget.category.name]: tempExpenses };
+      expenses[budget.category.name] = tempExpenses;
     }
   }
 

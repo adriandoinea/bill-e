@@ -1,9 +1,12 @@
+"use client";
+
 import { createIncome } from "@/app/actions/incomesActions";
 import { ITransactionCategory } from "@/types";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import { CircleDollarSign, List, MapPin, StickyNote } from "lucide-react";
 import dayjs from "dayjs";
+import { CircleDollarSign, StickyNote } from "lucide-react";
+import Link from "next/link";
+import CategorySelector from "../categories/category-selector";
+import { Button } from "../ui/button";
 
 export default function Form({
   categories,
@@ -17,25 +20,7 @@ export default function Form({
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
             Choose category
           </label>
-          <div className="relative">
-            <select
-              required
-              className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="category"
-              name="category"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            <List className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
+          <CategorySelector categories={categories} type="income" />
         </div>
 
         <div className="mb-4">

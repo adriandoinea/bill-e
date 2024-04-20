@@ -1,7 +1,7 @@
 import prisma from "@/db";
+import { IExpense } from "@/types";
 import { revalidatePath } from "next/cache";
 import { validateFilter } from "../utils";
-import { IExpense } from "@/types";
 
 export async function fetchFilteredTransactions(
   query: string,
@@ -67,17 +67,17 @@ export async function fetchTransactionById(
       type === "expense"
         ? await prisma.expense.findUnique({
             where: { id },
-            include: { category: { select: { name: true } } },
+            include: { category: true },
           })
         : await prisma.income.findUnique({
             where: { id },
-            include: { category: { select: { name: true } } },
+            include: { category: true },
           });
 
     if (data) {
       const expense = { ...data, amount: data.amount / 100 };
       revalidatePath(`/${type}/${id}/edit`);
-      return expense as IExpense;
+      return expense;
     }
   } catch (error) {
     console.error(error);
@@ -114,7 +114,7 @@ export const queryTransactions = async (
             ],
           }
         : { date: filterData, category: { name: categoryName } },
-      include: { category: { select: { name: true } } },
+      include: { category: true },
       orderBy: { date: "desc" },
     });
   }
@@ -140,7 +140,7 @@ export const queryTransactions = async (
           ],
         }
       : { date: filterData },
-    include: { category: { select: { name: true } } },
+    include: { category: true },
     orderBy: { date: "desc" },
   });
 };

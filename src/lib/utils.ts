@@ -1,6 +1,7 @@
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
 import { twMerge } from "tailwind-merge";
+import { COLORS } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -47,20 +48,6 @@ export const validateFilter = (filter: {
 };
 
 export const generateRandomBgColor = () => {
-  const colors = [
-    "rgba(255, 165, 0, 0.7)",
-    "rgba(0, 120, 255, 0.7)",
-    "rgba(0, 128, 0, 0.7)",
-    "rgba(128, 0, 128, 0.7)",
-    "rgba(255, 0, 0, 0.7)",
-    "rgba(220, 250, 100, 0.7)",
-    "rgba(75, 0, 130, 0.7)",
-    "rgba(255, 200, 180, 0.7)",
-    "rgba(0, 128, 128, 0.7)",
-    "rgba(0, 200, 255, 0.7)",
-    "rgba(165, 42, 42, 0.7)",
-  ];
-
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
+  const randomIndex = Math.floor(Math.random() * COLORS.length);
+  return COLORS[randomIndex];
 };

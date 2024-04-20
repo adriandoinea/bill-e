@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
-import { ShoppingCart } from "lucide-react";
 import { DeleteBudget, EditBudget } from "./buttons";
 
 interface BudgetCardProps {
   id: string;
-  category: string;
+  category: { name: string; emoji: string };
   initialAmount: number;
   currentAmount: number;
   color: string;
@@ -28,10 +27,10 @@ export default function BudgetCard({
         style={{ backgroundColor: color }}
         className="flex items-center justify-center rounded-full h-7 w-7"
       >
-        <ShoppingCart size={16} fill="hsl(var(--primary))" />
+        <div className="text-lg">{category.emoji}</div>
       </div>
       <div className="text-center">
-        <div>{category}</div>
+        <div>{category.name}</div>
         <div>${initialAmount}</div>
       </div>
       <div className="w-full flex justify-between">

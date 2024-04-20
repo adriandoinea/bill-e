@@ -1,4 +1,3 @@
-import { IExpense } from "@/types";
 import {
   Table,
   TableBody,
@@ -7,9 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { fetchFilteredTransactions } from "@/lib/data/transactions";
 import dayjs from "dayjs";
 import { DeleteExpense, EditExpense } from "./buttons";
-import { fetchFilteredTransactions } from "@/lib/data/transactions";
 
 interface ExpensesTableProps {
   query: string;
@@ -49,12 +48,12 @@ export default async function ExpensesTable({
       <TableBody>
         {expenses.map((expense) => (
           <TableRow key={expense.id}>
-            {/*@ts-ignore */}
-            <TableCell>{expense.category.name}</TableCell>
+            <TableCell>
+              {expense.category.emoji} {expense.category.name}
+            </TableCell>
             <TableCell>{expense.amount / 100}</TableCell>
             <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
             <TableCell>{expense.note}</TableCell>
-            {/*@ts-ignore */}
             <TableCell>{expense.location}</TableCell>
             <TableCell className="flex gap-3 items-center justify-end">
               <EditExpense id={expense.id} />

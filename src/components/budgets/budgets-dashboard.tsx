@@ -1,8 +1,8 @@
+import { fetchFilteredBudgets } from "@/lib/data/budgets";
 import BudgetCard from "./budget-card";
 import { CreateBudget } from "./buttons";
 import DonutChart from "./donut-chart";
 import ProgressPanel from "./progress-panel";
-import { fetchFilteredBudgets } from "@/lib/data/budgets";
 
 export default async function BudgetsDashboard({
   period,
@@ -38,7 +38,7 @@ export default async function BudgetsDashboard({
           <BudgetCard
             key={budget.id}
             id={budget.id}
-            category={budget.category.name}
+            category={budget.category}
             initialAmount={budget.initAmount / 100}
             currentAmount={budget.currentAmount / 100}
             color={budget.color}

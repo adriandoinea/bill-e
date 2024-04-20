@@ -1,6 +1,6 @@
 export interface IExpense {
   id: string;
-  category: { id: string; type: string; name: string };
+  category: ITransactionCategory;
   amount: number;
   date: Date;
   note?: string | null;
@@ -9,7 +9,7 @@ export interface IExpense {
 
 export interface IIncome {
   id: string;
-  category: { id: string; type: string; name: string };
+  category: ITransactionCategory;
   amount: number;
   date: Date;
   note?: string | null;
@@ -17,7 +17,7 @@ export interface IIncome {
 
 export interface IBudget {
   id: string;
-  category: { type?: string; name: string };
+  category: ITransactionCategory;
   initAmount: number;
   resetPeriod: "daily" | "weekly" | "monthly" | "yearly" | string;
   currentAmount: number;
@@ -25,6 +25,22 @@ export interface IBudget {
 }
 
 export interface ITransactionCategory {
-  type: "expense" | "income" | string;
+  type: string;
   name: string;
+  emoji: string;
+}
+
+export interface ILocalCategory {
+  id: number;
+  oldVal: string;
+  newVal: string;
+  emoji: string;
+  isEditing?: boolean;
+  isAdded?: boolean;
+  isDeletedLocally?: boolean;
+  isUpdated?: boolean;
+  errors?: {
+    emoji?: string | null;
+    newVal?: string | null;
+  };
 }

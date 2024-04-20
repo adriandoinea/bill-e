@@ -45,6 +45,7 @@ model Budget {
 model Category {
   type     String
   name     String
+  emoji    String
   Expenses Expense[]
   Incomes  Income[]
   Budgets  Budget[]
