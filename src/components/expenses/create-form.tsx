@@ -1,5 +1,3 @@
-"use client";
-
 import { createExpense } from "@/app/actions/expensesActions";
 import { ITransactionCategory } from "@/types";
 import dayjs from "dayjs";

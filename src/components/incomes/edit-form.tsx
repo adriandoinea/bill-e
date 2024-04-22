@@ -1,5 +1,3 @@
-"use client";
-
 import { editIncome } from "@/app/actions/incomesActions";
 import { IIncome, ITransactionCategory } from "@/types";
 import dayjs from "dayjs";
