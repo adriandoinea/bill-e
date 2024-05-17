@@ -67,13 +67,13 @@ export async function fetchFilteredBudgets(
 
   for (let budget of tempBudgets) {
     const expensesForBudget = expenses[budget.category.name];
-    budget.currentAmount = budget.initAmount - sumOfExpenses(expensesForBudget);
+    const currentAmount = budget.initAmount - sumOfExpenses(expensesForBudget);
 
     const { category, ...rest } = budget;
 
     await prisma.budget.update({
       where: { id: budget.id },
-      data: rest,
+      data: { ...rest, currentAmount },
     });
   }
 
