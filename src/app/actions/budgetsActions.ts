@@ -1,11 +1,11 @@
 "use server";
 
 import prisma from "@/db";
-import { z } from "zod";
-import { v4 as uuid } from "uuid";
+import { generateRandomBgColor } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { generateRandomBgColor } from "@/lib/utils";
+import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -19,7 +19,10 @@ const FormSchema = z.object({
 
 const CreateBudget = FormSchema.omit({ id: true, color: true });
 
-export async function createBudget(formData: FormData) {
+export async function createBudget(
+  prevState: { message: string } | null,
+  formData: FormData
+) {
   const validatedFields = CreateBudget.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -41,8 +44,9 @@ export async function createBudget(formData: FormData) {
   });
 
   if (alreadyExisting) {
-    //TODO: Implement message that the budget already exists
-    redirect("/budgets");
+    return {
+      message: `A budget with the same category and reset period already exists.`,
+    };
   }
 
   try {
@@ -72,6 +76,7 @@ export async function createBudget(formData: FormData) {
 export async function editBudget(
   id: string,
   currentResetPeriod: string,
+  prevState: { message: string } | null,
   formData: FormData
 ) {
   const validatedFields = CreateBudget.safeParse({
@@ -90,15 +95,14 @@ export async function editBudget(
   const { category, amount, resetPeriod } = validatedFields.data;
   const amountInCents = amount * 100;
 
-  const alreadyExisting =
-    currentResetPeriod !== resetPeriod &&
-    (await prisma.budget.findFirst({
-      where: { category: { name: category }, resetPeriod },
-    }));
+  const alreadyExisting = await prisma.budget.findFirst({
+    where: { category: { name: category }, resetPeriod },
+  });
 
   if (alreadyExisting) {
-    //TODO: Implement message that the budget already exists
-    redirect("/budgets");
+    return {
+      message: `A budget with the same category and reset period already exists.`,
+    };
   }
 
   try {

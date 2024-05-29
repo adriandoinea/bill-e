@@ -1,8 +1,11 @@
+"use client";
+
+import { editBudget } from "@/app/actions/budgetsActions";
 import { IBudget, ITransactionCategory } from "@/types";
 import { CircleDollarSign, List, RotateCcw } from "lucide-react";
 import Link from "next/link";
+import { useFormState } from "react-dom";
 import { Button } from "../ui/button";
-import { editBudget } from "@/app/actions/budgetsActions";
 
 export default function EditForm({
   categories,
@@ -12,8 +15,10 @@ export default function EditForm({
   budget: IBudget;
 }) {
   const editBudgetWithId = editBudget.bind(null, budget.id, budget.resetPeriod);
+  const [state, dispatch] = useFormState(editBudgetWithId, null);
   return (
-    <form action={editBudgetWithId}>
+    <form action={dispatch}>
+      <div>{state?.message}</div>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
@@ -31,7 +36,7 @@ export default function EditForm({
                 Select a category
               </option>
               {categories.map((category) => (
-                <option key={category.id} value={category.name}>
+                <option key={category.name} value={category.name}>
                   {category.name}
                 </option>
               ))}
