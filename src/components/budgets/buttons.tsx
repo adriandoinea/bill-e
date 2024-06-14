@@ -1,5 +1,5 @@
 import { deleteBudget } from "@/app/actions/budgetsActions";
-import { Pencil, Trash, Plus } from "lucide-react";
+import { Pencil, Plus, Trash } from "lucide-react";
 import Link from "next/link";
 
 export function EditBudget({ id }: { id: string }) {
@@ -26,7 +26,7 @@ export function CreateBudget() {
   return (
     <Link
       href="budgets/create"
-      className="w-56 h-40 bg-paper border-2 rounded-md flex justify-center items-center gap-1 text-customAccent hover:text-customAccent-foreground hover:border-customAccent-foreground"
+      className="w-56 h-40 bg-accent dark:bg-background border-2 rounded-md flex justify-center items-center gap-1 text-customAccent hover:text-customAccent-foreground hover:border-customAccent-foreground"
     >
       <Plus size={16} />
       <>Add budget</>

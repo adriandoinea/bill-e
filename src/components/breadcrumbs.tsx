@@ -1,4 +1,4 @@
-import { clsx } from "clsx";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface Breadcrumb {
@@ -18,7 +18,7 @@ export default function Breadcrumbs({
         {breadcrumbs.map((breadcrumb, index) => (
           <li
             key={breadcrumb.href}
-            className={clsx(
+            className={cn(
               breadcrumb.active ? "text-customAccent" : "text-gray-500"
             )}
           >

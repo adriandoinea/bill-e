@@ -17,7 +17,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        paper: "hsl(var(--paper-color))",
         customAccent: {
           DEFAULT: "hsl(var(--custom-accent))",
           foreground: "hsl(var(--custom-accent-foreground))",
