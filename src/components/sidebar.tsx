@@ -22,7 +22,7 @@ export function Sidebar({ className }: { className?: string }) {
       <div className="flex flex-col gap-1">
         <Link
           className={cn(
-            "rounded-sm",
+            "rounded-md",
             "py-2",
             "px-10",
             "hover:bg-slate-200",
@@ -38,7 +38,7 @@ export function Sidebar({ className }: { className?: string }) {
         </Link>
         <Link
           className={cn(
-            "rounded-sm",
+            "rounded-md",
             "py-2",
             "px-10",
             "hover:bg-slate-200",
@@ -54,7 +54,7 @@ export function Sidebar({ className }: { className?: string }) {
         </Link>
         <Link
           className={cn(
-            "rounded-sm",
+            "rounded-md",
             "py-2",
             "px-10",
             "hover:bg-slate-200",
@@ -70,7 +70,7 @@ export function Sidebar({ className }: { className?: string }) {
         </Link>
         <Link
           className={cn(
-            "rounded-sm",
+            "rounded-md",
             "py-2",
             "px-10",
             "hover:bg-slate-200",
