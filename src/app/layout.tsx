@@ -22,9 +22,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system">
           <div className="h-screen flex">
             <Sidebar />
-            <div className="h-full w-full flex-grow p-6 md:overflow-y-auto md:p-12">
+            <main className="h-full w-full flex-grow p-6 md:overflow-y-auto md:p-12">
               {children}
-            </div>
+            </main>
           </div>
         </ThemeProvider>
       </body>

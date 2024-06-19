@@ -1,7 +1,7 @@
-import ExpensesOperations from "@/components/transactions-operations";
 import ExpensesTable from "@/components/expenses/table";
-import { Suspense } from "react";
 import { TransactionsTableSkeleton } from "@/components/skeletons";
+import ExpensesOperations from "@/components/transactions-operations";
+import { Suspense } from "react";
 
 export default async function Page({
   searchParams,

@@ -1,59 +1,59 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Chart as ChartJS, ArcElement, Tooltip, Chart } from "chart.js";
-import { useTheme } from "next-themes";
-import { Doughnut } from "react-chartjs-2";
+import { DefaultRawDatum, PieCustomLayerProps, ResponsivePie } from "@nivo/pie";
 
-interface DonutChartProps {
-  data: number[];
-  labels: string[];
-  backgroundColors: string[];
-  className?: string;
+interface Props {
+  data: {
+    id: string;
+    label?: string;
+    value: number;
+    color: string;
+  }[];
+  centerText?: string;
 }
-
-export default function DonutChart({
-  data,
-  labels,
-  backgroundColors,
-  className,
-}: DonutChartProps) {
-  const { resolvedTheme } = useTheme();
-  ChartJS.register(ArcElement, Tooltip);
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: "Budget amount",
-        data,
-        backgroundColor: backgroundColors,
-        borderColor: "transparent",
-      },
-    ],
+export default function DonutChart({ data, centerText }: Props) {
+  const CenteredMetric = ({
+    centerX,
+    centerY,
+  }: PieCustomLayerProps<DefaultRawDatum>) => {
+    return (
+      <text
+        className="font-semibold text-xl "
+        x={centerX}
+        y={centerY}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fill="hsl(var(--primary))"
+      >
+        {centerText}
+      </text>
+    );
   };
-
-  const textCenter = {
-    id: "textCenter",
-    beforeDatasetsDraw(chart: Chart<"doughnut", number[], unknown>) {
-      const { ctx, data } = chart;
-      const chartData = chart.getDatasetMeta(0).data[0];
-
-      const total = data.datasets[0].data.reduce((acc, current) => {
-        return (acc += current);
-      }, 0);
-
-      ctx.save();
-      ctx.fillStyle = resolvedTheme === "light" ? "black" : "white";
-      ctx.font = "normal 1.5rem sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(`$${total}`, chartData?.x, chartData?.y);
-    },
-  };
-
   return (
-    <div className={cn("flex items-center", className)}>
-      <Doughnut key={resolvedTheme} data={chartData} plugins={[textCenter]} />
+    <div className="w-64 h-full">
+      <ResponsivePie
+        data={data}
+        enableArcLabels={false}
+        enableArcLinkLabels={false}
+        innerRadius={0.5}
+        activeOuterRadiusOffset={8}
+        padAngle={0.7}
+        colors={{ datum: "data.color" }}
+        cornerRadius={3}
+        borderWidth={1}
+        borderColor={{
+          from: "color",
+          modifiers: [["darker", 0.2]],
+        }}
+        margin={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        layers={[
+          "arcs",
+          "arcLabels",
+          "arcLinkLabels",
+          "legends",
+          CenteredMetric,
+        ]}
+      />
     </div>
   );
 }

@@ -36,6 +36,9 @@
 
     --custom-accent: 224, 56%, 44%;
     --custom-accent-foreground: 225 34% 44%;
+
+    --hover-color: 214, 32%, 91%;
+    --hover-color-foreground: var(--custom-accent-foreground);
   }
 
   .dark {
@@ -69,6 +72,9 @@
 
     --custom-accent: 220 24% 68%;
     --custom-accent-foreground: 220 45% 75%;
+
+    --hover-color: var(--muted);
+    --hover-color-foreground: var(--custom-accent-foreground);
   }
 }
 

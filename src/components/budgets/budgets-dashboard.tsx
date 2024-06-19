@@ -11,21 +11,25 @@ export default async function BudgetsDashboard({
 }) {
   const budgets = await fetchFilteredBudgets(period);
 
-  const donutChartData = budgets.map((budget) => budget.initAmount / 100);
-  const backgroundColors = budgets.map((budget) => budget.color);
-  const labels = budgets.map((budget) => budget.category.name);
+  const donutChartData = budgets.map((budget) => ({
+    id: budget.category.name,
+    value: (budget.initAmount - budget.currentAmount) / 100,
+    color: budget.color,
+    label: budget.category.name,
+  }));
+  const totalSpent = budgets.reduce((acc, current) => {
+    const spent = current.initAmount - current.currentAmount;
+    return (acc += spent);
+  }, 0);
 
   return (
     <div className="flex flex-col gap-10">
       {budgets.length > 0 ? (
-        <div className="flex items-center gap-8 w-full">
+        <div className="flex items-center gap-8 w-full h-52">
           <DonutChart
-            className="h-52 w-52"
             data={donutChartData}
-            backgroundColors={backgroundColors}
-            labels={labels}
+            centerText={`$${totalSpent / 100}`}
           />
-
           <ProgressPanel budgets={budgets} className="w-full" />
         </div>
       ) : (
