@@ -30,7 +30,7 @@ export default function DonutChart({ data, centerText }: Props) {
     );
   };
   return (
-    <div className="w-64 h-full">
+    <div className="w-64 h-full text-black">
       <ResponsivePie
         data={data}
         enableArcLabels={false}
