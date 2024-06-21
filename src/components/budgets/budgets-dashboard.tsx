@@ -1,7 +1,7 @@
 import { fetchFilteredBudgets } from "@/lib/data/budgets";
+import PieChart from "../charts/pie-chart";
 import BudgetCard from "./budget-card";
 import { CreateBudget } from "./buttons";
-import DonutChart from "./donut-chart";
 import ProgressPanel from "./progress-panel";
 
 export default async function BudgetsDashboard({
@@ -26,7 +26,8 @@ export default async function BudgetsDashboard({
     <div className="flex flex-col gap-10">
       {budgets.length > 0 ? (
         <div className="flex items-center gap-8 w-full h-52">
-          <DonutChart
+          <PieChart
+            isDonut
             data={donutChartData}
             centerText={`$${totalSpent / 100}`}
           />

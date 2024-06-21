@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { DefaultRawDatum, PieCustomLayerProps, ResponsivePie } from "@nivo/pie";
 
 interface Props {
@@ -10,8 +11,25 @@ interface Props {
     color: string;
   }[];
   centerText?: string;
+  className?: string;
+  isDonut?: boolean;
 }
-export default function DonutChart({ data, centerText }: Props) {
+export default function PieChart({
+  data,
+  centerText,
+  className,
+  isDonut,
+}: Props) {
+  const config = isDonut
+    ? {
+        innerRadius: 0.5,
+        cornerRadius: 3,
+      }
+    : {
+        innerRadius: 0,
+        cornerRadius: 0,
+      };
+
   const CenteredMetric = ({
     centerX,
     centerY,
@@ -29,17 +47,17 @@ export default function DonutChart({ data, centerText }: Props) {
       </text>
     );
   };
+
   return (
-    <div className="w-64 h-full text-black">
+    <div className={cn("w-64 h-full text-black", className)}>
       <ResponsivePie
+        {...config}
         data={data}
         enableArcLabels={false}
         enableArcLinkLabels={false}
-        innerRadius={0.5}
+        colors={{ datum: "data.color" }}
         activeOuterRadiusOffset={8}
         padAngle={0.7}
-        colors={{ datum: "data.color" }}
-        cornerRadius={3}
         borderWidth={1}
         borderColor={{
           from: "color",
