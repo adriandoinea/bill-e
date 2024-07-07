@@ -1,7 +1,13 @@
 import prisma from "@/db";
 import { IExpense } from "@/types";
 import { revalidatePath } from "next/cache";
-import { validateFilter } from "../utils";
+import {
+  calculatePercentageChange,
+  getFilterData,
+  getLastSixMonths,
+  getTopSpentBudget,
+} from "../utils";
+import { fetchFilteredBudgets } from "./budgets";
 
 export async function fetchFilteredTransactions(
   query: string,
@@ -107,73 +113,100 @@ export const queryTransactions = async (
   });
 };
 
-export const sumOfExpenses = (expenses?: IExpense[]) => {
-  let s = 0;
-  if (expenses && expenses.length > 0) {
-    for (let expense of expenses) {
-      s += expense.amount;
-    }
-
-    return s;
-  }
-  return 0;
+export const sumOfExpenses = (expenses: IExpense[]) => {
+  return expenses.reduce((acc, current) => (acc += current.amount), 0);
 };
 
-export const getMonthlyTotal = async (type: "expense" | "income") => {
-  const currentMonth = (new Date().getMonth() + 1).toString();
-  const filterData = getFilterData({ filterBy: "month", date: currentMonth });
+export const getMonthlyTotal = async (
+  month: number,
+  type: "expense" | "income"
+) => {
+  const filterData = getFilterData({
+    filterBy: "month",
+    date: month.toString(),
+  });
   const transactions = await queryTransactions(type, filterData);
 
   const sumInCents = transactions.reduce((acc, current) => {
     return (acc += current.amount);
   }, 0);
-  return sumInCents;
+  return sumInCents / 100;
 };
 
-export const getFilterData = (filter: { filterBy?: string; date?: string }) => {
-  const currentYear = new Date().getFullYear();
-  const { filterBy, date } = validateFilter(filter);
+export const getMonthlyTotalByCategory = async (
+  month: number,
+  type: "expense" | "income"
+) => {
+  const filter = getFilterData({ filterBy: "month", date: month.toString() });
+  const lastMonthTransactions = await queryTransactions(type, filter);
+  const transactionsTotalPerCategs = lastMonthTransactions.reduce(
+    (acc: Record<string, number>, current) => {
+      if (acc[current.categoryName]) {
+        acc[current.categoryName] += current.amount;
+      } else acc[current.categoryName] = current.amount;
 
-  switch (filterBy) {
-    case "day":
-      const dateArray = date.split("-");
-      const day = dateArray[0];
-      const month = dateArray[1];
-      const year = dateArray[2];
-      return {
-        gte: new Date(`${year}-${month}-${day}T00:00:00.000`),
-        lte: new Date(`${year}-${month}-${day}T23:59:59.999`),
-      };
+      return acc;
+    },
+    {}
+  );
 
-    case "year":
-      return {
-        gte: new Date(`${date}-01-01T00:00:00.000`),
-        lte: new Date(`${date}-12-31T23:59:59.999`),
-      };
+  return transactionsTotalPerCategs;
+};
 
-    case "month":
-      if (date === "12") {
-        return {
-          gte: new Date(`${currentYear}-${date}-01T00:00:00.000`),
-          lte: new Date(`${currentYear + 1}-01-01T00:00:00.000`),
-        };
-      } else {
-        const newCurrentMonth =
-          parseInt(date) < 10 ? date.padStart(2, "0") : date;
-        const nextMonth =
-          parseInt(date) < 9
-            ? (parseInt(date) + 1).toString().padStart(2, "0")
-            : date;
-
-        const lte = new Date(`${currentYear}-${nextMonth}-01T00:00:00.000`);
-        lte.setMilliseconds(-1);
-        return {
-          gte: new Date(`${currentYear}-${newCurrentMonth}-01T00:00:00.000`),
-          lte,
-        };
-      }
-
-    default:
-      throw new Error(`'Filter by' can only be 'day', 'month' or 'year'`);
+export const getLineChartData = async (type: "expense" | "income") => {
+  const last6Months = getLastSixMonths();
+  const result = [];
+  for (const item of last6Months) {
+    const { monthNum, month } = item;
+    const total = await getMonthlyTotal(monthNum, type);
+    result.push({ x: month, y: total });
   }
+  return result;
+};
+
+export const getRecentExpenses = async () => {
+  return await prisma.expense.findMany({
+    orderBy: [{ date: "desc" }],
+    take: 10,
+    include: { category: true },
+  });
+};
+
+export const getInsights = async () => {
+  const currentMonth = new Date().getMonth() + 1;
+  const lastMonth = currentMonth - 1;
+  const lastMonthExpensesTotal = await getMonthlyTotal(lastMonth, "expense");
+  const currentMonthExpensesTotal = await getMonthlyTotal(
+    currentMonth,
+    "expense"
+  );
+  const expensePercentageChange = calculatePercentageChange(
+    lastMonthExpensesTotal,
+    currentMonthExpensesTotal
+  );
+  const lastMonthIncomeTotal = await getMonthlyTotal(lastMonth, "income");
+  const currentMonthIncomeTotal = await getMonthlyTotal(currentMonth, "income");
+  const incomePercentageChange = calculatePercentageChange(
+    lastMonthIncomeTotal,
+    currentMonthIncomeTotal
+  );
+
+  const budgets = await fetchFilteredBudgets("monthly");
+  const budgetsCompletionPercentages = budgets.map((budget) => ({
+    name: budget.categoryName,
+    spentPercent: Math.round(
+      ((budget.initAmount - budget.currentAmount) / budget.initAmount) * 100
+    ),
+    initAmount: budget.initAmount / 100,
+    currentAmount: budget.currentAmount / 100,
+  }));
+  const budgetDetails = getTopSpentBudget(budgetsCompletionPercentages);
+
+  return {
+    transactionsPercentageChange: {
+      expenses: expensePercentageChange,
+      income: incomePercentageChange,
+    },
+    budgetDetails,
+  };
 };

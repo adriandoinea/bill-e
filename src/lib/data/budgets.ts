@@ -63,22 +63,24 @@ export async function fetchFilteredBudgets(
     }
   }
 
-  const tempBudgets = [...budgets];
-
-  for (let budget of tempBudgets) {
+  for (let budget of budgets) {
     const expensesForBudget = expenses[budget.category.name];
-    const currentAmount = budget.initAmount - sumOfExpenses(expensesForBudget);
+    if (expensesForBudget?.length > 0) {
+      const currentAmount =
+        budget.initAmount - sumOfExpenses(expensesForBudget);
 
-    const { category, ...rest } = budget;
+      const { category, ...rest } = budget;
 
-    await prisma.budget.update({
-      where: { id: budget.id },
-      data: { ...rest, currentAmount },
-    });
+      await prisma.budget.update({
+        where: { id: budget.id },
+        data: { ...rest, currentAmount },
+      });
+    }
   }
 
-  return tempBudgets;
+  return budgets;
 }
+
 export async function fetchBudgetById(id: string) {
   try {
     const data = await prisma.budget.findUnique({

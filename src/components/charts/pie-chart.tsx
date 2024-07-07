@@ -7,20 +7,24 @@ interface Props {
   data: {
     id: string;
     label?: string;
+    color?: string;
     value: number;
-    color: string;
   }[];
+  arcLabel?: "id" | "value";
   centerText?: string;
   className?: string;
   isDonut?: boolean;
+  padAngle?: number;
 }
 export default function PieChart({
   data,
   centerText,
   className,
   isDonut,
+  arcLabel,
+  padAngle,
 }: Props) {
-  const config = isDonut
+  const donutConfig = isDonut
     ? {
         innerRadius: 0.5,
         cornerRadius: 3,
@@ -29,6 +33,7 @@ export default function PieChart({
         innerRadius: 0,
         cornerRadius: 0,
       };
+  const hasCustomColors = data.some((item) => item.color);
 
   const CenteredMetric = ({
     centerX,
@@ -49,20 +54,32 @@ export default function PieChart({
   };
 
   return (
-    <div className={cn("w-64 h-full text-black", className)}>
+    <div className={cn("w-64 h-64 text-black", className)}>
       <ResponsivePie
-        {...config}
+        {...donutConfig}
         data={data}
-        enableArcLabels={false}
+        sortByValue
+        valueFormat={(value) => `$${value}`}
         enableArcLinkLabels={false}
-        colors={{ datum: "data.color" }}
+        enableArcLabels={!!arcLabel || false}
+        arcLabelsTextColor="hsl(var(--secondary))"
+        arcLabel={arcLabel}
+        colors={
+          hasCustomColors
+            ? { datum: "data.color" }
+            : ["hsl(var(--custom-accent))"]
+        }
         activeOuterRadiusOffset={8}
-        padAngle={0.7}
+        padAngle={padAngle || 0.7}
         borderWidth={1}
-        borderColor={{
-          from: "color",
-          modifiers: [["darker", 0.2]],
-        }}
+        borderColor={
+          hasCustomColors
+            ? {
+                from: "color",
+                modifiers: [["darker", 0.2]],
+              }
+            : "hsl(var(--custom-accent-foreground))"
+        }
         margin={{ top: 10, bottom: 10, left: 10, right: 10 }}
         layers={[
           "arcs",
