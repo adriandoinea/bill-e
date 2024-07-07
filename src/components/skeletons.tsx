@@ -6,8 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "./ui/skeleton";
 import { CreateBudget } from "./budgets/buttons";
+import { Card } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 function TransactionsRowSkeleton({ type }: { type: "expense" | "income" }) {
   return (
@@ -86,4 +87,32 @@ export function BudgetsDashboardSkeleton() {
       </div>
     </>
   );
+}
+
+export function TransactionsTotalsSkeleton() {
+  return (
+    <div className="grid md:grid-cols-3 gap-6">
+      <Card className="h-[100px]">
+        <Skeleton className="h-full" />
+      </Card>
+      <Card className="h-[100px]">
+        <Skeleton className="h-full" />
+      </Card>
+      <Card className="h-[100px]">
+        <Skeleton className="h-full" />
+      </Card>
+    </div>
+  );
+}
+
+export function LineChartSkeleton() {
+  return <Skeleton className="h-64 md:col-span-2" />;
+}
+
+export function DashboardPieChartSkeleton() {
+  return <Skeleton className="size-64 rounded-full md:col-span-1" />;
+}
+
+export function DashboardBottomSectionSkeleton() {
+  return <Skeleton className="h-60 w-full" />;
 }

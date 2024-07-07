@@ -1,4 +1,3 @@
-import { IIncome } from "@/types";
 import {
   Table,
   TableBody,
@@ -7,9 +6,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { fetchFilteredTransactions } from "@/lib/data/transactions";
 import dayjs from "dayjs";
 import { DeleteIncome, EditIncome } from "./buttons";
-import { fetchFilteredTransactions } from "@/lib/data/transactions";
 
 interface IncomesTableProps {
   query: string;
@@ -48,7 +47,6 @@ export default async function IncomesTable({
       <TableBody>
         {incomes.map((income) => (
           <TableRow key={income.id}>
-            {/* @ts-ignore */}
             <TableCell>{income.category.name}</TableCell>
             <TableCell>{income.amount / 100}</TableCell>
             <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
