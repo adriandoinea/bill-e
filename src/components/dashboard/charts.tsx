@@ -33,20 +33,29 @@ export async function DashboardPieChart({
 }: {
   currentMonth: number;
 }) {
-  const monthlyTotalByCategory = await getMonthlyTotalByCategory(
+  const monthlyDetailsByCategory = await getMonthlyTotalByCategory(
     currentMonth,
     "expense"
   );
-  const pieChartData = Object.entries(monthlyTotalByCategory).map(
-    ([key, value]) => ({ id: key, value: value / 100 })
+  const pieChartData = Object.entries(monthlyDetailsByCategory).map(
+    ([category, details]) => ({
+      id: category,
+      value: details.amount / 100,
+      color: details.color,
+    })
+  );
+
+  const totalSpent = Object.values(monthlyDetailsByCategory).reduce(
+    (acc, current) => (acc += current.amount / 100),
+    0
   );
 
   return (
     <PieChart
       className="w-auto md:col-span-1"
+      isDonut
       data={pieChartData}
-      arcLabel="id"
-      padAngle={0.5}
+      centerText={`$${totalSpent}`}
     />
   );
 }

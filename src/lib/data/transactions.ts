@@ -140,10 +140,14 @@ export const getMonthlyTotalByCategory = async (
   const filter = getFilterData({ filterBy: "month", date: month.toString() });
   const lastMonthTransactions = await queryTransactions(type, filter);
   const transactionsTotalPerCategs = lastMonthTransactions.reduce(
-    (acc: Record<string, number>, current) => {
-      if (acc[current.categoryName]) {
-        acc[current.categoryName] += current.amount;
-      } else acc[current.categoryName] = current.amount;
+    (acc: Record<string, { amount: number; color: string }>, current) => {
+      if (acc[current.categoryName]?.amount) {
+        acc[current.categoryName].amount += current.amount;
+      } else
+        acc[current.categoryName] = {
+          amount: current.amount,
+          color: current.category.color,
+        };
 
       return acc;
     },
