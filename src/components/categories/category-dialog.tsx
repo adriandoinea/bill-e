@@ -31,6 +31,7 @@ export default function CategoryDialog({
   const initCategoriesState: ILocalCategory[] = useMemo(
     () =>
       categories.map((category, index) => ({
+        ...category,
         id: index,
         oldVal: category.name,
         newVal: category.name,
@@ -57,6 +58,7 @@ export default function CategoryDialog({
         isEditing: true,
         isAdded: true,
         emoji: "",
+        color: "",
       },
     ];
     setLocalCategories(newCategories);
@@ -101,6 +103,22 @@ export default function CategoryDialog({
           emoji,
           isUpdated: true,
           errors: { ...category.errors, emoji: null },
+        };
+      } else {
+        return category;
+      }
+    });
+    setLocalCategories(newCategories);
+  };
+
+  const handleColorSelection = (id: number, color?: string) => {
+    if (!color) return;
+    const newCategories = localCategories.map((category) => {
+      if (category.id === id) {
+        return {
+          ...category,
+          color,
+          isUpdated: true,
         };
       } else {
         return category;
@@ -242,7 +260,15 @@ export default function CategoryDialog({
                         hasError={hasEmojiError(category)}
                       />
                       <Input
-                        id={category.oldVal}
+                        type="color"
+                        className="w-10 p-2"
+                        disabled={!category.isEditing}
+                        value={category.color}
+                        onChange={(e) => {
+                          handleColorSelection(category.id, e.target.value);
+                        }}
+                      />
+                      <Input
                         className={cn(
                           "focus-visible:ring-0",
                           "focus-visible:border-primary",

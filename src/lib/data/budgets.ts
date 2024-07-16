@@ -85,7 +85,7 @@ export async function fetchBudgetById(id: string) {
   try {
     const data = await prisma.budget.findUnique({
       where: { id },
-      include: { category: { select: { name: true } } },
+      include: { category: true },
     });
 
     if (data) {

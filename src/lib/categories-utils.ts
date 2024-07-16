@@ -10,6 +10,7 @@ const FormSchema = z.object({
   emoji: z.string().refine((arg) => !!arg, {
     message: "Please select an emoji.",
   }),
+  color: z.optional(z.string()),
   isEditing: z.optional(z.boolean()),
   isAdded: z.optional(z.boolean()),
   isDeletedLocally: z.optional(z.boolean()),

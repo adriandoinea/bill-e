@@ -37,7 +37,6 @@ model Budget {
   initAmount    Int
   currentAmount Int
   resetPeriod   String
-  color         String
   categoryType  String
   categoryName  String
 }
@@ -46,6 +45,7 @@ model Category {
   type     String
   name     String
   emoji    String
+  color    String
   Expenses Expense[]
   Incomes  Income[]
   Budgets  Budget[]

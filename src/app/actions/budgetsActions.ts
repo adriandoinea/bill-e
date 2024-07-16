@@ -1,7 +1,6 @@
 "use server";
 
 import prisma from "@/db";
-import { generateRandomBgColor } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { v4 as uuid } from "uuid";
@@ -59,7 +58,6 @@ export async function createBudget(
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,
-        color: generateRandomBgColor(),
       },
     });
   } catch (error) {

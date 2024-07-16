@@ -21,13 +21,13 @@ export interface IBudget {
   initAmount: number;
   resetPeriod: "daily" | "weekly" | "monthly" | "yearly" | string;
   currentAmount: number;
-  color: string;
 }
 
 export interface ITransactionCategory {
   type: string;
   name: string;
   emoji: string;
+  color: string;
 }
 
 export interface ILocalCategory {
@@ -35,6 +35,7 @@ export interface ILocalCategory {
   oldVal: string;
   newVal: string;
   emoji: string;
+  color?: string;
   isEditing?: boolean;
   isAdded?: boolean;
   isDeletedLocally?: boolean;

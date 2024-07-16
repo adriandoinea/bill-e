@@ -14,7 +14,7 @@ export default async function BudgetsDashboard({
   const donutChartData = budgets.map((budget) => ({
     id: budget.category.name,
     value: (budget.initAmount - budget.currentAmount) / 100,
-    color: budget.color,
+    color: budget.category.color,
     label: budget.category.name,
   }));
   const totalSpent = budgets.reduce((acc, current) => {
@@ -46,7 +46,7 @@ export default async function BudgetsDashboard({
             category={budget.category}
             initialAmount={budget.initAmount / 100}
             currentAmount={budget.currentAmount / 100}
-            color={budget.color}
+            color={budget.category.color}
           />
         ))}
       </div>

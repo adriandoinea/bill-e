@@ -38,7 +38,7 @@ export default function EmojiPicker({
           disabled ? "Click on edit to enable Emoji picker" : "Emoji picker"
         }
         className={cn(
-          "w-10 h-10 rounded-md text-xl flex items-center justify-center bg-transparent hover:bg-accent focus:bg-accent cursor-pointer",
+          "size-10 rounded-md text-xl flex items-center justify-center bg-transparent hover:bg-accent focus:bg-accent cursor-pointer",
           {
             "cursor-not-allowed": disabled,
             "hover:bg-transparent": disabled,

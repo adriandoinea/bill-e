@@ -2,6 +2,7 @@
 
 import prisma from "@/db";
 import { validateCategoriesFields } from "@/lib/categories-utils";
+import { generateRandomColor } from "@/lib/utils";
 import { ILocalCategory } from "@/types";
 import { revalidatePath } from "next/cache";
 
@@ -32,6 +33,7 @@ export async function updateCategories(
           type,
           name: updatedCateg.newVal,
           emoji: updatedCateg.emoji,
+          color: updatedCateg.color,
         },
       });
     } catch (error) {
@@ -47,6 +49,7 @@ export async function updateCategories(
         type,
         name: categ.newVal,
         emoji: categ.emoji,
+        color: categ.color || generateRandomColor(),
       })),
     });
   } catch (error) {
