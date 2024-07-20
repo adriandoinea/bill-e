@@ -7,6 +7,9 @@ import { usePathname } from "next/navigation";
 import { DarkModeToggle } from "./dark-mode-toggler";
 
 export function Sidebar({ className }: { className?: string }) {
+  const defaultStyle = "rounded-md py-2 px-10 hover:bg-hoverColor";
+  const selectedStyle =
+    "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
   const path = usePathname();
 
   return (
@@ -21,36 +24,32 @@ export function Sidebar({ className }: { className?: string }) {
       </Link>
       <div className="flex flex-col gap-1">
         <Link
-          className={cn("rounded-md py-2 px-10 hover:bg-hoverColor", {
-            "bg-customAccent hover:bg-hoverColor-foreground text-secondary":
-              path === "/dashboard" || path === "/",
+          className={cn(defaultStyle, {
+            [selectedStyle]: path === "/dashboard" || path === "/",
           })}
           href="/"
         >
           Dashboard
         </Link>
         <Link
-          className={cn("rounded-md py-2 px-10 hover:bg-hoverColor", {
-            "bg-customAccent hover:bg-hoverColor-foreground text-secondary":
-              path === "/expenses",
+          className={cn(defaultStyle, {
+            [selectedStyle]: path === "/expenses",
           })}
           href="/expenses"
         >
           Expenses
         </Link>
         <Link
-          className={cn("rounded-md py-2 px-10 hover:bg-hoverColor", {
-            "bg-customAccent hover:bg-hoverColor-foreground text-secondary":
-              path === "/incomes",
+          className={cn(defaultStyle, {
+            [selectedStyle]: path === "/incomes",
           })}
           href="/incomes"
         >
           Incomes
         </Link>
         <Link
-          className={cn("rounded-md py-2 px-10 hover:bg-hoverColor", {
-            "bg-customAccent hover:bg-hoverColor-foreground text-secondary":
-              path === "/budgets",
+          className={cn(defaultStyle, {
+            [selectedStyle]: path === "/budgets",
           })}
           href="/budgets"
         >
