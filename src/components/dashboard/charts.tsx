@@ -2,16 +2,23 @@ import {
   getLineChartData,
   getMonthlyTotalByCategory,
 } from "@/lib/data/transactions";
+import { cn } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import LineChart from "../charts/line-chart";
 import PieChart from "../charts/pie-chart";
 
-export async function DashboardLineChart() {
+export async function DashboardLineChart({
+  className,
+}: {
+  className?: string;
+}) {
   const expensesLineChartData = await getLineChartData("expense");
   const incomeLineChartData = await getLineChartData("income");
 
   return (
     <LineChart
-      className="md:col-span-2"
+      className={cn("w-full", className)}
       data={[
         {
           id: "expenses",
@@ -30,8 +37,10 @@ export async function DashboardLineChart() {
 
 export async function DashboardPieChart({
   currentMonth,
+  className,
 }: {
   currentMonth: number;
+  className?: string;
 }) {
   const monthlyDetailsByCategory = await getMonthlyTotalByCategory(
     currentMonth,
@@ -45,14 +54,31 @@ export async function DashboardPieChart({
     })
   );
 
+  const hasExpenses = Object.values(monthlyDetailsByCategory).some(
+    (detail) => detail.amount > 0
+  );
   const totalSpent = Object.values(monthlyDetailsByCategory).reduce(
     (acc, current) => (acc += current.amount / 100),
     0
   );
 
+  if (!hasExpenses) {
+    return (
+      <div className="h-full flex items-center">
+        No expenses added yet.
+        <Link
+          className="text-customAccent rounded-full hover:bg-hoverColor p-1"
+          href={"/expenses/create"}
+        >
+          <Plus />
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <PieChart
-      className="w-auto md:col-span-1"
+      className={cn("size-full", className)}
       isDonut
       data={pieChartData}
       centerText={`$${totalSpent}`}

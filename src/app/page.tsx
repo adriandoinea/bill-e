@@ -26,7 +26,7 @@ export default async function Page() {
 
         <div className="grid md:grid-cols-3">
           <Suspense fallback={<LineChartSkeleton />}>
-            <DashboardLineChart />
+            <DashboardLineChart className="col-span-2" />
           </Suspense>
 
           <Suspense key={currentMonth} fallback={<DashboardPieChartSkeleton />}>

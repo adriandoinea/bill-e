@@ -110,7 +110,7 @@ export function LineChartSkeleton() {
 }
 
 export function DashboardPieChartSkeleton() {
-  return <Skeleton className="size-64 rounded-full md:col-span-1" />;
+  return <Skeleton className="size-64 rounded-full place-self-center" />;
 }
 
 export function DashboardBottomSectionSkeleton() {

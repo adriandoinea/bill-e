@@ -1,4 +1,5 @@
 import { fetchFilteredBudgets } from "@/lib/data/budgets";
+import { cn } from "@/lib/utils";
 import PieChart from "../charts/pie-chart";
 import BudgetCard from "./budget-card";
 import { CreateBudget } from "./buttons";
@@ -22,15 +23,25 @@ export default async function BudgetsDashboard({
     return (acc += spent);
   }, 0);
 
+  const hasBudgetsValues = budgets.some(
+    (budget) => budget.initAmount - budget.currentAmount > 0
+  );
+
   return (
     <div className="flex flex-col gap-10">
       {budgets.length > 0 ? (
-        <div className="flex items-center gap-8 w-full h-52">
-          <PieChart
-            isDonut
-            data={donutChartData}
-            centerText={`$${totalSpent / 100}`}
-          />
+        <div
+          className={cn("flex items-center gap-8 w-full h-52", {
+            "h-auto": !hasBudgetsValues,
+          })}
+        >
+          {hasBudgetsValues && (
+            <PieChart
+              isDonut
+              data={donutChartData}
+              centerText={`$${totalSpent / 100}`}
+            />
+          )}
           <ProgressPanel budgets={budgets} className="w-full" />
         </div>
       ) : (
