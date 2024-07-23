@@ -1,11 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import prisma from "@/db";
-import { redirect } from "next/navigation";
-import { z } from "zod";
-import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -59,6 +59,7 @@ export async function createExpense(formData: FormData) {
     };
   }
   revalidatePath("/expenses");
+  revalidatePath("/budgets");
   redirect("/expenses");
 }
 
@@ -100,6 +101,7 @@ export async function editExpense(id: string, formData: FormData) {
   }
 
   revalidatePath("/expenses");
+  revalidatePath("/budgets");
   redirect("/expenses");
 }
 
