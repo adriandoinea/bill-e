@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider attribute="class" defaultTheme="system">
-          <div className="h-screen flex">
+          <div className="h-screen flex flex-col text-sm sm:flex-row sm:text-base">
             <Sidebar />
             <main className="h-full w-full flex-grow p-6 md:overflow-y-auto md:p-12">
               {children}

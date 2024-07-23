@@ -1,62 +1,122 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { FileBarChart } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BadgeDollarSign,
+  CreditCard,
+  FileBarChart,
+  LayoutDashboard,
+  PiggyBank,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { DarkModeToggle } from "./dark-mode-toggler";
+import { Button } from "./ui/button";
 
 export function Sidebar({ className }: { className?: string }) {
-  const defaultStyle = "rounded-md py-2 px-10 hover:bg-hoverColor";
-  const selectedStyle =
+  const defaultLinkStyle =
+    "rounded-md py-2 px-3 md:px-8 hover:bg-hoverColor flex items-center gap-1";
+  const selectedLinkStyle =
     "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
+  const collapsedStyle = "p-3 md:p-3";
   const path = usePathname();
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const handleToggleCollapsing = () => setIsCollapsed(!isCollapsed);
 
   return (
     <div
       className={cn(
-        `w-52 bg-accent dark:bg-background flex flex-col justify-between items-center px-5 py-10 border-r border-solid border-border`,
-        className
+        `w-full flex flex-row items-center bg-accent dark:bg-background p-2 sm:py-10 border-border border-solid border-b sm:border-r sm:border-b-0 sm:w-52 sm:h-full sm:flex-col justify-between md:px-5`,
+        className,
+        { "sm:w-auto": isCollapsed }
       )}
     >
       <Link href="/">
-        <FileBarChart size="50px" />
+        <FileBarChart className="size-8 sm:size-12" />
       </Link>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-row gap-1 sm:flex-col">
         <Link
-          className={cn(defaultStyle, {
-            [selectedStyle]: path === "/dashboard" || path === "/",
+          className={cn(defaultLinkStyle, {
+            [selectedLinkStyle]: path === "/dashboard" || path === "/",
+            [collapsedStyle]: isCollapsed,
           })}
           href="/"
         >
-          Dashboard
+          <LayoutDashboard />
+          {!isCollapsed && (
+            <span
+              className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
+            >
+              Dashboard
+            </span>
+          )}
         </Link>
         <Link
-          className={cn(defaultStyle, {
-            [selectedStyle]: path === "/expenses",
+          className={cn(defaultLinkStyle, {
+            [selectedLinkStyle]: path === "/expenses",
+            [collapsedStyle]: isCollapsed,
           })}
           href="/expenses"
         >
-          Expenses
+          <BadgeDollarSign />
+          {!isCollapsed && (
+            <span
+              className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
+            >
+              Expenses
+            </span>
+          )}
         </Link>
         <Link
-          className={cn(defaultStyle, {
-            [selectedStyle]: path === "/incomes",
+          className={cn(defaultLinkStyle, {
+            [selectedLinkStyle]: path === "/incomes",
+            [collapsedStyle]: isCollapsed,
           })}
           href="/incomes"
         >
-          Incomes
+          <CreditCard />
+          {!isCollapsed && (
+            <span
+              className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
+            >
+              Incomes
+            </span>
+          )}
         </Link>
         <Link
-          className={cn(defaultStyle, {
-            [selectedStyle]: path === "/budgets",
+          className={cn(defaultLinkStyle, {
+            [selectedLinkStyle]: path === "/budgets",
+            [collapsedStyle]: isCollapsed,
           })}
           href="/budgets"
         >
-          Budgets
+          <PiggyBank />
+          {!isCollapsed && (
+            <span
+              className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
+            >
+              Budgets
+            </span>
+          )}
         </Link>
       </div>
-      <DarkModeToggle />
+      <div className="flex flex-col items-center gap-1">
+        <div className="flex justify-center items-center rounded-full hover:bg-hoverColor">
+          <Button
+            size="icon"
+            className="hidden sm:flex bg-transparent hover:bg-transparent text-primary"
+            onClick={handleToggleCollapsing}
+          >
+            {isCollapsed ? <ArrowRight /> : <ArrowLeft />}
+          </Button>
+        </div>
+        <DarkModeToggle />
+      </div>
     </div>
   );
 }
