@@ -37,7 +37,7 @@ export default function EditForm({
               </option>
               {categories.map((category) => (
                 <option key={category.name} value={category.name}>
-                  {category.name}
+                  {category.emoji} {category.name}
                 </option>
               ))}
             </select>
