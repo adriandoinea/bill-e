@@ -113,4 +113,5 @@ export async function deleteExpense(id: string) {
   });
 
   revalidatePath("/expenses");
+  revalidatePath("/budgets");
 }

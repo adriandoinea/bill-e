@@ -14,7 +14,7 @@ export default function EditForm({
   categories: ITransactionCategory[];
   budget: IBudget;
 }) {
-  const editBudgetWithId = editBudget.bind(null, budget.id, budget.resetPeriod);
+  const editBudgetWithId = editBudget.bind(null, budget.id);
   const [state, dispatch] = useFormState(editBudgetWithId, null);
   return (
     <form action={dispatch}>

@@ -73,7 +73,6 @@ export async function createBudget(
 
 export async function editBudget(
   id: string,
-  currentResetPeriod: string,
   prevState: { message: string } | null,
   formData: FormData
 ) {
@@ -94,10 +93,13 @@ export async function editBudget(
   const amountInCents = amount * 100;
 
   const alreadyExisting = await prisma.budget.findFirst({
-    where: { category: { name: category }, resetPeriod },
+    where: {
+      category: { name: category },
+      resetPeriod,
+    },
   });
 
-  if (alreadyExisting) {
+  if (alreadyExisting && alreadyExisting.id !== id) {
     return {
       message: `A budget with the same category and reset period already exists.`,
     };
