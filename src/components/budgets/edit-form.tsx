@@ -2,10 +2,20 @@
 
 import { editBudget } from "@/app/actions/budgetsActions";
 import { IBudget, ITransactionCategory } from "@/types";
-import { CircleDollarSign, List, RotateCcw } from "lucide-react";
+import { CircleDollarSign, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useFormState } from "react-dom";
+import CategorySelector from "../categories/category-selector";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export default function EditForm({
   categories,
@@ -21,76 +31,55 @@ export default function EditForm({
       <div>{state?.message}</div>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
-          <label htmlFor="category" className="mb-2 block text-sm font-medium">
+          <Label htmlFor="category" className="mb-2">
             Choose category
-          </label>
+          </Label>
           <div className="relative">
-            <select
-              required
-              className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="category"
-              name="category"
+            <CategorySelector
+              type="expense"
+              categories={categories}
               defaultValue={budget.category.name}
-            >
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categories.map((category) => (
-                <option key={category.name} value={category.name}>
-                  {category.emoji} {category.name}
-                </option>
-              ))}
-            </select>
-            <List className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            />
           </div>
         </div>
 
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+          <Label htmlFor="amount" className="mb-2">
             Choose an amount
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                required
-                className="block w-full rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                type="number"
-                name="amount"
-                id="amount"
-                step="0.01"
-                placeholder="Enter USD amount"
-                defaultValue={budget.initAmount}
-              />
-              <CircleDollarSign className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
+          </Label>
+          <div className="relative">
+            <Input
+              required
+              className="pl-10"
+              type="number"
+              name="amount"
+              id="amount"
+              step="0.01"
+              placeholder="Enter USD amount"
+              defaultValue={budget.initAmount}
+            />
+            <CircleDollarSign className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
 
         <div className="mb-4">
-          <label
-            htmlFor="resetPeriod"
-            className="mb-2 block text-sm font-medium"
-          >
+          <Label htmlFor="resetPeriod" className="mb-2">
             Choose reset period
-          </label>
-          <div className="relative">
-            <select
-              required
-              className="block w-full cursor-pointer rounded-md py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="resetPeriod"
-              name="resetPeriod"
-              defaultValue={budget.resetPeriod}
-            >
-              <option value="" disabled>
-                Select a period
-              </option>
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-            <RotateCcw className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
+          </Label>
+          <Select required name="resetPeriod" defaultValue={budget.resetPeriod}>
+            <SelectTrigger>
+              <div className="flex items-center gap-2">
+                <RotateCcw className="pointer-events-none h-[18px] w-[18px] text-gray-500" />
+                <SelectValue placeholder="Select a category" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="yearly">Yearly</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
