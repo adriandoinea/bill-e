@@ -18,11 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="h-svh">
         <ThemeProvider attribute="class" defaultTheme="system">
-          <div className="h-screen flex flex-col text-sm sm:flex-row sm:text-base">
+          <div className="h-full flex flex-col text-sm sm:flex-row sm:text-base">
             <Sidebar />
-            <main className="h-full w-full flex-grow p-6 md:overflow-y-auto md:p-12">
+            <main className="h-full w-full flex-grow p-6 overflow-y-auto sm:p-12 2xl:px-28">
               {children}
             </main>
           </div>

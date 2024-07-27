@@ -274,7 +274,7 @@ export default function CategoryDialog({
                           "focus-visible:border-primary",
                           {
                             "border-0": !category.isEditing,
-                            "border-red-400": hasInputError(category),
+                            "border-destructive": hasInputError(category),
                           }
                         )}
                         disabled={!category.isEditing}
@@ -299,7 +299,7 @@ export default function CategoryDialog({
                             <Check size={17} />
                           </Button>
                           <Button
-                            className="bg-transparent hover:bg-accent text-red-400"
+                            className="bg-transparent hover:bg-accent text-destructive"
                             size="icon"
                             onClick={() => handleCancelEditing(category.id)}
                           >
@@ -318,7 +318,7 @@ export default function CategoryDialog({
                             <Pencil size={17} />
                           </Button>
                           <Button
-                            className="bg-transparent hover:bg-accent text-red-400"
+                            className="bg-transparent hover:bg-accent text-destructive"
                             size="icon"
                             onClick={() => handleRemoveCategory(category.id)}
                           >
@@ -339,7 +339,7 @@ export default function CategoryDialog({
             </Button>
           </div>
 
-          <DialogFooter className="mt-8 flex justify-end">
+          <DialogFooter className="mt-8 flex justify-end gap-1">
             <Button
               className="bg-customAccent hover:bg-customAccent-foreground"
               onClick={handleCancelChanges}

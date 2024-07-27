@@ -1,7 +1,7 @@
+import IncomesTable from "@/components/incomes/table";
+import { TransactionsTableSkeleton } from "@/components/skeletons";
 import TransactionsOperations from "@/components/transactions-operations";
 import { Suspense } from "react";
-import { TransactionsTableSkeleton } from "@/components/skeletons";
-import IncomesTable from "@/components/incomes/table";
 
 export default async function Page({
   searchParams,
@@ -13,7 +13,7 @@ export default async function Page({
   const date = searchParams.date;
 
   return (
-    <div className="pl-10 pr-5 h-full flex flex-col gap-6">
+    <div className="h-full flex flex-col gap-6">
       <div className="text-2xl mb-3">Incomes</div>
       <TransactionsOperations type="income" />
       <Suspense

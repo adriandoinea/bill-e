@@ -79,7 +79,7 @@ export default function EditForm({
           <Label htmlFor="date">Choose a date</Label>
           <Input
             required
-            className="block w-full rounded-md py-2 pl-2 pr-2 text-sm outline-2 placeholder:text-gray-500"
+            className="block w-full"
             type="date"
             name="date"
             id="date"

@@ -45,7 +45,7 @@ export default function EmojiPicker({
             "opacity-70": disabled,
             border: !disabled,
             "border-input": !disabled && !hasError,
-            "border-red-400": hasError,
+            "border-destructive": hasError,
           }
         )}
       >

@@ -31,7 +31,7 @@ export default async function ExpensesTable({
   );
 
   return (
-    <Table>
+    <Table className="text-sm md:text-base">
       <TableHeader>
         <TableRow>
           <TableHead>Category</TableHead>

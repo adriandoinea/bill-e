@@ -54,7 +54,7 @@ export default function Form({
           <label htmlFor="date">Choose a date</label>
           <Input
             required
-            className="block w-full rounded-md py-2 pl-2 pr-2 text-sm outline-2 placeholder:text-gray-500"
+            className="w-full block"
             type="date"
             name="date"
             id="date"

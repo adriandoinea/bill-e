@@ -41,7 +41,7 @@ export default function BudgetCard({
         <div className="text-4xl font-extralight">|</div>
         <div className="flex flex-col items-center">
           <div>Left</div>
-          <div className={cn({ "text-red-500": currentAmount < 0 })}>
+          <div className={cn({ "text-destructive": currentAmount < 0 })}>
             ${currentAmount}
           </div>
         </div>

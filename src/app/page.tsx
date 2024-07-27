@@ -17,7 +17,7 @@ export default async function Page() {
   const currentMonth = new Date().getMonth() + 1;
 
   return (
-    <div className="pl-10 pr-5 h-full flex flex-col gap-6">
+    <div className="h-full flex flex-col gap-6">
       <div className="text-2xl mb-3">Dashboard</div>
       <div className="flex flex-col gap-6">
         <Suspense key={currentMonth} fallback={<TransactionsTotalsSkeleton />}>

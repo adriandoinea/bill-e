@@ -14,7 +14,7 @@ export function DeleteIncome({ id }: { id: string }) {
   const deleteIncomeWithId = deleteIncome.bind(null, id);
   return (
     <form className="flex" action={deleteIncomeWithId}>
-      <button className="text-red-400">
+      <button className="text-destructive">
         <span className="sr-only">Delete</span>
         <Trash />
       </button>

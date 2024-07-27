@@ -5,7 +5,7 @@ import Link from "next/link";
 export function EditExpense({ id }: { id: string }) {
   return (
     <Link className="text-customAccent" href={`expenses/${id}/edit`}>
-      <Pencil />
+      <Pencil className="size-5 sm:size-6" />
     </Link>
   );
 }
@@ -14,9 +14,9 @@ export function DeleteExpense({ id }: { id: string }) {
   const deleteExpenseWithId = deleteExpense.bind(null, id);
   return (
     <form className="flex" action={deleteExpenseWithId}>
-      <button className="text-red-400">
+      <button className="text-destructive">
         <span className="sr-only">Delete</span>
-        <Trash />
+        <Trash className="size-5 sm:size-6" />
       </button>
     </form>
   );

@@ -13,7 +13,7 @@ export default async function Page({
   const date = searchParams.date;
 
   return (
-    <div className="pl-10 pr-5 h-full flex flex-col gap-6">
+    <div className="h-full flex flex-col gap-6">
       <div className="text-2xl mb-3">Expenses</div>
       <ExpensesOperations type="expense" />
       <Suspense

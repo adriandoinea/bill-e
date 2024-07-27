@@ -72,7 +72,7 @@ export default function EditForm({
           <div className="mt-2 rounded-md">
             <Input
               required
-              className="block w-full rounded-md py-2 pl-2 pr-2 text-sm outline-2 placeholder:text-gray-500"
+              className="w-full block"
               type="date"
               name="date"
               id="date"
