@@ -1,5 +1,3 @@
-"use client";
-
 import CreateTransaction from "@/components/create-transaction";
 import Filter from "@/components/filter";
 import Searchbar from "@/components/searchbar";
