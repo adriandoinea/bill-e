@@ -9,18 +9,17 @@ export default async function Page({
   searchParams: { [key: string]: string | undefined };
 }) {
   const query = searchParams.query || "";
-  const filterBy = searchParams.filterBy;
-  const date = searchParams.date;
+  const filter = { from: searchParams.dateFrom, to: searchParams.dateTo };
 
   return (
     <div className="h-full flex flex-col gap-6">
       <div className="text-2xl mb-3">Incomes</div>
       <TransactionsOperations type="income" />
       <Suspense
-        key={`${query}_${filterBy}_${date}`}
+        key={`${query}_${filter.from}_${filter.to}`}
         fallback={<TransactionsTableSkeleton type="income" />}
       >
-        <IncomesTable query={query} filterBy={filterBy} date={date} />
+        <IncomesTable query={query} filter={filter} />
       </Suspense>
     </div>
   );

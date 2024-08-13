@@ -1,6 +1,6 @@
 import {
   getLineChartData,
-  getMonthlyTotalByCategory,
+  getMonthTotalByCategory,
 } from "@/lib/data/transactions";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
@@ -37,13 +37,16 @@ export async function DashboardLineChart({
 
 export async function DashboardPieChart({
   currentMonth,
+  currentYear,
   className,
 }: {
   currentMonth: number;
+  currentYear: number;
   className?: string;
 }) {
-  const monthlyDetailsByCategory = await getMonthlyTotalByCategory(
+  const monthlyDetailsByCategory = await getMonthTotalByCategory(
     currentMonth,
+    currentYear,
     "expense"
   );
   const pieChartData = Object.entries(monthlyDetailsByCategory).map(

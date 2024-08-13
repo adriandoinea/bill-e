@@ -14,14 +14,22 @@ import {
 import { Suspense } from "react";
 
 export default async function Page() {
-  const currentMonth = new Date().getMonth() + 1;
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
 
   return (
     <div className="h-full flex flex-col gap-6">
       <div className="text-2xl mb-3">Dashboard</div>
       <div className="flex flex-col gap-6">
-        <Suspense key={currentMonth} fallback={<TransactionsTotalsSkeleton />}>
-          <TransactionsTotals currentMonth={currentMonth} />
+        <Suspense
+          key={`${currentMonth}-${currentYear}`}
+          fallback={<TransactionsTotalsSkeleton />}
+        >
+          <TransactionsTotals
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+          />
         </Suspense>
 
         <div className="grid md:grid-cols-3">
@@ -29,8 +37,14 @@ export default async function Page() {
             <DashboardLineChart className="col-span-2" />
           </Suspense>
 
-          <Suspense key={currentMonth} fallback={<DashboardPieChartSkeleton />}>
-            <DashboardPieChart currentMonth={currentMonth} />
+          <Suspense
+            key={`${currentMonth}-${currentYear}`}
+            fallback={<DashboardPieChartSkeleton />}
+          >
+            <DashboardPieChart
+              currentMonth={currentMonth}
+              currentYear={currentYear}
+            />
           </Suspense>
         </div>
 

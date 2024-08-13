@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
 import { twMerge } from "tailwind-merge";
 import { COLORS } from "./constants";
+import { FilterParams } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,86 +14,15 @@ export const sanitizeString = (id: string) => {
   return sanitized;
 };
 
-export const validateFilter = (filter: {
-  filterBy?: string;
-  date?: string;
-}) => {
-  const { filterBy, date } = filter;
-  const currentDate = dayjs();
-  const currentDay = currentDate.format("DD-MM-YYYY");
-  const currentMonth = currentDate.format("MM");
-  const currentYear = currentDate.format("YYYY");
+export const getFilterData = (filter: FilterParams) => {
+  const filterData = {
+    gte: convertStringToDate(filter.from),
+    lte: convertStringToDate(filter.to),
+  };
+  filterData.gte.setHours(0, 0, 0, 0);
+  filterData.lte.setHours(23, 59, 59, 999);
 
-  switch (filterBy) {
-    case "day":
-      if (date) {
-        return { filterBy, date };
-      }
-      return { filterBy, date: currentDay };
-
-    case "month":
-      if (date && parseInt(date) >= 1 && parseInt(date) <= 12) {
-        return { filterBy, date };
-      }
-      return { filterBy, date: currentMonth };
-
-    case "year":
-      if (date) {
-        return { filterBy, date: parseInt(date).toString() };
-      }
-      return { filterBy, date: currentYear };
-
-    default:
-      return { filterBy: "month", date: date || currentMonth };
-  }
-};
-
-export const getFilterData = (filter: { filterBy?: string; date?: string }) => {
-  const currentYear = new Date().getFullYear();
-  const { filterBy, date } = validateFilter(filter);
-
-  switch (filterBy) {
-    case "day":
-      const dateArray = date.split("-");
-      const day = dateArray[0];
-      const month = dateArray[1];
-      const year = dateArray[2];
-      return {
-        gte: new Date(`${year}-${month}-${day}T00:00:00.000`),
-        lte: new Date(`${year}-${month}-${day}T23:59:59.999`),
-      };
-
-    case "year":
-      return {
-        gte: new Date(`${date}-01-01T00:00:00.000`),
-        lte: new Date(`${date}-12-31T23:59:59.999`),
-      };
-
-    case "month":
-      if (date === "12") {
-        return {
-          gte: new Date(`${currentYear}-${date}-01T00:00:00.000`),
-          lte: new Date(`${currentYear + 1}-01-01T00:00:00.000`),
-        };
-      } else {
-        const newCurrentMonth =
-          parseInt(date) < 10 ? date.padStart(2, "0") : date;
-        const nextMonth =
-          parseInt(date) < 9
-            ? (parseInt(date) + 1).toString().padStart(2, "0")
-            : date;
-
-        const lte = new Date(`${currentYear}-${nextMonth}-01T00:00:00.000`);
-        lte.setMilliseconds(-1);
-        return {
-          gte: new Date(`${currentYear}-${newCurrentMonth}-01T00:00:00.000`),
-          lte,
-        };
-      }
-
-    default:
-      throw new Error(`'Filter by' can only be 'day', 'month' or 'year'`);
-  }
+  return filterData;
 };
 
 export const generateRandomColor = () => {
@@ -143,4 +73,15 @@ export const getTopSpentBudget = (
   }
 
   return maxItem;
+};
+
+export const convertDateToString = (date?: Date) => {
+  return dayjs(date).format("DD-MM-YYYY");
+};
+
+export const convertStringToDate = (dateStr?: string | null) => {
+  // This fn needs a format of DD-MM-YYYY
+  if (!dateStr) return new Date();
+  const [day, month, year] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
 };

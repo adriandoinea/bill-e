@@ -7,28 +7,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { fetchFilteredTransactions } from "@/lib/data/transactions";
+import { FilterParams } from "@/types";
 import dayjs from "dayjs";
 import { DeleteExpense, EditExpense } from "./buttons";
 
 interface ExpensesTableProps {
   query: string;
-  filterBy?: string;
-  date?: string;
+  filter: FilterParams;
 }
 
 export default async function ExpensesTable({
   query,
-  date,
-  filterBy,
+  filter,
 }: ExpensesTableProps) {
-  const expenses = await fetchFilteredTransactions(
-    query,
-    {
-      filterBy,
-      date,
-    },
-    "expense"
-  );
+  const expenses = await fetchFilteredTransactions(query, filter, "expense");
 
   return (
     <Table className="text-sm md:text-base">
@@ -46,7 +38,7 @@ export default async function ExpensesTable({
       </TableHeader>
 
       <TableBody>
-        {expenses.map((expense) => (
+        {expenses?.map((expense) => (
           <TableRow key={expense.id}>
             <TableCell>
               {expense.category.emoji} {expense.category.name}

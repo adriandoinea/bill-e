@@ -1,5 +1,5 @@
 import prisma from "@/db";
-import { IExpense } from "@/types";
+import { FilterParams, IExpense } from "@/types";
 import { revalidatePath } from "next/cache";
 import {
   calculatePercentageChange,
@@ -8,23 +8,24 @@ import {
   getTopSpentBudget,
 } from "../utils";
 import { fetchFilteredBudgets } from "./budgets";
+import dayjs from "dayjs";
 
-export async function fetchFilteredTransactions(
+export const fetchFilteredTransactions = async (
   query: string,
-  filter: { filterBy?: string; date?: string },
+  filter: FilterParams,
   type: "expense" | "income"
-) {
+) => {
   const filterData = getFilterData(filter);
+
   try {
     const transactions = await queryTransactions(type, filterData, query);
-
     revalidatePath(`/${type}s`);
     return transactions;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch expenses.");
   }
-}
+};
 
 export async function fetchTransactionById(
   id: string,
@@ -117,29 +118,43 @@ export const sumOfExpenses = (expenses: IExpense[]) => {
   return expenses.reduce((acc, current) => (acc += current.amount), 0);
 };
 
-export const getMonthlyTotal = async (
+export const getMonthTotal = async (
   month: number,
+  year: number,
   type: "expense" | "income"
 ) => {
+  const formattedMonth = month.toString().padStart(2, "0");
+  const lastDayOfTheMonth = dayjs(`${year}-${formattedMonth}-01`)
+    .endOf("month")
+    .date();
   const filterData = getFilterData({
-    filterBy: "month",
-    date: month.toString(),
+    from: `01-${formattedMonth}-${year}`,
+    to: `${lastDayOfTheMonth}-${formattedMonth}-${year}`,
   });
-  const transactions = await queryTransactions(type, filterData);
 
+  const transactions = await queryTransactions(type, filterData);
   const sumInCents = transactions.reduce((acc, current) => {
     return (acc += current.amount);
   }, 0);
   return sumInCents / 100;
 };
 
-export const getMonthlyTotalByCategory = async (
+export const getMonthTotalByCategory = async (
   month: number,
+  year: number,
   type: "expense" | "income"
 ) => {
-  const filter = getFilterData({ filterBy: "month", date: month.toString() });
-  const lastMonthTransactions = await queryTransactions(type, filter);
-  const transactionsTotalPerCategs = lastMonthTransactions.reduce(
+  const formattedMonth = month.toString().padStart(2, "0");
+  const lastDayOfTheMonth = dayjs(`${year}-${formattedMonth}-01`)
+    .endOf("month")
+    .date();
+  const filterData = getFilterData({
+    from: `01-${formattedMonth}-${year}`,
+    to: `${lastDayOfTheMonth}-${formattedMonth}-${year}`,
+  });
+  const currentMonthTransactions = await queryTransactions(type, filterData);
+
+  const transactionsTotalPerCategs = currentMonthTransactions.reduce(
     (acc: Record<string, { amount: number; color: string }>, current) => {
       if (acc[current.categoryName]?.amount) {
         acc[current.categoryName].amount += current.amount;
@@ -161,10 +176,11 @@ export const getLineChartData = async (type: "expense" | "income") => {
   const last6Months = getLastSixMonths();
   const result = [];
   for (const item of last6Months) {
-    const { monthNum, month } = item;
-    const total = await getMonthlyTotal(monthNum, type);
+    const { monthNum, month, year } = item;
+    const total = await getMonthTotal(monthNum, year, type);
     result.push({ x: month, y: total });
   }
+
   return result;
 };
 
@@ -177,19 +193,37 @@ export const getRecentExpenses = async () => {
 };
 
 export const getInsights = async () => {
-  const currentMonth = new Date().getMonth() + 1;
-  const lastMonth = currentMonth - 1;
-  const lastMonthExpensesTotal = await getMonthlyTotal(lastMonth, "expense");
-  const currentMonthExpensesTotal = await getMonthlyTotal(
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
+  const lastMonth = currentMonth > 1 ? currentMonth - 1 : 12;
+  const yearForLastMonth = currentMonth > 1 ? currentYear : currentYear - 1;
+
+  const lastMonthExpensesTotal = await getMonthTotal(
+    lastMonth,
+    yearForLastMonth,
+    "expense"
+  );
+  const currentMonthExpensesTotal = await getMonthTotal(
     currentMonth,
+    currentYear,
     "expense"
   );
   const expensePercentageChange = calculatePercentageChange(
     lastMonthExpensesTotal,
     currentMonthExpensesTotal
   );
-  const lastMonthIncomeTotal = await getMonthlyTotal(lastMonth, "income");
-  const currentMonthIncomeTotal = await getMonthlyTotal(currentMonth, "income");
+
+  const lastMonthIncomeTotal = await getMonthTotal(
+    lastMonth,
+    yearForLastMonth,
+    "income"
+  );
+  const currentMonthIncomeTotal = await getMonthTotal(
+    currentMonth,
+    currentYear,
+    "income"
+  );
   const incomePercentageChange = calculatePercentageChange(
     lastMonthIncomeTotal,
     currentMonthIncomeTotal

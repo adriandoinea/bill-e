@@ -1,16 +1,15 @@
 import prisma from "@/db";
 import dayjs from "dayjs";
-import weekOfYear from "dayjs/plugin/weekOfYear";
 import { revalidatePath } from "next/cache";
 import { queryTransactions, sumOfExpenses } from "./transactions";
 
-dayjs.extend(weekOfYear);
 export async function fetchFilteredBudgets(
   resetPeriod?: "daily" | "weekly" | "monthly" | "yearly" | string
 ) {
-  const currentDay = new Date().getDate();
-  const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0");
-  const currentYear = new Date().getFullYear();
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const currentYear = currentDate.getFullYear();
   const lastDayOfTheMonth = dayjs().endOf("month").date();
 
   //resetPeriod = "monthly" || !resetPeriod

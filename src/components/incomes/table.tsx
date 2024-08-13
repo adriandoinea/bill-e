@@ -9,26 +9,18 @@ import {
 import { fetchFilteredTransactions } from "@/lib/data/transactions";
 import dayjs from "dayjs";
 import { DeleteIncome, EditIncome } from "./buttons";
+import { FilterParams } from "@/types";
 
 interface IncomesTableProps {
   query: string;
-  filterBy?: string;
-  date?: string;
+  filter: FilterParams;
 }
 
 export default async function IncomesTable({
   query,
-  date,
-  filterBy,
+  filter,
 }: IncomesTableProps) {
-  const incomes = await fetchFilteredTransactions(
-    query,
-    {
-      filterBy,
-      date,
-    },
-    "income"
-  );
+  const incomes = await fetchFilteredTransactions(query, filter, "income");
 
   return (
     <Table>

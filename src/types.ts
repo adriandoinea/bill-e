@@ -45,3 +45,5 @@ export interface ILocalCategory {
     newVal?: string | null;
   };
 }
+
+export type FilterParams = { from?: string; to?: string };

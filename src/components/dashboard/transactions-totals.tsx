@@ -1,12 +1,20 @@
-import { getMonthlyTotal } from "@/lib/data/transactions";
+import { getMonthTotal } from "@/lib/data/transactions";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 interface Props {
   currentMonth: number;
+  currentYear: number;
 }
-export default async function TransactionsTotals({ currentMonth }: Props) {
-  const totalExpenses = await getMonthlyTotal(currentMonth, "expense");
-  const totalIncome = await getMonthlyTotal(currentMonth, "income");
+export default async function TransactionsTotals({
+  currentMonth,
+  currentYear,
+}: Props) {
+  const totalExpenses = await getMonthTotal(
+    currentMonth,
+    currentYear,
+    "expense"
+  );
+  const totalIncome = await getMonthTotal(currentMonth, currentYear, "income");
   const netBalance = totalIncome - totalExpenses;
 
   return (
