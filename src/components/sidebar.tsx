@@ -12,9 +12,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DarkModeToggle } from "./dark-mode-toggler";
 import { Button } from "./ui/button";
+
+const getLocalStorageState = () => {
+  const savedState = localStorage.getItem("bille-sidebar-isCollapsed");
+  if (!savedState) return false;
+  return JSON.parse(savedState);
+};
 
 export function Sidebar({ className }: { className?: string }) {
   const defaultLinkStyle =
@@ -24,9 +30,16 @@ export function Sidebar({ className }: { className?: string }) {
   const collapsedStyle = "p-3 md:p-3";
   const path = usePathname();
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(getLocalStorageState);
 
   const handleToggleCollapsing = () => setIsCollapsed(!isCollapsed);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "bille-sidebar-isCollapsed",
+      JSON.stringify(isCollapsed)
+    );
+  }, [isCollapsed]);
 
   return (
     <div
