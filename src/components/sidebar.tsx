@@ -22,31 +22,34 @@ const getLocalStorageState = () => {
   return JSON.parse(savedState);
 };
 
+const DEFAULT_LINK_STYLE =
+  "rounded-md p-3 md:px-8 hover:bg-hoverColor flex items-center gap-1 sm:transition-all sm:duration-200 sm:ease-in-out";
+const SELECTED_LINK_STYLE =
+  "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
+const COLLAPSED_LINK_STYLE = "md:p-3";
+
 export function Sidebar({ className }: { className?: string }) {
-  const defaultLinkStyle =
-    "rounded-md py-2 px-3 md:px-8 hover:bg-hoverColor flex items-center gap-1";
-  const selectedLinkStyle =
-    "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
-  const collapsedStyle = "p-3 md:p-3";
   const path = usePathname();
 
-  const [isCollapsed, setIsCollapsed] = useState(getLocalStorageState);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
-  const handleToggleCollapsing = () => setIsCollapsed(!isCollapsed);
+  const handleToggleCollapsing = () => {
+    const newVal = !isCollapsed;
+    setIsCollapsed(newVal);
+    localStorage.setItem("bille-sidebar-isCollapsed", JSON.stringify(newVal));
+  };
 
   useEffect(() => {
-    localStorage.setItem(
-      "bille-sidebar-isCollapsed",
-      JSON.stringify(isCollapsed)
-    );
-  }, [isCollapsed]);
+    const savedState = getLocalStorageState();
+    setIsCollapsed(savedState);
+  }, []);
 
   return (
-    <div
+    <nav
       className={cn(
-        `w-full flex flex-row items-center bg-accent dark:bg-background p-2 sm:py-10 border-border border-solid border-b sm:border-r sm:border-b-0 sm:w-52 sm:h-full sm:flex-col justify-between md:px-5`,
-        className,
-        { "sm:w-auto": isCollapsed }
+        `w-full flex flex-row items-center bg-accent dark:bg-background p-2 sm:py-10 border-border border-solid border-b sm:border-r sm:border-b-0 sm:h-full sm:flex-col justify-between sm:transition-all sm:duration-200 sm:ease-in-out`,
+        { "sm:w-24": isCollapsed, "sm:w-52": !isCollapsed },
+        className
       )}
     >
       <Link href="/">
@@ -54,9 +57,9 @@ export function Sidebar({ className }: { className?: string }) {
       </Link>
       <div className="flex flex-row gap-1 sm:flex-col">
         <Link
-          className={cn(defaultLinkStyle, {
-            [selectedLinkStyle]: path === "/dashboard" || path === "/",
-            [collapsedStyle]: isCollapsed,
+          className={cn(DEFAULT_LINK_STYLE, {
+            [SELECTED_LINK_STYLE]: path === "/dashboard" || path === "/",
+            [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/"
         >
@@ -70,9 +73,9 @@ export function Sidebar({ className }: { className?: string }) {
           )}
         </Link>
         <Link
-          className={cn(defaultLinkStyle, {
-            [selectedLinkStyle]: path === "/expenses",
-            [collapsedStyle]: isCollapsed,
+          className={cn(DEFAULT_LINK_STYLE, {
+            [SELECTED_LINK_STYLE]: path === "/expenses",
+            [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/expenses"
         >
@@ -86,9 +89,9 @@ export function Sidebar({ className }: { className?: string }) {
           )}
         </Link>
         <Link
-          className={cn(defaultLinkStyle, {
-            [selectedLinkStyle]: path === "/incomes",
-            [collapsedStyle]: isCollapsed,
+          className={cn(DEFAULT_LINK_STYLE, {
+            [SELECTED_LINK_STYLE]: path === "/incomes",
+            [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/incomes"
         >
@@ -102,9 +105,9 @@ export function Sidebar({ className }: { className?: string }) {
           )}
         </Link>
         <Link
-          className={cn(defaultLinkStyle, {
-            [selectedLinkStyle]: path === "/budgets",
-            [collapsedStyle]: isCollapsed,
+          className={cn(DEFAULT_LINK_STYLE, {
+            [SELECTED_LINK_STYLE]: path === "/budgets",
+            [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/budgets"
         >
@@ -130,6 +133,6 @@ export function Sidebar({ className }: { className?: string }) {
         </div>
         <DarkModeToggle />
       </div>
-    </div>
+    </nav>
   );
 }
