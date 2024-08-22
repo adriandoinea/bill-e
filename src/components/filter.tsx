@@ -12,6 +12,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { DateRange } from "react-day-picker";
 import { Button } from "./ui/button";
+import dayjs from "dayjs";
 
 export default function Filter({
   className,
@@ -24,16 +25,23 @@ export default function Filter({
     [searchParams]
   );
 
-  const strFrom = params.get("dateFrom") || convertDateToString();
-  const strTo = params.get("dateTo");
+  const strFrom = useMemo(() => {
+    const firstDayOfTheMonth = dayjs().startOf("month").toDate();
+    const paramFrom = params.get("dateFrom");
+    if (paramFrom) {
+      return paramFrom;
+    }
+    return convertDateToString(firstDayOfTheMonth);
+  }, [params]);
 
-  const dateFrom = convertStringToDate(strFrom);
-  const dateTo = convertStringToDate(strTo);
-
-  const selected = {
-    from: dateFrom,
-    to: dateTo,
-  };
+  const strTo = useMemo(() => {
+    const lastDayOfTheMonth = dayjs().endOf("month").toDate();
+    const paramTo = params.get("dateTo");
+    if (paramTo !== null) {
+      return paramTo;
+    }
+    return convertDateToString(lastDayOfTheMonth);
+  }, [params]);
 
   const handleDateChange = (range?: DateRange) => {
     const formattedFrom = convertDateToString(range?.from);
@@ -45,11 +53,21 @@ export default function Filter({
   };
 
   useEffect(() => {
+    const dateFrom = convertStringToDate(strFrom);
+    const dateTo = convertStringToDate(strTo);
+    params.set("dateFrom", strFrom);
     if (dateTo < dateFrom) {
       params.set("dateTo", strFrom);
-      router.replace(`${pathname}?${params.toString()}`);
+    } else {
+      params.set("dateTo", strTo);
     }
-  }, [dateFrom, dateTo, params, pathname, router, strFrom]);
+    router.replace(`${pathname}?${params.toString()}`);
+  }, [params, pathname, router, strFrom, strTo]);
+
+  const selected = {
+    from: convertStringToDate(strFrom),
+    to: convertStringToDate(strTo),
+  };
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -83,7 +101,7 @@ export default function Filter({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={dateFrom}
+            defaultMonth={selected.from}
             selected={selected}
             onSelect={handleDateChange}
             numberOfMonths={2}

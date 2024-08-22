@@ -16,6 +16,9 @@ export const fetchFilteredTransactions = async (
   type: "expense" | "income"
 ) => {
   const filterData = getFilterData(filter);
+  if (filterData.gte > filterData.lte) {
+    return;
+  }
 
   try {
     const transactions = await queryTransactions(type, filterData, query);
