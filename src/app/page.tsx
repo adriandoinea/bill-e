@@ -21,7 +21,7 @@ export default async function Page() {
   return (
     <div className="h-full flex flex-col gap-6">
       <div className="text-2xl mb-3">Dashboard</div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Suspense
           key={`${currentMonth}-${currentYear}`}
           fallback={<TransactionsTotalsSkeleton />}
@@ -32,7 +32,7 @@ export default async function Page() {
           />
         </Suspense>
 
-        <div className="grid md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-0">
           <Suspense fallback={<LineChartSkeleton />}>
             <DashboardLineChart className="col-span-2" />
           </Suspense>
@@ -48,7 +48,7 @@ export default async function Page() {
           </Suspense>
         </div>
 
-        <div className="max-h-60 flex gap-6">
+        <div className="max-h-60 flex gap-4 mb-2">
           <Suspense fallback={<DashboardBottomSectionSkeleton />}>
             <RecentExpenses />
           </Suspense>

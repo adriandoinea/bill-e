@@ -187,10 +187,10 @@ export const getLineChartData = async (type: "expense" | "income") => {
   return result;
 };
 
-export const getRecentExpenses = async () => {
+export const getRecentExpenses = async (take?: number) => {
   return await prisma.expense.findMany({
     orderBy: [{ date: "desc" }],
-    take: 10,
+    take: take || 10,
     include: { category: true },
   });
 };

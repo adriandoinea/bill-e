@@ -1,8 +1,9 @@
 import { getInsights } from "@/lib/data/transactions";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { cn } from "@/lib/utils";
 
-export default async function Insights() {
+export default async function Insights({ className }: { className?: string }) {
   const { transactionsPercentageChange, budgetDetails } = await getInsights();
 
   const getExpensesPercentChangeMessage = () => {
@@ -13,15 +14,17 @@ export default async function Insights() {
         <>
           You spent {percentageChange.toFixed(0)}% more this month compared to
           last month.
-          <ArrowUpIcon className="h-5 w-5 text-destructive" />
+          <ArrowUpIcon className="size-12 md:size-5 text-destructive" />
         </>
       );
     } else if (percentageChange < 0) {
       return (
         <>
-          You spent {Math.abs(percentageChange).toFixed(0)}% less this month
-          compared to last month.
-          <ArrowDownIcon className="h-5 w-5 text-green-500" />
+          <span>
+            You spent {Math.abs(percentageChange).toFixed(0)}% less this month
+            compared to last month.
+          </span>
+          <ArrowDownIcon className="size-12 md:size-5 text-green-500" />
         </>
       );
     } else return <>Your spending is the same as last month.</>;
@@ -33,17 +36,21 @@ export default async function Insights() {
     if (percentageChange > 0) {
       return (
         <>
-          Your income increased by {percentageChange.toFixed(0)}% this month
-          compared to last month.
-          <ArrowUpIcon className="h-5 w-5 text-green-500" />
+          <span>
+            Your income increased by {percentageChange.toFixed(0)}% this month
+            compared to last month.
+          </span>
+          <ArrowUpIcon className="size-12 md:size-5 text-green-500" />
         </>
       );
     } else if (percentageChange < 0) {
       return (
         <>
-          Your income decreased by {Math.abs(percentageChange).toFixed(0)}% this
-          month compared to last month.
-          <ArrowDownIcon className="h-5 w-5 text-destructive" />
+          <span>
+            Your income decreased by {Math.abs(percentageChange).toFixed(0)}%
+            this month compared to last month.
+          </span>
+          <ArrowDownIcon className="size-12 md:size-5 text-destructive" />
         </>
       );
     } else return <>Your income is the same as last month.</>;
@@ -61,21 +68,21 @@ export default async function Insights() {
     : null;
 
   return (
-    <Card className="h-full w-full overflow-hidden">
-      <CardHeader>
+    <Card className={cn("h-full w-full overflow-auto", className)}>
+      <CardHeader className="px-4 md:px-6">
         <CardTitle>Insights</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 md:px-6 text-sm md:text-base">
         <div className="grid gap-2">
-          <h4 className="text-md font-medium flex items-center justify-between">
+          <div className="font-medium flex items-center gap-1">
             {expensesPercentChangeMessage}
-          </h4>
-          <h4 className="text-md font-medium flex items-center justify-between">
+          </div>
+          <div className="font-medium flex items-center gap-1">
             {incomePercentChangeMessage}
-          </h4>
-          <h4 className="text-md font-medium flex items-center justify-between">
+          </div>
+          <div className="font-medium flex items-center gap-1">
             {budgetMessage}
-          </h4>
+          </div>
         </div>
       </CardContent>
     </Card>

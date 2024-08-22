@@ -8,21 +8,26 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { cn } from "@/lib/utils";
 
-export default async function RecentExpenses() {
+export default async function RecentExpenses({
+  className,
+}: {
+  className?: string;
+}) {
   const recentExpenses = await getRecentExpenses();
   return (
-    <Card className="h-full w-full overflow-hidden hover:overflow-auto">
-      <CardHeader>
+    <Card className={cn("h-full w-full overflow-auto", className)}>
+      <CardHeader className="px-4 md:px-6">
         <CardTitle>Recent Expenses</CardTitle>
         <CardDescription className="flex justify-between items-center">
-          <span>Hover to see the date</span>
+          <span className="hidden sm:inline">Hover to see the date</span>
           <Link href="/expenses">
             {recentExpenses.length > 0 ? "View all" : "Add"}
           </Link>
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-1">
+      <CardContent className="flex flex-col gap-1 px-4 md:px-6 text-sm md:text-base">
         {recentExpenses.length > 0 ? (
           recentExpenses.map((transaction) => (
             <div

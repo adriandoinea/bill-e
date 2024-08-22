@@ -18,7 +18,7 @@ export default async function TransactionsTotals({
   const netBalance = totalIncome - totalExpenses;
 
   return (
-    <div className="grid md:grid-cols-3 gap-6">
+    <div className="grid gap-2 md:grid-cols-3 md:gap-4">
       <Card>
         <CardHeader>
           <CardDescription>Total Expenses</CardDescription>
