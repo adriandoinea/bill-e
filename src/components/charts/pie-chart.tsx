@@ -41,7 +41,7 @@ export default function PieChart({
   }: PieCustomLayerProps<DefaultRawDatum>) => {
     return (
       <text
-        className="font-semibold text-xl "
+        className="font-semibold sm:text-xl"
         x={centerX}
         y={centerY}
         textAnchor="middle"

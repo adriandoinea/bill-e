@@ -28,7 +28,7 @@ export default async function BudgetsDashboard({
   );
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-2 md:gap-8">
       {budgets.length > 0 ? (
         <div
           className={cn("flex items-center gap-8 w-full h-52", {
@@ -48,7 +48,7 @@ export default async function BudgetsDashboard({
         <div className="font-medium">No {period} budgets added yet.</div>
       )}
 
-      <div className="flex flex-wrap gap-5">
+      <div className="justify-center flex flex-wrap gap-3 md:justify-normal">
         <CreateBudget />
         {budgets.map((budget) => (
           <BudgetCard
