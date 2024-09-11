@@ -9,10 +9,12 @@ import {
   FileBarChart,
   LayoutDashboard,
   PiggyBank,
+  SettingsIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { DarkModeToggle } from "./dark-mode-toggler";
 import { Button } from "./ui/button";
 
@@ -29,6 +31,7 @@ const SELECTED_LINK_STYLE =
 const COLLAPSED_LINK_STYLE = "md:p-3";
 
 export function Sidebar({ className }: { className?: string }) {
+  const { status } = useSession();
   const path = usePathname();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -43,6 +46,8 @@ export function Sidebar({ className }: { className?: string }) {
     const savedState = getLocalStorageState();
     setIsCollapsed(savedState);
   }, []);
+
+  if (status === "unauthenticated") return null;
 
   return (
     <nav
@@ -117,6 +122,22 @@ export function Sidebar({ className }: { className?: string }) {
               className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
             >
               Budgets
+            </span>
+          )}
+        </Link>
+        <Link
+          className={cn(DEFAULT_LINK_STYLE, {
+            [SELECTED_LINK_STYLE]: path === "/settings",
+            [COLLAPSED_LINK_STYLE]: isCollapsed,
+          })}
+          href="/settings"
+        >
+          <SettingsIcon />
+          {!isCollapsed && (
+            <span
+              className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
+            >
+              Settings
             </span>
           )}
         </Link>
