@@ -211,7 +211,16 @@ export const getLineChartData = async (type: "expense" | "income") => {
 };
 
 export const getRecentExpenses = async (take?: number) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   return await prisma.expense.findMany({
+    where: {
+      userId,
+    },
     orderBy: [{ date: "desc" }],
     take: take || 10,
     include: { category: true },
