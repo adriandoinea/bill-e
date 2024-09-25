@@ -9,6 +9,9 @@ export async function fetchFilteredBudgets(
 ) {
   const session = await auth();
   const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
 
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
