@@ -1,3 +1,5 @@
+"use client";
+
 import { updateCategories } from "@/app/actions/categoriesActions";
 import {
   Dialog,
@@ -15,9 +17,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import EmojiPicker from "../emoji-picker";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { useSession } from "next-auth/react";
 interface Props {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: Function;
   type: "income" | "expense";
   categories: ITransactionCategory[];
 }
@@ -28,6 +31,7 @@ export default function CategoryDialog({
   type,
   categories,
 }: Props) {
+  const { data: session } = useSession();
   const initCategoriesState: ILocalCategory[] = useMemo(
     () =>
       categories.map((category, index) => ({
@@ -231,7 +235,7 @@ export default function CategoryDialog({
   }, [isOpen, initCategoriesState]);
 
   return (
-    <Dialog modal open={isOpen} onOpenChange={onClose}>
+    <Dialog modal open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent
         className="sm:max-w-[425px]"
         onInteractOutside={(e) => e.preventDefault()}

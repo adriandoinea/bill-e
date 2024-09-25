@@ -3,7 +3,22 @@ import authConfig from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./db";
 
+// To be used only with server components/actions.
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  callbacks: {
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub,
+        },
+      };
+    },
+    async jwt({ token }) {
+      return token;
+    },
+  },
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
@@ -22,5 +37,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
+
   ...authConfig,
 });

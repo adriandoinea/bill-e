@@ -23,7 +23,7 @@ export default async function IncomesTable({
   const incomes = await fetchFilteredTransactions(query, filter, "income");
 
   return (
-    <Table>
+    <Table className="text-sm md:text-base">
       <TableHeader>
         <TableRow>
           <TableHead>Category</TableHead>
@@ -37,9 +37,11 @@ export default async function IncomesTable({
       </TableHeader>
 
       <TableBody>
-        {incomes.map((income) => (
+        {incomes?.map((income) => (
           <TableRow key={income.id}>
-            <TableCell>{income.category.name}</TableCell>
+            <TableCell>
+              {income.category.emoji} {income.category.name}
+            </TableCell>
             <TableCell>{income.amount / 100}</TableCell>
             <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
             <TableCell>{income.note}</TableCell>

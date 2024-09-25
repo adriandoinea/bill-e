@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/db";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
+import { auth } from "@/auth";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -21,6 +21,12 @@ const FormSchema = z.object({
 const CreateIncome = FormSchema.omit({ id: true });
 
 export async function createIncome(formData: FormData) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = CreateIncome.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -40,7 +46,6 @@ export async function createIncome(formData: FormData) {
   try {
     await prisma.income.create({
       data: {
-        id: uuid(),
         category: {
           connect: {
             type_name: { name: category, type: "income" },
@@ -49,6 +54,7 @@ export async function createIncome(formData: FormData) {
         amount: amountInCents,
         date,
         note,
+        User: { connect: { id: userId } },
       },
     });
   } catch (error) {
@@ -62,6 +68,12 @@ export async function createIncome(formData: FormData) {
 }
 
 export async function editIncome(id: string, formData: FormData) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = CreateIncome.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -82,7 +94,7 @@ export async function editIncome(id: string, formData: FormData) {
 
   try {
     await prisma.income.update({
-      where: { id },
+      where: { id, userId },
       data: {
         ...data,
         category: {
@@ -104,9 +116,16 @@ export async function editIncome(id: string, formData: FormData) {
 }
 
 export async function deleteIncome(id: string) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   await prisma.income.delete({
     where: {
       id,
+      userId,
     },
   });
 

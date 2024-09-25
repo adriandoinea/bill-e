@@ -1,10 +1,10 @@
 "use server";
 
+import { auth } from "@/auth";
 import prisma from "@/db";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -22,6 +22,12 @@ const FormSchema = z.object({
 const CreateExpense = FormSchema.omit({ id: true });
 
 export async function createExpense(formData: FormData) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = CreateExpense.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -42,7 +48,6 @@ export async function createExpense(formData: FormData) {
   try {
     await prisma.expense.create({
       data: {
-        id: uuid(),
         category: {
           connect: { type_name: { type: "expense", name: category } },
         },
@@ -50,6 +55,7 @@ export async function createExpense(formData: FormData) {
         date,
         location,
         note,
+        User: { connect: { id: userId } },
       },
     });
   } catch (error) {
@@ -64,6 +70,12 @@ export async function createExpense(formData: FormData) {
 }
 
 export async function editExpense(id: string, formData: FormData) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = CreateExpense.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -85,7 +97,7 @@ export async function editExpense(id: string, formData: FormData) {
 
   try {
     await prisma.expense.update({
-      where: { id },
+      where: { id, userId },
       data: {
         ...data,
         category: {
@@ -106,9 +118,16 @@ export async function editExpense(id: string, formData: FormData) {
 }
 
 export async function deleteExpense(id: string) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   await prisma.expense.delete({
     where: {
       id,
+      userId,
     },
   });
 

@@ -46,7 +46,9 @@ export default async function ExpensesTable({
             <TableCell>{expense.amount / 100}</TableCell>
             <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
             <TableCell>{expense.note}</TableCell>
-            <TableCell>{expense.location}</TableCell>
+            {"location" in expense && (
+              <TableCell>{expense.location as string}</TableCell>
+            )}
             <TableCell className="flex gap-3 items-center justify-end">
               <EditExpense id={expense.id} />
               <DeleteExpense id={expense.id} />

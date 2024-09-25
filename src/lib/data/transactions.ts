@@ -9,6 +9,7 @@ import {
 } from "../utils";
 import { fetchFilteredBudgets } from "./budgets";
 import dayjs from "dayjs";
+import { auth } from "@/auth";
 
 export const fetchFilteredTransactions = async (
   query: string,
@@ -57,7 +58,13 @@ export async function fetchTransactionById(
 }
 
 export async function fetchTransactionCategories(type: "expense" | "income") {
-  return prisma.category.findMany({ where: { type } });
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  return prisma.category.findMany({ where: { type, userId } });
 }
 
 export const queryTransactions = async (
@@ -66,12 +73,19 @@ export const queryTransactions = async (
   query?: string,
   categoryName?: string
 ) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   if (type === "expense") {
     return await prisma.expense.findMany({
       where: query
         ? {
             AND: [
               {
+                userId,
                 date: filterData,
                 category: { name: categoryName },
               },
@@ -85,7 +99,11 @@ export const queryTransactions = async (
               },
             ],
           }
-        : { date: filterData, category: { name: categoryName } },
+        : {
+            userId,
+            date: filterData,
+            category: { name: categoryName },
+          },
       include: { category: true },
       orderBy: { date: "desc" },
     });
@@ -96,6 +114,7 @@ export const queryTransactions = async (
       ? {
           AND: [
             {
+              userId,
               date: filterData,
             },
             {
@@ -111,7 +130,7 @@ export const queryTransactions = async (
             },
           ],
         }
-      : { date: filterData },
+      : { userId, date: filterData },
     include: { category: true },
     orderBy: { date: "desc" },
   });
@@ -135,7 +154,7 @@ export const getMonthTotal = async (
     to: `${lastDayOfTheMonth}-${formattedMonth}-${year}`,
   });
 
-  const transactions = await queryTransactions(type, filterData);
+  const transactions = await queryTransactions(type, filterData, "");
   const sumInCents = transactions.reduce((acc, current) => {
     return (acc += current.amount);
   }, 0);
@@ -155,7 +174,11 @@ export const getMonthTotalByCategory = async (
     from: `01-${formattedMonth}-${year}`,
     to: `${lastDayOfTheMonth}-${formattedMonth}-${year}`,
   });
-  const currentMonthTransactions = await queryTransactions(type, filterData);
+  const currentMonthTransactions = await queryTransactions(
+    type,
+    filterData,
+    ""
+  );
 
   const transactionsTotalPerCategs = currentMonthTransactions.reduce(
     (acc: Record<string, { amount: number; color: string }>, current) => {

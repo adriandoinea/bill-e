@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@/auth";
 import prisma from "@/db";
 import { validateCategoriesFields } from "@/lib/categories-utils";
 import { generateRandomColor } from "@/lib/utils";
@@ -10,6 +11,12 @@ export async function updateCategories(
   type: string,
   localCategories: ILocalCategory[]
 ) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = validateCategoriesFields(localCategories);
   if (!validatedFields.success) {
     return {
@@ -28,7 +35,10 @@ export async function updateCategories(
   for (const updatedCateg of updatedCategories) {
     try {
       await prisma.category.update({
-        where: { type_name: { type, name: updatedCateg.oldVal } },
+        where: {
+          type_name: { type, name: updatedCateg.oldVal },
+          userId,
+        },
         data: {
           type,
           name: updatedCateg.newVal,
@@ -50,6 +60,7 @@ export async function updateCategories(
         name: categ.newVal,
         emoji: categ.emoji,
         color: categ.color || generateRandomColor(),
+        userId,
       })),
     });
   } catch (error) {
@@ -61,6 +72,7 @@ export async function updateCategories(
   try {
     await prisma.category.deleteMany({
       where: {
+        userId,
         name: {
           in: deletedCategories.map((deletedCateg) => deletedCateg.oldVal),
         },

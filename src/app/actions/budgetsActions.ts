@@ -1,9 +1,9 @@
 "use server";
 
+import { auth } from "@/auth";
 import prisma from "@/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -22,6 +22,12 @@ export async function createBudget(
   prevState: { message: string } | null,
   formData: FormData
 ) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = CreateBudget.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -39,7 +45,7 @@ export async function createBudget(
   const amountInCents = amount * 100;
 
   const alreadyExisting = await prisma.budget.findFirst({
-    where: { category: { name: category }, resetPeriod },
+    where: { category: { name: category }, resetPeriod, userId },
   });
 
   if (alreadyExisting) {
@@ -51,13 +57,13 @@ export async function createBudget(
   try {
     await prisma.budget.create({
       data: {
-        id: uuid(),
         category: {
           connect: { type_name: { name: category, type: "expense" } },
         },
         initAmount: amountInCents,
         currentAmount: amountInCents,
         resetPeriod,
+        User: { connect: { id: userId } },
       },
     });
   } catch (error) {
@@ -76,6 +82,12 @@ export async function editBudget(
   prevState: { message: string } | null,
   formData: FormData
 ) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const validatedFields = CreateBudget.safeParse({
     category: formData.get("category"),
     amount: formData.get("amount"),
@@ -96,6 +108,7 @@ export async function editBudget(
     where: {
       category: { name: category },
       resetPeriod,
+      userId,
     },
   });
 
@@ -109,6 +122,7 @@ export async function editBudget(
     await prisma.budget.update({
       where: {
         id,
+        userId,
       },
       data: {
         category: {
@@ -131,8 +145,15 @@ export async function editBudget(
 }
 
 export async function deleteBudget(id: string) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   await prisma.budget.delete({
     where: {
+      userId,
       id,
     },
   });

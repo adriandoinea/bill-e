@@ -2,10 +2,14 @@ import prisma from "@/db";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 import { queryTransactions, sumOfExpenses } from "./transactions";
+import { auth } from "@/auth";
 
 export async function fetchFilteredBudgets(
   resetPeriod?: "daily" | "weekly" | "monthly" | "yearly" | string
 ) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -45,7 +49,7 @@ export async function fetchFilteredBudgets(
   }
 
   const budgets = await prisma.budget.findMany({
-    where: { resetPeriod: resetPeriod || "monthly" },
+    where: { resetPeriod: resetPeriod || "monthly", userId },
     include: { category: true },
   });
 
@@ -66,7 +70,7 @@ export async function fetchFilteredBudgets(
     const expensesForBudget = expenses[budget.category.name];
     if (!expensesForBudget && budget.currentAmount > 0) {
       await prisma.budget.update({
-        where: { id: budget.id },
+        where: { id: budget.id, userId },
         data: { currentAmount: budget.initAmount },
       });
     }
@@ -77,7 +81,7 @@ export async function fetchFilteredBudgets(
       const { category, ...rest } = budget;
 
       await prisma.budget.update({
-        where: { id: budget.id },
+        where: { id: budget.id, userId },
         data: { ...rest, currentAmount },
       });
     }
