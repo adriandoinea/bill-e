@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import Breadcrumbs from "@/components/breadcrumbs";
 import EditForm from "@/components/expenses/edit-form";
 import {
@@ -7,10 +8,11 @@ import {
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
+  const session = await auth();
   const categories = await fetchTransactionCategories("expense");
   const expense = await fetchTransactionById(params.id, "expense");
 
-  if (!expense) notFound();
+  if (!expense || expense.userId !== session?.user?.id) notFound();
 
   return (
     <>
