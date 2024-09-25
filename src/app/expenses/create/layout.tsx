@@ -1,3 +1,9 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Create Expense",
+};
+
 export default function CreateExpenseLayout({
   children,
 }: {

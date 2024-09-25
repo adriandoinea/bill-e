@@ -1,7 +1,12 @@
 import IncomesTable from "@/components/incomes/table";
 import { TransactionsTableSkeleton } from "@/components/skeletons";
 import TransactionsOperations from "@/components/transactions-operations";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Incomes",
+};
 
 export default async function Page({
   searchParams,

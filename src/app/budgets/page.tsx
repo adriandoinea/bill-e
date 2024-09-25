@@ -1,7 +1,12 @@
 import BudgetsDashboard from "@/components/budgets/budgets-dashboard";
 import Filter from "@/components/budgets/filter";
 import { BudgetsDashboardSkeleton } from "@/components/skeletons";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Budgets",
+};
 
 export default async function Page({
   searchParams,

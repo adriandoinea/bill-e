@@ -1,3 +1,9 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit Income",
+};
+
 export default function EditIncomeLayout({
   children,
 }: {
