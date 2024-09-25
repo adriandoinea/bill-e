@@ -17,7 +17,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import EmojiPicker from "../emoji-picker";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useSession } from "next-auth/react";
 interface Props {
   isOpen: boolean;
   onClose: Function;
@@ -31,7 +30,6 @@ export default function CategoryDialog({
   type,
   categories,
 }: Props) {
-  const { data: session } = useSession();
   const initCategoriesState: ILocalCategory[] = useMemo(
     () =>
       categories.map((category, index) => ({
@@ -277,7 +275,8 @@ export default function CategoryDialog({
                           "focus-visible:ring-0",
                           "focus-visible:border-primary",
                           {
-                            "border-0": !category.isEditing,
+                            "border-0":
+                              !category.isEditing && !hasInputError(category),
                             "border-destructive": hasInputError(category),
                           }
                         )}

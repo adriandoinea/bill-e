@@ -43,7 +43,7 @@ export default function EmojiPicker({
             "cursor-not-allowed": disabled,
             "hover:bg-transparent": disabled,
             "opacity-70": disabled,
-            border: !disabled,
+            border: !disabled || hasError,
             "border-input": !disabled && !hasError,
             "border-destructive": hasError,
           }

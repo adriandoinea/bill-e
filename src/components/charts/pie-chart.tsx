@@ -13,6 +13,7 @@ interface Props {
   arcLabel?: "id" | "value";
   centerText?: string;
   className?: string;
+  centerTextClassName?: string;
   isDonut?: boolean;
   padAngle?: number;
 }
@@ -20,6 +21,7 @@ export default function PieChart({
   data,
   centerText,
   className,
+  centerTextClassName,
   isDonut,
   arcLabel,
   padAngle,
@@ -41,7 +43,7 @@ export default function PieChart({
   }: PieCustomLayerProps<DefaultRawDatum>) => {
     return (
       <text
-        className="font-semibold sm:text-xl"
+        className={cn("font-semibold", centerTextClassName)}
         x={centerX}
         y={centerY}
         textAnchor="middle"

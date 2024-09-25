@@ -40,6 +40,7 @@ export default async function BudgetsDashboard({
               isDonut
               data={donutChartData}
               centerText={`$${totalSpent / 100}`}
+              centerTextClassName="text-base md:text-2xl"
             />
           )}
           <ProgressPanel budgets={budgets} className="w-full" />

@@ -81,8 +81,9 @@ export async function DashboardPieChart({
 
   return (
     <PieChart
-      className={cn("size-full", className)}
       isDonut
+      className={cn("size-full", className)}
+      centerTextClassName="text-2xl"
       data={pieChartData}
       centerText={`$${totalSpent}`}
     />
