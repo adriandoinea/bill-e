@@ -30,7 +30,7 @@ export default async function IncomesTable({ query, filter }: Props) {
         />
       ))}
 
-      <Table className="hidden md:block text-base">
+      <Table className="hidden md:table text-base">
         <TableHeader>
           <TableRow>
             <TableHead>Category</TableHead>

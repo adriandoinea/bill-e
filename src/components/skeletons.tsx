@@ -60,7 +60,7 @@ export function TransactionsTableSkeleton({
         <TransactionCardSkeleton key={index} className="md:hidden" />
       ))}
 
-      <Table>
+      <Table className="hidden md:table">
         <TableHeader>
           <TableRow>
             <TableHead>Category</TableHead>
