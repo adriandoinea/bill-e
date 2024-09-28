@@ -24,6 +24,14 @@ export default function LoginForm() {
     });
   };
 
+  const handleLoginForTesting = () => {
+    clientSideSignIn("credentials", {
+      email: "devtestacc010@gmail.com",
+      password: "aVeryStrongPassword",
+      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+    });
+  };
+
   return (
     <form
       action={formAction}
@@ -111,6 +119,15 @@ export default function LoginForm() {
             Sign up
           </Link>
         </div>
+
+        <Button
+          type="button"
+          variant="link"
+          className="mt-4 w-full text-sm text-muted-foreground hover:text-customAccent-foreground transition duration-300"
+          onClick={handleLoginForTesting}
+        >
+          Test the app without an account
+        </Button>
       </div>
     </form>
   );
