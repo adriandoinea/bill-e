@@ -58,7 +58,9 @@ export async function createBudget(
     await prisma.budget.create({
       data: {
         category: {
-          connect: { type_name: { name: category, type: "expense" } },
+          connect: {
+            type_name_userId: { name: category, type: "expense", userId },
+          },
         },
         initAmount: amountInCents,
         currentAmount: amountInCents,
@@ -126,7 +128,9 @@ export async function editBudget(
       },
       data: {
         category: {
-          connect: { type_name: { name: category, type: "expense" } },
+          connect: {
+            type_name_userId: { name: category, type: "expense", userId },
+          },
         },
         initAmount: amountInCents,
         currentAmount: amountInCents,

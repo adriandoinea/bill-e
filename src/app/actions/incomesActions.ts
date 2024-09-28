@@ -48,7 +48,7 @@ export async function createIncome(formData: FormData) {
       data: {
         category: {
           connect: {
-            type_name: { name: category, type: "income" },
+            type_name_userId: { name: category, type: "income", userId },
           },
         },
         amount: amountInCents,
@@ -99,7 +99,7 @@ export async function editIncome(id: string, formData: FormData) {
         ...data,
         category: {
           connect: {
-            type_name: { name: data.category, type: "income" },
+            type_name_userId: { name: data.category, type: "income", userId },
           },
         },
       },

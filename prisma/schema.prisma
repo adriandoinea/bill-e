@@ -11,40 +11,43 @@ datasource db {
 }
 
 model Expense {
-  id           String   @id @default(uuid())
-  amount       Int
-  date         DateTime
-  note         String?
-  location     String?
-  category     Category @relation(fields: [categoryType, categoryName], references: [type, name])
-  categoryType String
-  categoryName String
-  User         User     @relation(fields: [userId], references: [id])
-  userId       String
+  id             String   @id @default(uuid())
+  amount         Int
+  date           DateTime
+  note           String?
+  location       String?
+  category       Category @relation(fields: [categoryType, categoryName, categoryUserId], references: [type, name, userId])
+  categoryType   String
+  categoryName   String
+  User           User     @relation(fields: [userId], references: [id])
+  userId         String
+  categoryUserId String
 }
 
 model Income {
-  id           String   @id @default(uuid())
-  amount       Int
-  date         DateTime
-  note         String?
-  category     Category @relation(fields: [categoryType, categoryName], references: [type, name])
-  categoryType String
-  categoryName String
-  User         User     @relation(fields: [userId], references: [id])
-  userId       String
+  id             String   @id @default(uuid())
+  amount         Int
+  date           DateTime
+  note           String?
+  category       Category @relation(fields: [categoryType, categoryName, categoryUserId], references: [type, name, userId])
+  categoryType   String
+  categoryName   String
+  User           User     @relation(fields: [userId], references: [id])
+  userId         String
+  categoryUserId String
 }
 
 model Budget {
-  id            String   @id @default(uuid())
-  category      Category @relation(fields: [categoryType, categoryName], references: [type, name])
-  initAmount    Int
-  currentAmount Int
-  resetPeriod   String
-  categoryType  String
-  categoryName  String
-  User          User     @relation(fields: [userId], references: [id])
-  userId        String
+  id             String   @id @default(uuid())
+  category       Category @relation(fields: [categoryType, categoryName, categoryUserId], references: [type, name, userId])
+  initAmount     Int
+  currentAmount  Int
+  resetPeriod    String
+  categoryType   String
+  categoryName   String
+  User           User     @relation(fields: [userId], references: [id])
+  userId         String
+  categoryUserId String
 }
 
 model Category {
@@ -58,7 +61,7 @@ model Category {
   User     User      @relation(fields: [userId], references: [id])
   userId   String
 
-  @@id([type, name])
+  @@id([type, name, userId])
 }
 
 model Account {

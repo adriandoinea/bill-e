@@ -49,7 +49,9 @@ export async function createExpense(formData: FormData) {
     await prisma.expense.create({
       data: {
         category: {
-          connect: { type_name: { type: "expense", name: category } },
+          connect: {
+            type_name_userId: { type: "expense", name: category, userId },
+          },
         },
         amount: amountInCents,
         date,
@@ -101,7 +103,9 @@ export async function editExpense(id: string, formData: FormData) {
       data: {
         ...data,
         category: {
-          connect: { type_name: { type: "expense", name: data.category } },
+          connect: {
+            type_name_userId: { type: "expense", name: data.category, userId },
+          },
         },
       },
     });

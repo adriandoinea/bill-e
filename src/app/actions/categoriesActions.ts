@@ -36,8 +36,7 @@ export async function updateCategories(
     try {
       await prisma.category.update({
         where: {
-          type_name: { type, name: updatedCateg.oldVal },
-          userId,
+          type_name_userId: { type, name: updatedCateg.oldVal, userId },
         },
         data: {
           type,
