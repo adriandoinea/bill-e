@@ -9,6 +9,25 @@ import {
 import { CreateBudget } from "./budgets/buttons";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
+import { cn } from "@/lib/utils";
+
+function TransactionCardSkeleton({ className }: { className?: string }) {
+  return (
+    <Card className={cn("p-4", className)}>
+      <div className="flex justify-between items-center mb-2">
+        <Skeleton className="h-6 w-1/3" />
+        <Skeleton className="h-6 w-1/4" />
+      </div>
+      <Skeleton className="h-4 w-1/4 mb-2" />
+      <Skeleton className="h-4 w-3/4 mb-2" />
+      <Skeleton className="h-4 w-2/3 mb-2" />
+      <div className="flex justify-end gap-2 mt-2">
+        <Skeleton className="h-8 w-8 rounded-md" />
+        <Skeleton className="h-8 w-8 rounded-md" />
+      </div>
+    </Card>
+  );
+}
 
 function TransactionsRowSkeleton({ type }: { type: "expense" | "income" }) {
   return (
@@ -18,18 +37,11 @@ function TransactionsRowSkeleton({ type }: { type: "expense" | "income" }) {
           <Skeleton className="h-6" />
         </TableCell>
       ) : null}
-      <TableCell>
-        <Skeleton className="h-6" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-6" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-6" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-6" />
-      </TableCell>
+      {[...Array(4)].map((_, index) => (
+        <TableCell key={index}>
+          <Skeleton className="h-6" />
+        </TableCell>
+      ))}
       <TableCell className="flex justify-end">
         <Skeleton className="h-6 w-16" />
       </TableCell>
@@ -43,31 +55,32 @@ export function TransactionsTableSkeleton({
   type: "expense" | "income";
 }) {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Category</TableHead>
-          <TableHead>Amount</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Note</TableHead>
-          {type === "expense" ? <TableHead>Location</TableHead> : null}
-          <TableHead>
-            <span className="sr-only">Edit or Remove</span>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
+    <>
+      {[...Array(5)].map((_, index) => (
+        <TransactionCardSkeleton key={index} className="md:hidden" />
+      ))}
 
-      <TableBody>
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-        <TransactionsRowSkeleton type={type} />
-      </TableBody>
-    </Table>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Category</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Note</TableHead>
+            {type === "expense" ? <TableHead>Location</TableHead> : null}
+            <TableHead>
+              <span className="sr-only">Edit or Remove</span>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {[...Array(8)].map((_, index) => (
+            <TransactionsRowSkeleton key={index} type={type} />
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }
 
