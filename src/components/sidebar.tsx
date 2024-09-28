@@ -6,7 +6,6 @@ import {
   ArrowRight,
   BadgeDollarSign,
   CreditCard,
-  FileBarChart,
   LayoutDashboard,
   PiggyBank,
   SettingsIcon,
@@ -17,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { DarkModeToggle } from "./dark-mode-toggler";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 const getLocalStorageState = () => {
   const savedState = localStorage.getItem("bille-sidebar-isCollapsed");
@@ -25,7 +25,7 @@ const getLocalStorageState = () => {
 };
 
 const DEFAULT_LINK_STYLE =
-  "rounded-md p-3 md:px-8 hover:bg-hoverColor flex items-center gap-1 sm:transition-all sm:duration-200 sm:ease-in-out";
+  "rounded-md p-3 md:px-8 hover:bg-hoverColor flex items-center gap-1";
 const SELECTED_LINK_STYLE =
   "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
 const COLLAPSED_LINK_STYLE = "md:p-3";
@@ -52,14 +52,44 @@ export function Sidebar({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        `w-full flex flex-row items-center bg-accent dark:bg-background p-2 sm:py-10 border-border border-solid border-b sm:border-r sm:border-b-0 sm:h-full sm:flex-col justify-between sm:transition-all sm:duration-200 sm:ease-in-out`,
+        `w-full flex flex-row items-center bg-accent dark:bg-background p-2 sm:py-10 border-border border-solid border-b sm:border-r sm:border-b-0 sm:h-full sm:flex-col justify-between`,
         { "sm:w-24": isCollapsed, "sm:w-52": !isCollapsed },
         className
       )}
     >
       <Link href="/">
-        <FileBarChart className="size-8 sm:size-12" />
+        <Image
+          src="/logo-small.png"
+          alt="Small Logo"
+          width={50}
+          height={50}
+          className={cn("size-10 sm:size-[50px] inline sm:hidden", {
+            "sm:inline": isCollapsed,
+          })}
+        />
+
+        <Image
+          src="/logo-lightmode.png"
+          priority
+          alt="Logo"
+          width={120}
+          height={120}
+          className={cn("hidden size-auto", {
+            "sm:block dark:hidden": !isCollapsed,
+          })}
+        />
+        <Image
+          src="/logo-darkmode.png"
+          priority
+          alt="Logo"
+          width={120}
+          height={120}
+          className={cn("hidden size-auto", {
+            "sm:dark:block": !isCollapsed,
+          })}
+        />
       </Link>
+
       <div className="flex flex-row gap-1 sm:flex-col">
         <Link
           className={cn(DEFAULT_LINK_STYLE, {
