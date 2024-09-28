@@ -7,6 +7,7 @@ import { LoginSchema } from "@/schemas";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { generateRandomColor } from "@/lib/utils";
 
 export async function login(
   prevState:
@@ -84,22 +85,76 @@ export async function register(
   }
 
   try {
-    await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
       },
     });
 
-    return {
-      errors: null,
-      message: "Account created successfully!",
-    };
-  } catch (error) {
-    console.error(error);
+    try {
+      await createDefaultCategories(newUser.id);
+      return {
+        errors: null,
+        message:
+          "Account created successfully! Please return to the login page.",
+      };
+    } catch (categoriesError) {
+      console.error("Default Categories Creation Error:", categoriesError);
+      return {
+        errors: null,
+        message: "Account created, but failed to create default categories.",
+      };
+    }
+  } catch (newUserError) {
+    console.error(newUserError);
     return {
       errors: {},
       message: "Database Error: Failed to Create User.",
     };
   }
 }
+
+const createDefaultCategories = async (userId: string) => {
+  const defaultCategories = [
+    {
+      userId,
+      name: "Groceries",
+      type: "expense",
+      color: generateRandomColor(),
+      emoji: "🛒",
+    },
+    {
+      userId,
+      name: "Entertainment",
+      type: "expense",
+      color: generateRandomColor(),
+      emoji: "🍿",
+    },
+    {
+      userId,
+      name: "Utilities",
+      type: "expense",
+      color: generateRandomColor(),
+      emoji: "💡",
+    },
+    {
+      userId,
+      name: "Transport",
+      type: "expense",
+      color: generateRandomColor(),
+      emoji: "🚗",
+    },
+    {
+      userId,
+      name: "Health",
+      type: "expense",
+      color: generateRandomColor(),
+      emoji: "💊",
+    },
+  ];
+
+  await prisma.category.createMany({
+    data: defaultCategories,
+  });
+};
