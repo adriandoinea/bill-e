@@ -8,6 +8,9 @@ import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { generateRandomColor } from "@/lib/utils";
+import { generateVerificationToken } from "@/lib/data/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
+import { getVerificationTokenByToken } from "@/lib/data/verification-token";
 
 export async function login(
   prevState:
@@ -31,6 +34,26 @@ export async function login(
   }
 
   const { email, password } = validatedCredentials.data;
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { errors: {}, message: "User does not exist!" };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    );
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+    return {
+      errors: null,
+      message: "Confirmation email sent!",
+    };
+  }
+
   try {
     await signIn("credentials", {
       email,
@@ -92,25 +115,61 @@ export async function register(
       },
     });
 
-    try {
-      await createDefaultCategories(newUser.id);
-      return {
-        errors: null,
-        message:
-          "Account created successfully! Please return to the login page.",
-      };
-    } catch (categoriesError) {
-      console.error("Default Categories Creation Error:", categoriesError);
-      return {
-        errors: null,
-        message: "Account created, but failed to create default categories.",
-      };
-    }
-  } catch (newUserError) {
-    console.error(newUserError);
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+    return {
+      errors: null,
+      message: "Confirmation email sent!",
+    };
+  } catch (error) {
+    console.error(error);
     return {
       errors: {},
       message: "Database Error: Failed to Create User.",
+    };
+  }
+}
+
+export async function newVerification(token: string) {
+  const existingToken = await getVerificationTokenByToken(token);
+  if (!existingToken) {
+    return { errors: {}, message: "Token does not exist!" };
+  }
+
+  const hasExpired = new Date(existingToken.expires) < new Date();
+  if (hasExpired) {
+    return { errors: {}, message: "Token has expired!" };
+  }
+
+  const existingUser = await getUserByEmail(existingToken.email);
+  if (!existingUser) {
+    return {
+      errors: {},
+      message: "Email does not exist!",
+    };
+  }
+
+  await prisma.user.update({
+    where: { id: existingUser.id },
+    data: { emailVerified: new Date() },
+  });
+
+  await prisma.verificationToken.delete({ where: { id: existingToken.id } });
+
+  try {
+    await createDefaultCategories(existingUser.id);
+    return {
+      errors: null,
+      message: "Email verified!",
+    };
+  } catch (categoriesError) {
+    console.error("Default Categories Creation Error:", categoriesError);
+    return {
+      errors: null,
+      message: "Email verified, but failed to create default categories.",
     };
   }
 }

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { signIn as clientSideSignIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { useSearchParams } from "next/navigation";
-import ErrorMessage from "@/components/auth/error-message";
+import { ErrorMessage, SuccessMessage } from "./form-messages";
 
 export default function LoginForm() {
   const [formState, formAction] = useFormState(login, undefined);
@@ -108,7 +108,9 @@ export default function LoginForm() {
           <ErrorMessage message={formState.message} />
         ) : urlErrorMessage ? (
           <ErrorMessage message={urlErrorMessage} />
-        ) : null}
+        ) : (
+          formState?.message && <SuccessMessage message={formState.message} />
+        )}
 
         <div className="mt-6 text-sm text-center">
           Don&rsquo;t have an account?{" "}

@@ -3,14 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { useFormState } from "react-dom";
 import { register } from "@/app/actions/accountActions";
-import {
-  ArrowRightIcon,
-  CheckCircle2Icon,
-  Key,
-  MailWarning,
-} from "lucide-react";
+import { ArrowRightIcon, Key, MailWarning } from "lucide-react";
 import Link from "next/link";
-import ErrorMessage from "@/components/auth/error-message";
+import { ErrorMessage, SuccessMessage } from "./form-messages";
 
 export default function RegisterForm() {
   const [formState, formAction] = useFormState(register, undefined);
@@ -69,12 +64,7 @@ export default function RegisterForm() {
         {formState?.errors ? (
           <ErrorMessage message={formState.message} />
         ) : (
-          formState?.message && (
-            <div className="mt-4 flex items-center space-x-2 text-green-500">
-              <CheckCircle2Icon className="size-5" />
-              <p className="text-sm">{formState?.message}</p>
-            </div>
-          )
+          formState?.message && <SuccessMessage message={formState.message} />
         )}
 
         <div className="mt-6 text-center text-sm">
