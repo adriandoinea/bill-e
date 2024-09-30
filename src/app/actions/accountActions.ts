@@ -169,7 +169,7 @@ export async function newVerification(token: string) {
     console.error("Default Categories Creation Error:", categoriesError);
     return {
       errors: null,
-      message: "Email verified, but failed to create default categories.",
+      message: "Email verified!",
     };
   }
 }

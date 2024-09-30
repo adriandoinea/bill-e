@@ -12,33 +12,37 @@ import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { newVerification } from "@/app/actions/accountActions";
 import { ErrorMessage, SuccessMessage } from "./form-messages";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function NewVerificationForm() {
-  const [error, setError] = useState<string>();
-  const [success, setSuccess] = useState<string>();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const searchParams = useSearchParams();
 
   const token = searchParams.get("token");
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (!token) {
       setError("Missing token!");
+      setIsLoading(false);
       return;
     }
 
-    newVerification(token)
-      .then((data) => {
-        if (data.errors) {
-          setError(data.message);
-        } else {
-          setSuccess(data.message);
-        }
-      })
-      .catch((e) => {
-        setError("Something went wrong!");
-        console.error(e);
-      });
+    try {
+      const data = await newVerification(token);
+      if (data.errors) {
+        setError(data.message);
+      } else {
+        setSuccess(data.message);
+      }
+    } catch (e) {
+      setError("Something went wrong!");
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   }, [token]);
 
   useEffect(() => {
@@ -50,35 +54,43 @@ export default function NewVerificationForm() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-3xl font-semibold text-center">
-            Verification in Progress
+            {isLoading
+              ? "Verification in Progress"
+              : success
+              ? "Verification Successful"
+              : "Verification Failed"}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex justify-center">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          </div>
-          <div className="text-center space-y-2">
-            {success ? (
-              <SuccessMessage
-                message={success}
-                className="flex items-center justify-center"
-              />
-            ) : error ? (
+          {isLoading ? (
+            <>
+              <div className="flex justify-center">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              </div>
+              <p className="text-center text-muted-foreground">
+                Confirming your verification...
+              </p>
+            </>
+          ) : success ? (
+            <SuccessMessage
+              message={success}
+              className="flex items-center justify-center"
+            />
+          ) : (
+            error && (
               <ErrorMessage
                 message={error}
                 className="flex items-center justify-center"
               />
-            ) : (
-              <p className="text-muted-foreground">
-                Confirming your verification ...
-              </p>
-            )}
-          </div>
+            )
+          )}
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Link href="/login" className="text-sm text-primary hover:underline">
-            Back to Login
-          </Link>
+          {!isLoading && (
+            <Button asChild variant="link">
+              <Link href="/login">Back to Login</Link>
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </div>
