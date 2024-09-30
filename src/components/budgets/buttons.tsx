@@ -26,7 +26,7 @@ export function CreateBudget() {
   return (
     <Link
       href="budgets/create"
-      className="w-56 h-40 bg-accent dark:bg-background border-2 rounded-md flex justify-center items-center gap-1 text-customAccent hover:text-customAccent-foreground hover:border-customAccent-foreground"
+      className="w-auto h-36 sm:w-56 sm:h-40 bg-accent dark:bg-background border-2 rounded-md flex flex-wrap justify-center items-center gap-1 text-customAccent hover:text-customAccent-foreground hover:border-customAccent-foreground"
     >
       <Plus size={16} />
       <>Add budget</>

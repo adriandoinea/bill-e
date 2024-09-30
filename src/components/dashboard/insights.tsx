@@ -74,13 +74,13 @@ export default async function Insights({ className }: { className?: string }) {
       </CardHeader>
       <CardContent className="px-4 md:px-6 text-sm md:text-base">
         <div className="grid gap-2">
-          <div className="font-medium flex items-center gap-1">
+          <div className="font-medium flex items-center justify-between gap-1">
             {expensesPercentChangeMessage}
           </div>
-          <div className="font-medium flex items-center gap-1">
+          <div className="font-medium flex items-center justify-between gap-1">
             {incomePercentChangeMessage}
           </div>
-          <div className="font-medium flex items-center gap-1">
+          <div className="font-medium flex items-center justify-between gap-1">
             {budgetMessage}
           </div>
         </div>
