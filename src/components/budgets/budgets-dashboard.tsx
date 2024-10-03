@@ -33,9 +33,10 @@ export default async function BudgetsDashboard({
       {budgets.length > 0 ? (
         <div
           className={cn(
-            "w-full h-64 sm:h-auto flex flex-col sm:flex-row items-center gap-4 sm:gap-8",
+            "w-full h-64 flex flex-col sm:flex-row items-center gap-4 sm:gap-8",
             {
               "h-auto": !hasBudgetsValues,
+              "h-72 sm:h-64": budgets.length > 2,
             }
           )}
         >
@@ -44,8 +45,8 @@ export default async function BudgetsDashboard({
               isDonut
               data={donutChartData}
               centerText={`${totalSpent / 100} ${CURRENCY}`}
-              centerTextClassName="text-base md:text-2xl"
-              className="w-full sm:w-1/3"
+              centerTextClassName="text-base lg:text-2xl"
+              className="size-2/3 sm:w-1/3 sm:h-full"
             />
           )}
           <ProgressPanel

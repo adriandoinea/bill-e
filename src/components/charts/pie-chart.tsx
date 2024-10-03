@@ -57,7 +57,7 @@ export default function PieChart({
   };
 
   return (
-    <div className={cn("w-64 h-64 place-self-center text-black", className)}>
+    <div className={cn("size-64 place-self-center text-black", className)}>
       <ResponsivePie
         {...donutConfig}
         data={data}

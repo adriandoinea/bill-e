@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { CURRENCY } from "@/lib/constants";
 
 export default function EditForm({
   categories,
@@ -55,7 +56,7 @@ export default function EditForm({
               name="amount"
               id="amount"
               step="0.01"
-              placeholder="Enter USD amount"
+              placeholder={`Enter ${CURRENCY} amount`}
               defaultValue={budget.initAmount}
             />
             <CircleDollarSign className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
