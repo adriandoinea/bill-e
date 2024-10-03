@@ -46,12 +46,12 @@ export default async function BudgetsDashboard({
               data={donutChartData}
               centerText={`${totalSpent / 100} ${CURRENCY}`}
               centerTextClassName="text-base lg:text-2xl"
-              className="size-2/3 sm:w-1/3 sm:h-full"
+              className="h-2/3 w-full sm:w-1/3 sm:h-full"
             />
           )}
           <ProgressPanel
             budgets={budgets}
-            className={cn("w-full sm:w-2/3", {
+            className={cn("h-1/3 w-full sm:w-2/3", {
               "sm:w-full": !hasBudgetsValues,
             })}
           />
