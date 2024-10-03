@@ -1,5 +1,6 @@
 "use client";
 
+import { CURRENCY } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { DefaultRawDatum, PieCustomLayerProps, ResponsivePie } from "@nivo/pie";
 
@@ -61,7 +62,7 @@ export default function PieChart({
         {...donutConfig}
         data={data}
         sortByValue
-        valueFormat={(value) => `$${value}`}
+        valueFormat={(value) => `${value} ${CURRENCY}`}
         enableArcLinkLabels={false}
         enableArcLabels={!!arcLabel || false}
         arcLabelsTextColor="hsl(var(--secondary))"

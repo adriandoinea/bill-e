@@ -2,6 +2,7 @@ import { getInsights } from "@/lib/data/transactions";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "@/lib/utils";
+import { CURRENCY } from "@/lib/constants";
 
 export default async function Insights({ className }: { className?: string }) {
   const { transactionsPercentageChange, budgetDetails } = await getInsights();
@@ -60,9 +61,9 @@ export default async function Insights({ className }: { className?: string }) {
   const incomePercentChangeMessage = getIncomePercentChangeMessage();
 
   const budgetMessage = budgetDetails
-    ? `You spent $${
+    ? `You spent ${
         budgetDetails.initAmount - budgetDetails.currentAmount
-      } on ${budgetDetails.name} this month. That's ${
+      } ${CURRENCY} on ${budgetDetails.name} this month. That's ${
         budgetDetails.spentPercent
       }% of this category's budget.`
     : null;

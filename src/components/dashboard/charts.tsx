@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import LineChart from "../charts/line-chart";
 import PieChart from "../charts/pie-chart";
+import { CURRENCY } from "@/lib/constants";
 
 export async function DashboardLineChart({
   className,
@@ -85,7 +86,7 @@ export async function DashboardPieChart({
       className={cn("size-full", className)}
       centerTextClassName="text-2xl"
       data={pieChartData}
-      centerText={`$${totalSpent}`}
+      centerText={`${totalSpent} ${CURRENCY}`}
     />
   );
 }

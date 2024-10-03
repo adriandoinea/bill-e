@@ -4,6 +4,7 @@ import PieChart from "../charts/pie-chart";
 import BudgetCard from "./budget-card";
 import { CreateBudget } from "./buttons";
 import ProgressPanel from "./progress-panel";
+import { CURRENCY } from "@/lib/constants";
 
 export default async function BudgetsDashboard({
   period,
@@ -31,19 +32,28 @@ export default async function BudgetsDashboard({
     <div className="flex flex-col gap-8">
       {budgets.length > 0 ? (
         <div
-          className={cn("flex items-center gap-8 w-full h-52", {
-            "h-auto": !hasBudgetsValues,
-          })}
+          className={cn(
+            "w-full h-64 sm:h-auto flex flex-col sm:flex-row items-center gap-4 sm:gap-8",
+            {
+              "h-auto": !hasBudgetsValues,
+            }
+          )}
         >
           {hasBudgetsValues && (
             <PieChart
               isDonut
               data={donutChartData}
-              centerText={`$${totalSpent / 100}`}
+              centerText={`${totalSpent / 100} ${CURRENCY}`}
               centerTextClassName="text-base md:text-2xl"
+              className="w-full sm:w-1/3"
             />
           )}
-          <ProgressPanel budgets={budgets} className="w-full" />
+          <ProgressPanel
+            budgets={budgets}
+            className={cn("w-full sm:w-2/3", {
+              "sm:w-full": !hasBudgetsValues,
+            })}
+          />
         </div>
       ) : (
         <div className="font-medium">No {period} budgets added yet.</div>

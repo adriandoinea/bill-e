@@ -86,19 +86,19 @@ export function TransactionsTableSkeleton({
 
 export function BudgetsDashboardSkeleton() {
   return (
-    <>
-      <div className="flex items-center gap-8 w-full">
-        <Skeleton className="w-64 h-52 rounded-full" />
-        <Skeleton className="w-full h-52" />
+    <div className="flex flex-col gap-8">
+      <div className="w-full flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+        <Skeleton className="size-52 sm:min-w-52 rounded-full" />
+        <Skeleton className="w-full sm:w-full h-32" />
       </div>
 
-      <div className="flex flex-wrap gap-5">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
         <CreateBudget />
-        <Skeleton className="w-56 h-40" />
-        <Skeleton className="w-56 h-40" />
-        <Skeleton className="w-56 h-40" />
+        <Skeleton className="h-36 sm:w-56 sm:h-40" />
+        <Skeleton className="h-36 sm:w-56 sm:h-40" />
+        <Skeleton className="h-36 sm:w-56 sm:h-40" />
       </div>
-    </>
+    </div>
   );
 }
 

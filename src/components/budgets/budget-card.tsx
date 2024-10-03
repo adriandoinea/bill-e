@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { DeleteBudget, EditBudget } from "./buttons";
+import { CURRENCY } from "@/lib/constants";
 
 interface BudgetCardProps {
   id: string;
@@ -31,18 +32,22 @@ export default function BudgetCard({
       </div>
       <div className="text-center">
         <div>{category.name}</div>
-        <div>${initialAmount}</div>
+        <div>
+          {initialAmount} {CURRENCY}
+        </div>
       </div>
       <div className="w-full flex justify-between items-center">
         <div className="flex flex-col items-center">
           <div>Spent</div>
-          <div> ${initialAmount - currentAmount}</div>
+          <div>
+            {initialAmount - currentAmount} {CURRENCY}
+          </div>
         </div>
         <div className="text-4xl font-thin">|</div>
         <div className="flex flex-col items-center">
           <div>Left</div>
           <div className={cn({ "text-destructive": currentAmount < 0 })}>
-            ${currentAmount}
+            {currentAmount.toFixed(0)} {CURRENCY}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { CURRENCY } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { ResponsiveLine } from "@nivo/line";
 import {} from "@nivo/pie";
@@ -26,7 +27,7 @@ export default function LineChart({ data, className }: Props) {
           min: "auto",
           max: "auto",
         }}
-        yFormat={(value) => `$${value}`}
+        yFormat={(value) => `${value} ${CURRENCY}`}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,

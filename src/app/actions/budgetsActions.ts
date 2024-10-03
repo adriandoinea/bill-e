@@ -12,7 +12,7 @@ const FormSchema = z.object({
   category: z.string(),
   amount: z.coerce
     .number()
-    .gt(0, { message: "Please enter an amount greater than $0" }),
+    .gt(0, { message: "Please enter an amount greater than 0" }),
   resetPeriod: z.string(),
 });
 

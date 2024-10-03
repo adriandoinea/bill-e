@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { cn } from "@/lib/utils";
+import { CURRENCY } from "@/lib/constants";
 
 export default async function RecentExpenses({
   className,
@@ -38,7 +39,9 @@ export default async function RecentExpenses({
               <div className="font-medium">
                 {transaction.category.emoji} {transaction.categoryName}
               </div>
-              <div className="font-semibold">${transaction.amount / 100}</div>
+              <div className="font-semibold">
+                {transaction.amount / 100} {CURRENCY}
+              </div>
             </div>
           ))
         ) : (

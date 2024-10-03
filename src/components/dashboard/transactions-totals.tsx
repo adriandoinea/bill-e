@@ -1,5 +1,6 @@
 import { getMonthTotal } from "@/lib/data/transactions";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { CURRENCY } from "@/lib/constants";
 
 interface Props {
   currentMonth: number;
@@ -22,19 +23,25 @@ export default async function TransactionsTotals({
       <Card>
         <CardHeader>
           <CardDescription>Total Expenses</CardDescription>
-          <CardTitle>${totalExpenses}</CardTitle>
+          <CardTitle>
+            {totalExpenses} {CURRENCY}
+          </CardTitle>
         </CardHeader>
       </Card>
       <Card>
         <CardHeader>
           <CardDescription>Total Income</CardDescription>
-          <CardTitle>${totalIncome}</CardTitle>
+          <CardTitle>
+            {totalIncome} {CURRENCY}
+          </CardTitle>
         </CardHeader>
       </Card>
       <Card>
         <CardHeader>
           <CardDescription>Net balance</CardDescription>
-          <CardTitle>${netBalance}</CardTitle>
+          <CardTitle>
+            {netBalance} {CURRENCY}
+          </CardTitle>
         </CardHeader>
       </Card>
     </div>

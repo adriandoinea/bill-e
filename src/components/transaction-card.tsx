@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { DeleteExpense, EditExpense } from "./expenses/buttons";
 import { DeleteIncome, EditIncome } from "./incomes/buttons";
 import { cn } from "@/lib/utils";
+import { CURRENCY } from "@/lib/constants";
 
 interface Props {
   transaction: IExpense | IIncome;
@@ -18,7 +19,7 @@ export default function TransactionCard({ transaction, className }: Props) {
           {transaction.category.emoji} {transaction.category.name}
         </div>
         <div className="font-bold">
-          ${(transaction.amount / 100).toFixed(2)}
+          {(transaction.amount / 100).toFixed(2)} {CURRENCY}
         </div>
       </div>
       <div className="text-sm text-muted-foreground mb-2">

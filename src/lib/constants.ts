@@ -1,3 +1,5 @@
+export const CURRENCY = "RON";
+
 export const COLORS = [
   "#ffa500",
   "#0078ff",

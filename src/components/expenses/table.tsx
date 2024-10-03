@@ -11,6 +11,7 @@ import { FilterParams } from "@/types";
 import dayjs from "dayjs";
 import { DeleteExpense, EditExpense } from "./buttons";
 import TransactionCard from "../transaction-card";
+import { CURRENCY } from "@/lib/constants";
 
 interface Props {
   query: string;
@@ -50,7 +51,9 @@ export default async function ExpensesTable({ query, filter }: Props) {
               <TableCell>
                 {expense.category.emoji} {expense.category.name}
               </TableCell>
-              <TableCell>${(expense.amount / 100).toFixed(2)}</TableCell>
+              <TableCell>
+                {(expense.amount / 100).toFixed(2)} {CURRENCY}
+              </TableCell>
               <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
               <TableCell>{expense.note}</TableCell>
               {"location" in expense && (
