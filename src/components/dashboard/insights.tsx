@@ -13,7 +13,7 @@ export default async function Insights({ className }: { className?: string }) {
     if (percentageChange > 0) {
       return (
         <>
-          You spent {percentageChange.toFixed(0)}% more this month compared to
+          You spent {Math.round(percentageChange)}% more this month compared to
           last month.
           <ArrowUpIcon className="size-12 md:size-5 text-destructive" />
         </>
@@ -22,7 +22,7 @@ export default async function Insights({ className }: { className?: string }) {
       return (
         <>
           <span>
-            You spent {Math.abs(percentageChange).toFixed(0)}% less this month
+            You spent {Math.round(Math.abs(percentageChange))}% less this month
             compared to last month.
           </span>
           <ArrowDownIcon className="size-12 md:size-5 text-green-500" />
@@ -38,7 +38,7 @@ export default async function Insights({ className }: { className?: string }) {
       return (
         <>
           <span>
-            Your income increased by {percentageChange.toFixed(0)}% this month
+            Your income increased by {Math.round(percentageChange)}% this month
             compared to last month.
           </span>
           <ArrowUpIcon className="size-12 md:size-5 text-green-500" />
@@ -48,7 +48,7 @@ export default async function Insights({ className }: { className?: string }) {
       return (
         <>
           <span>
-            Your income decreased by {Math.abs(percentageChange).toFixed(0)}%
+            Your income decreased by {Math.round(Math.abs(percentageChange))}%
             this month compared to last month.
           </span>
           <ArrowDownIcon className="size-12 md:size-5 text-destructive" />

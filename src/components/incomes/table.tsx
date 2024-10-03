@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { DeleteIncome, EditIncome } from "./buttons";
 import { FilterParams } from "@/types";
 import TransactionCard from "../transaction-card";
+import { CURRENCY } from "@/lib/constants";
 
 interface Props {
   query: string;
@@ -49,7 +50,9 @@ export default async function IncomesTable({ query, filter }: Props) {
               <TableCell>
                 {income.category.emoji} {income.category.name}
               </TableCell>
-              <TableCell>{income.amount / 100}</TableCell>
+              <TableCell>
+                {(income.amount / 100).toFixed(2)} {CURRENCY}
+              </TableCell>
               <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
               <TableCell>{income.note}</TableCell>
               <TableCell className="flex gap-3 items-center justify-end">
