@@ -38,7 +38,7 @@ export const getLastSixMonths = () => {
     const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
     const formattedDate = date.toLocaleDateString("en-US", {
       year: "2-digit",
-      month: "long",
+      month: "short",
     });
     const monthNum = date.getMonth() + 1;
     const year = date.getFullYear();
