@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useFormState } from "react-dom";
 import { login } from "@/app/actions/accountActions";
-import { ArrowRightIcon, Key, MailWarning, Github } from "lucide-react";
+import { ArrowRightIcon, Key, Mail, Github } from "lucide-react";
 import Link from "next/link";
 import { signIn as clientSideSignIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
@@ -53,7 +53,7 @@ export default function LoginForm() {
                 placeholder="Enter your email address"
                 required
               />
-              <MailWarning className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2" />
+              <Mail className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2" />
             </div>
           </div>
 
@@ -77,6 +77,15 @@ export default function LoginForm() {
               <Key className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2" />
             </div>
           </div>
+        </div>
+
+        <div className="mt-2 text-right">
+          <Link
+            href="/auth/forgot-password"
+            className="text-sm text-customAccent-foreground hover:underline"
+          >
+            Forgot password?
+          </Link>
         </div>
 
         <Button className="mt-6 w-full bg-customAccent hover:bg-customAccent-foreground transition duration-300">

@@ -3,14 +3,22 @@
 import bcrypt from "bcryptjs";
 import prisma from "@/db";
 import { getUserByEmail } from "@/lib/data/user";
-import { LoginSchema } from "@/schemas";
+import {
+  ForgotPasswordSchema,
+  LoginSchema,
+  NewPasswordSchema,
+} from "@/schemas";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { generateRandomColor } from "@/lib/utils";
-import { generateVerificationToken } from "@/lib/data/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
+import {
+  generatePasswordResetToken,
+  generateVerificationToken,
+} from "@/lib/data/tokens";
+import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
 import { getVerificationTokenByToken } from "@/lib/data/verification-token";
+import { getPasswordResetTokenByToken } from "@/lib/data/password-reset-token";
 
 export async function login(
   prevState:
@@ -172,6 +180,108 @@ export async function newVerification(token: string) {
       message: "Email verified!",
     };
   }
+}
+
+export async function reset(
+  prevState:
+    | {
+        errors: { email?: string[]; password?: string[] } | null;
+        message: string;
+      }
+    | undefined,
+  formData: FormData
+) {
+  const validatedCredentials = ForgotPasswordSchema.safeParse({
+    email: formData.get("email"),
+  });
+
+  if (!validatedCredentials.success) {
+    return {
+      errors: validatedCredentials.error.flatten().fieldErrors,
+      message: "Invalid email",
+    };
+  }
+
+  const { email } = validatedCredentials.data;
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser) {
+    return { errors: {}, message: "Email not found!" };
+  }
+  const passwordResetToken = await generatePasswordResetToken(email);
+  await sendPasswordResetEmail(
+    passwordResetToken.email,
+    passwordResetToken.token
+  );
+  return { errors: null, message: "Reset email sent!" };
+}
+
+export async function newPassword(
+  token: string | null,
+  prevState:
+    | {
+        errors: { email?: string[]; password?: string[] } | null;
+        message: string;
+      }
+    | undefined,
+  formData: FormData
+) {
+  if (!token) {
+    return {
+      errors: { password: ["Missing token!"] },
+      message: "Missing token!",
+    };
+  }
+
+  const validatedCredentials = NewPasswordSchema.safeParse({
+    password: formData.get("password"),
+  });
+
+  if (!validatedCredentials.success) {
+    return {
+      errors: validatedCredentials.error.flatten().fieldErrors,
+      message: "Failed to Create Account",
+    };
+  }
+
+  const { password } = validatedCredentials.data;
+
+  const existingToken = await getPasswordResetTokenByToken(token);
+  if (!existingToken)
+    return {
+      errors: { password: ["Invalid token"] },
+      message: "Invalid token",
+    };
+
+  const hasExpired = new Date(existingToken.expires) < new Date();
+  if (hasExpired)
+    return {
+      errors: { password: ["Token has expired!"] },
+      message: "Token has expired!",
+    };
+
+  const existingUser = await getUserByEmail(existingToken.email);
+  if (!existingUser)
+    return {
+      errors: { password: ["Email does not exist!"] },
+      message: "Email does not exist!",
+    };
+
+  const hashedPassword = await bcrypt.hash(password, 6);
+  await prisma.user.update({
+    where: {
+      id: existingUser.id,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  await prisma.passwordResetToken.delete({
+    where: { id: existingToken.id },
+  });
+
+  return { errors: null, message: "Password updated!" };
 }
 
 const createDefaultCategories = async (userId: string) => {

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CheckCircle2Icon, MailWarning } from "lucide-react";
+import { CheckCircle2Icon, Mail } from "lucide-react";
 
 interface Props {
   message: string;
@@ -13,7 +13,7 @@ export function ErrorMessage({ message, className }: Props) {
         className
       )}
     >
-      <MailWarning className="size-5" />
+      <Mail className="size-5" />
       <p className="text-sm">{message}</p>
     </div>
   );
