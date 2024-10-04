@@ -15,7 +15,7 @@ export default async function BudgetsDashboard({
 
   const donutChartData = budgets.map((budget) => ({
     id: budget.category.name,
-    value: (budget.initAmount - budget.currentAmount) / 100,
+    value: Math.round((budget.initAmount - budget.currentAmount) / 100),
     color: budget.category.color,
     label: budget.category.name,
   }));
@@ -33,26 +33,22 @@ export default async function BudgetsDashboard({
       {budgets.length > 0 ? (
         <div
           className={cn(
-            "w-full h-64 flex flex-col sm:flex-row items-center gap-4 sm:gap-8",
-            {
-              "h-auto": !hasBudgetsValues,
-              "h-72 sm:h-64": budgets.length > 2,
-            }
+            "w-full flex flex-col md:flex-row items-center gap-4 md:gap-8"
           )}
         >
           {hasBudgetsValues && (
             <PieChart
               isDonut
               data={donutChartData}
-              centerText={`${totalSpent / 100} ${CURRENCY}`}
+              centerText={`${Math.round(totalSpent / 100)} ${CURRENCY}`}
               centerTextClassName="text-base lg:text-2xl"
-              className="h-2/3 w-full sm:w-1/3 sm:h-full"
+              className="h-56 w-full md:w-1/3"
             />
           )}
           <ProgressPanel
             budgets={budgets}
-            className={cn("h-1/3 w-full sm:w-2/3", {
-              "sm:w-full": !hasBudgetsValues,
+            className={cn("w-full md:w-2/3", {
+              "md:w-full": !hasBudgetsValues,
             })}
           />
         </div>
@@ -60,15 +56,15 @@ export default async function BudgetsDashboard({
         <div className="font-medium">No {period} budgets added yet.</div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+      <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap">
         <CreateBudget />
         {budgets.map((budget) => (
           <BudgetCard
             key={budget.id}
             id={budget.id}
             category={budget.category}
-            initialAmount={budget.initAmount / 100}
-            currentAmount={budget.currentAmount / 100}
+            initialAmount={Math.round(budget.initAmount / 100)}
+            currentAmount={Math.round(budget.currentAmount / 100)}
             color={budget.category.color}
           />
         ))}
