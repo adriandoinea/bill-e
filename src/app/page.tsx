@@ -44,7 +44,7 @@ export default async function Page() {
             fallback={<DashboardPieChartSkeleton />}
           >
             <DashboardPieChart
-              className="size-56 md:size-full"
+              className="w-56 h-56 md:w-full md:h-full"
               currentMonth={currentMonth}
               currentYear={currentYear}
             />
