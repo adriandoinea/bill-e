@@ -68,23 +68,30 @@ export default async function Insights({ className }: { className?: string }) {
       }% of this category's budget.`
     : null;
 
+  const hasInsights =
+    expensesPercentChangeMessage || incomePercentChangeMessage || budgetMessage;
+
   return (
     <Card className={cn("h-full w-full overflow-auto", className)}>
       <CardHeader className="px-4 md:px-6">
         <CardTitle>Insights</CardTitle>
       </CardHeader>
       <CardContent className="px-4 md:px-6 text-sm md:text-base">
-        <div className="grid gap-2">
-          <div className="font-medium flex items-center justify-between gap-1">
-            {expensesPercentChangeMessage}
+        {hasInsights ? (
+          <div className="grid gap-2">
+            <div className="font-medium flex items-center justify-between gap-1">
+              {expensesPercentChangeMessage}
+            </div>
+            <div className="font-medium flex items-center justify-between gap-1">
+              {incomePercentChangeMessage}
+            </div>
+            <div className="font-medium flex items-center justify-between gap-1">
+              {budgetMessage}
+            </div>
           </div>
-          <div className="font-medium flex items-center justify-between gap-1">
-            {incomePercentChangeMessage}
-          </div>
-          <div className="font-medium flex items-center justify-between gap-1">
-            {budgetMessage}
-          </div>
-        </div>
+        ) : (
+          <>Add more data to see insights.</>
+        )}
       </CardContent>
     </Card>
   );

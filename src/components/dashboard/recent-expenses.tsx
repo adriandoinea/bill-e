@@ -45,7 +45,7 @@ export default async function RecentExpenses({
             </div>
           ))
         ) : (
-          <span>No transactions added yet.</span>
+          <span>No expenses added yet.</span>
         )}
       </CardContent>
     </Card>
