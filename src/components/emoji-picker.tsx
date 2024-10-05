@@ -4,6 +4,7 @@ import Picker from "@emoji-mart/react";
 import { SmilePlus } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useState } from "react";
 
 interface Emoji {
   aliases: string[];
@@ -30,8 +31,14 @@ export default function EmojiPicker({
   hasError,
 }: Props) {
   const { resolvedTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const handleEmojiSelect = (data: Emoji) => {
+    onEmojiSelect(data);
+    setIsOpen(false);
+  };
+  const handleTogglePopover = () => setIsOpen(!isOpen);
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={handleTogglePopover}>
       <PopoverTrigger
         disabled={disabled}
         title={
@@ -58,7 +65,7 @@ export default function EmojiPicker({
         <Picker
           theme={resolvedTheme}
           data={data}
-          onEmojiSelect={onEmojiSelect}
+          onEmojiSelect={handleEmojiSelect}
           maxFrequentRows={1}
           previewPosition="none"
           perLine={7}
