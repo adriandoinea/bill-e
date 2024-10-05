@@ -84,9 +84,9 @@ export async function DashboardPieChart({
     <PieChart
       isDonut
       className={cn("size-full", className)}
-      centerTextClassName="text-2xl"
+      centerTextClassName="text-base lg:text-2xl"
       data={pieChartData}
-      centerText={`${totalSpent} ${CURRENCY}`}
+      centerText={`${Math.round(totalSpent)} ${CURRENCY}`}
     />
   );
 }

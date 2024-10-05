@@ -33,22 +33,25 @@ export default async function Page() {
         </Suspense>
 
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-0">
-          <Suspense fallback={<LineChartSkeleton />}>
-            <DashboardLineChart className="col-span-2" />
-          </Suspense>
+          <div className="order-1 md:-order-none col-span-2">
+            <Suspense fallback={<LineChartSkeleton />}>
+              <DashboardLineChart />
+            </Suspense>
+          </div>
 
           <Suspense
             key={`${currentMonth}-${currentYear}`}
             fallback={<DashboardPieChartSkeleton />}
           >
             <DashboardPieChart
+              className="size-56 md:size-full"
               currentMonth={currentMonth}
               currentYear={currentYear}
             />
           </Suspense>
         </div>
 
-        <div className="max-h-60 flex gap-4 mb-2">
+        <div className="max-h-80 md:max-h-60 flex flex-col md:flex-row gap-4 mb-2">
           <Suspense fallback={<DashboardBottomSectionSkeleton />}>
             <RecentExpenses />
           </Suspense>
