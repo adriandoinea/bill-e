@@ -24,7 +24,7 @@ export default async function TransactionsTotals({
         <CardHeader>
           <CardDescription>Total Expenses</CardDescription>
           <CardTitle>
-            {totalExpenses} {CURRENCY}
+            {Math.round(totalExpenses)} {CURRENCY}
           </CardTitle>
         </CardHeader>
       </Card>
@@ -32,7 +32,7 @@ export default async function TransactionsTotals({
         <CardHeader>
           <CardDescription>Total Income</CardDescription>
           <CardTitle>
-            {totalIncome} {CURRENCY}
+            {Math.round(totalIncome)} {CURRENCY}
           </CardTitle>
         </CardHeader>
       </Card>
@@ -40,7 +40,7 @@ export default async function TransactionsTotals({
         <CardHeader>
           <CardDescription>Net balance</CardDescription>
           <CardTitle>
-            {netBalance} {CURRENCY}
+            {Math.round(netBalance)} {CURRENCY}
           </CardTitle>
         </CardHeader>
       </Card>

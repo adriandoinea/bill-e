@@ -57,16 +57,17 @@ export default async function Insights({ className }: { className?: string }) {
     } else return <>Your income is the same as last month.</>;
   };
 
+  const getBudgetMessage = () => {
+    if (!budgetDetails || budgetDetails.spentPercent === 0) return null;
+
+    const spent = budgetDetails.initAmount - budgetDetails.currentAmount;
+    return `You spent ${spent} ${CURRENCY} on ${budgetDetails.name} this month. That's ${budgetDetails.spentPercent}% of this category's budget.`;
+  };
+
   const expensesPercentChangeMessage = getExpensesPercentChangeMessage();
   const incomePercentChangeMessage = getIncomePercentChangeMessage();
 
-  const budgetMessage = budgetDetails
-    ? `You spent ${
-        budgetDetails.initAmount - budgetDetails.currentAmount
-      } ${CURRENCY} on ${budgetDetails.name} this month. That's ${
-        budgetDetails.spentPercent
-      }% of this category's budget.`
-    : null;
+  const budgetMessage = getBudgetMessage();
 
   const hasInsights =
     expensesPercentChangeMessage || incomePercentChangeMessage || budgetMessage;
