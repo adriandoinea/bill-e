@@ -9,14 +9,17 @@ import {
   LayoutDashboard,
   PiggyBank,
   SettingsIcon,
+  LogOut,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { DarkModeToggle } from "./dark-mode-toggler";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const getLocalStorageState = () => {
   const savedState = localStorage.getItem("bille-sidebar-isCollapsed");
@@ -25,13 +28,13 @@ const getLocalStorageState = () => {
 };
 
 const DEFAULT_LINK_STYLE =
-  "rounded-md p-3 md:px-8 hover:bg-hoverColor flex items-center gap-1";
+  "size-11 md:size-auto rounded-md p-3 md:px-8 hover:bg-hoverColor flex items-center gap-1";
 const SELECTED_LINK_STYLE =
   "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
 const COLLAPSED_LINK_STYLE = "md:p-3";
 
 export function Sidebar({ className }: { className?: string }) {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const path = usePathname();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -48,6 +51,8 @@ export function Sidebar({ className }: { className?: string }) {
   }, []);
 
   if (status === "unauthenticated") return null;
+
+  const username = session?.user?.email;
 
   return (
     <nav
@@ -172,7 +177,11 @@ export function Sidebar({ className }: { className?: string }) {
           )}
         </Link>
       </div>
-      <div className="flex flex-col items-center gap-1">
+      <div
+        className={cn("flex flex-col items-center gap-1", {
+          "md:w-full": !isCollapsed,
+        })}
+      >
         <div className="flex justify-center items-center rounded-full hover:bg-hoverColor">
           <Button
             size="icon"
@@ -182,7 +191,41 @@ export function Sidebar({ className }: { className?: string }) {
             {isCollapsed ? <ArrowRight /> : <ArrowLeft />}
           </Button>
         </div>
-        <DarkModeToggle />
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn("h-11 w-11 md:w-auto justify-center gap-2", {
+                "md:w-full": !isCollapsed,
+              })}
+            >
+              <User className="shrink-0 h-4 w-4" />
+              {!isCollapsed && (
+                <span className="truncate max-w-full">{username}</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="mr-2">
+            <div className="grid gap-4">
+              <div className="flex items-center gap-4">
+                <User className="h-4 w-4" />
+                <div className="text-sm font-medium truncate">{username}</div>
+              </div>
+              <div className="grid gap-2">
+                <DarkModeToggle />
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </nav>
   );
