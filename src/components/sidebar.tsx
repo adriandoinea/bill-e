@@ -160,22 +160,6 @@ export function Sidebar({ className }: { className?: string }) {
             </span>
           )}
         </Link>
-        <Link
-          className={cn(DEFAULT_LINK_STYLE, {
-            [SELECTED_LINK_STYLE]: path === "/settings",
-            [COLLAPSED_LINK_STYLE]: isCollapsed,
-          })}
-          href="/settings"
-        >
-          <SettingsIcon />
-          {!isCollapsed && (
-            <span
-              className={cn("hidden sm:inline", { "sm:inline": !isCollapsed })}
-            >
-              Settings
-            </span>
-          )}
-        </Link>
       </div>
       <div
         className={cn("flex flex-col items-center gap-1", {
@@ -213,6 +197,13 @@ export function Sidebar({ className }: { className?: string }) {
                 <div className="text-sm font-medium truncate">{username}</div>
               </div>
               <div className="grid gap-2">
+                <Link
+                  href="/settings"
+                  className="h-10 flex items-center w-full px-4 py-1.5 text-sm rounded-md hover:bg-accent border border-input"
+                >
+                  <SettingsIcon className="mr-2 h-4 w-4" />
+                  Settings
+                </Link>
                 <DarkModeToggle />
                 <Button
                   variant="outline"
