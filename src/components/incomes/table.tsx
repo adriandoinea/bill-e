@@ -12,6 +12,7 @@ import { DeleteIncome, EditIncome } from "./buttons";
 import { FilterParams } from "@/types";
 import TransactionCard from "../transaction-card";
 import { CURRENCY } from "@/lib/constants";
+import { roundWithTwoDecimals } from "@/lib/utils";
 
 interface Props {
   query: string;
@@ -51,7 +52,7 @@ export default async function IncomesTable({ query, filter }: Props) {
                 {income.category.emoji} {income.category.name}
               </TableCell>
               <TableCell>
-                {(income.amount / 100).toFixed(2)} {CURRENCY}
+                {roundWithTwoDecimals(income.amount / 100)} {CURRENCY}
               </TableCell>
               <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
               <TableCell>{income.note}</TableCell>

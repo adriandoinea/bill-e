@@ -39,15 +39,13 @@ export default function BudgetCard({
       <div className="w-full flex justify-between items-center">
         <div className="flex flex-col items-center">
           <div>Spent</div>
-          <div>
-            {initialAmount - currentAmount} {CURRENCY}
-          </div>
+          <div>{initialAmount - currentAmount}</div>
         </div>
         <div className="text-4xl font-thin">|</div>
         <div className="flex flex-col items-center">
           <div>Left</div>
           <div className={cn({ "text-destructive": currentAmount < 0 })}>
-            {Math.round(currentAmount)} {CURRENCY}
+            {currentAmount}
           </div>
         </div>
       </div>

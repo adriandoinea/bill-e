@@ -2,12 +2,11 @@ import {
   getLineChartData,
   getMonthTotalByCategory,
 } from "@/lib/data/transactions";
-import { cn } from "@/lib/utils";
+import { cn, roundWithTwoDecimals } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import LineChart from "../charts/line-chart";
 import PieChart from "../charts/pie-chart";
-import { CURRENCY } from "@/lib/constants";
 
 export async function DashboardLineChart({
   className,
@@ -84,9 +83,9 @@ export async function DashboardPieChart({
     <PieChart
       isDonut
       className={cn("size-full", className)}
-      centerTextClassName="text-base lg:text-2xl"
+      centerTextClassName="text-base lg:text-xl"
       data={pieChartData}
-      centerText={`${Math.round(totalSpent)} ${CURRENCY}`}
+      centerText={`${roundWithTwoDecimals(totalSpent)}`}
     />
   );
 }

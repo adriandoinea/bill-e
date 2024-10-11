@@ -1,10 +1,9 @@
 import { fetchFilteredBudgets } from "@/lib/data/budgets";
-import { cn } from "@/lib/utils";
+import { cn, roundWithTwoDecimals } from "@/lib/utils";
 import PieChart from "../charts/pie-chart";
 import BudgetCard from "./budget-card";
 import { CreateBudget } from "./buttons";
 import ProgressPanel from "./progress-panel";
-import { CURRENCY } from "@/lib/constants";
 
 export default async function BudgetsDashboard({
   period,
@@ -15,7 +14,9 @@ export default async function BudgetsDashboard({
 
   const donutChartData = budgets.map((budget) => ({
     id: budget.category.name,
-    value: Math.round((budget.initAmount - budget.currentAmount) / 100),
+    value: roundWithTwoDecimals(
+      (budget.initAmount - budget.currentAmount) / 100
+    ),
     color: budget.category.color,
     label: budget.category.name,
   }));
@@ -40,8 +41,8 @@ export default async function BudgetsDashboard({
             <PieChart
               isDonut
               data={donutChartData}
-              centerText={`${Math.round(totalSpent / 100)} ${CURRENCY}`}
-              centerTextClassName="text-base lg:text-2xl"
+              centerText={`${roundWithTwoDecimals(totalSpent / 100)}`}
+              centerTextClassName="text-base lg:text-xl"
               className="h-56 w-full md:w-1/3"
             />
           )}
@@ -63,8 +64,8 @@ export default async function BudgetsDashboard({
             key={budget.id}
             id={budget.id}
             category={budget.category}
-            initialAmount={Math.round(budget.initAmount / 100)}
-            currentAmount={Math.round(budget.currentAmount / 100)}
+            initialAmount={roundWithTwoDecimals(budget.initAmount / 100)}
+            currentAmount={roundWithTwoDecimals(budget.currentAmount / 100)}
             color={budget.category.color}
           />
         ))}

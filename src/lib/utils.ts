@@ -85,3 +85,8 @@ export const convertStringToDate = (dateStr?: string | null) => {
   const [day, month, year] = dateStr.split("-").map(Number);
   return new Date(year, month - 1, day);
 };
+
+export const roundWithTwoDecimals = (num: number) => {
+  const rounded = Math.round(num * 100) / 100;
+  return rounded % 1 === 0 ? rounded : Number(rounded.toFixed(2));
+};

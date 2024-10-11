@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { DeleteExpense, EditExpense } from "./buttons";
 import TransactionCard from "../transaction-card";
 import { CURRENCY } from "@/lib/constants";
+import { roundWithTwoDecimals } from "@/lib/utils";
 
 interface Props {
   query: string;
@@ -52,7 +53,7 @@ export default async function ExpensesTable({ query, filter }: Props) {
                 {expense.category.emoji} {expense.category.name}
               </TableCell>
               <TableCell>
-                {(expense.amount / 100).toFixed(2)} {CURRENCY}
+                {roundWithTwoDecimals(expense.amount / 100)} {CURRENCY}
               </TableCell>
               <TableCell>{dayjs(expense.date).format("DD MMM YY")}</TableCell>
               <TableCell>{expense.note}</TableCell>

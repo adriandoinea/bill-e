@@ -1,6 +1,7 @@
 import { getMonthTotal } from "@/lib/data/transactions";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { CURRENCY } from "@/lib/constants";
+import { roundWithTwoDecimals } from "@/lib/utils";
 
 interface Props {
   currentMonth: number;
@@ -24,7 +25,7 @@ export default async function TransactionsTotals({
         <CardHeader>
           <CardDescription>Total Expenses</CardDescription>
           <CardTitle>
-            {Math.round(totalExpenses)} {CURRENCY}
+            {roundWithTwoDecimals(totalExpenses)} {CURRENCY}
           </CardTitle>
         </CardHeader>
       </Card>
@@ -32,7 +33,7 @@ export default async function TransactionsTotals({
         <CardHeader>
           <CardDescription>Total Income</CardDescription>
           <CardTitle>
-            {Math.round(totalIncome)} {CURRENCY}
+            {roundWithTwoDecimals(totalIncome)} {CURRENCY}
           </CardTitle>
         </CardHeader>
       </Card>
@@ -40,7 +41,7 @@ export default async function TransactionsTotals({
         <CardHeader>
           <CardDescription>Net balance</CardDescription>
           <CardTitle>
-            {Math.round(netBalance)} {CURRENCY}
+            {roundWithTwoDecimals(netBalance)} {CURRENCY}
           </CardTitle>
         </CardHeader>
       </Card>
