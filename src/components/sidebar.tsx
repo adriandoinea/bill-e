@@ -28,10 +28,10 @@ const getLocalStorageState = () => {
 };
 
 const DEFAULT_LINK_STYLE =
-  "size-11 md:size-auto rounded-md p-3 md:px-8 hover:bg-hoverColor flex items-center gap-1";
+  "rounded-md p-3 sm:px-8 hover:bg-hoverColor flex items-center gap-1";
 const SELECTED_LINK_STYLE =
   "bg-customAccent hover:bg-hoverColor-foreground text-secondary";
-const COLLAPSED_LINK_STYLE = "md:p-3";
+const COLLAPSED_LINK_STYLE = "sm:p-3";
 
 export function Sidebar({ className }: { className?: string }) {
   const { data: session, status } = useSession();
@@ -163,7 +163,7 @@ export function Sidebar({ className }: { className?: string }) {
       </div>
       <div
         className={cn("flex flex-col items-center gap-1", {
-          "md:w-full": !isCollapsed,
+          "sm:w-full": !isCollapsed,
         })}
       >
         <div className="flex justify-center items-center rounded-full hover:bg-hoverColor">
@@ -180,13 +180,15 @@ export function Sidebar({ className }: { className?: string }) {
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className={cn("h-11 w-11 md:w-auto justify-center gap-2", {
-                "md:w-full": !isCollapsed,
+              className={cn("h-12 w-12 justify-center gap-2", {
+                "sm:w-full": !isCollapsed,
               })}
             >
               <User className="shrink-0 h-4 w-4" />
               {!isCollapsed && (
-                <span className="truncate max-w-full">{username}</span>
+                <span className="hidden sm:inline truncate max-w-full">
+                  {username}
+                </span>
               )}
             </Button>
           </PopoverTrigger>
