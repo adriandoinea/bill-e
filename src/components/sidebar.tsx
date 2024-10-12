@@ -199,13 +199,16 @@ export function Sidebar({ className }: { className?: string }) {
                 <div className="text-sm font-medium truncate">{username}</div>
               </div>
               <div className="grid gap-2">
-                <Link
-                  href="/settings"
-                  className="h-10 flex items-center w-full px-4 py-1.5 text-sm rounded-md hover:bg-accent border border-input"
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full justify-start"
                 >
-                  <SettingsIcon className="mr-2 h-4 w-4" />
-                  Settings
-                </Link>
+                  <Link href="/settings">
+                    <SettingsIcon className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
+                </Button>
                 <DarkModeToggle />
                 <Button
                   variant="outline"
