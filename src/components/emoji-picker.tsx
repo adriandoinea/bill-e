@@ -38,7 +38,7 @@ export default function EmojiPicker({
   };
   const handleTogglePopover = () => setIsOpen(!isOpen);
   return (
-    <Popover open={isOpen} onOpenChange={handleTogglePopover}>
+    <Popover modal open={isOpen} onOpenChange={handleTogglePopover}>
       <PopoverTrigger
         disabled={disabled}
         title={
@@ -60,7 +60,9 @@ export default function EmojiPicker({
       </PopoverTrigger>
       <PopoverContent
         side="left"
-        className="w-auto p-0 border-0 bg-transparent"
+        className="p-0 border-0 bg-transparent"
+        onWheel={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
       >
         <Picker
           theme={resolvedTheme}
