@@ -53,7 +53,7 @@ export function DeleteTransaction({ id, type }: Props) {
         `"${category.name}" from ${convertDateToString(date)} has been removed.`
       );
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
       toast.error(`Failed to delete ${type}.`);
     }
   };

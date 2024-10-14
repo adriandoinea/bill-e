@@ -45,7 +45,7 @@ export function DeleteBudget({ id }: { id: string }) {
       router.refresh();
       toast(`"${category.name}" ${resetPeriod} budget has been removed.`);
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
       toast.error(`Failed to delete budget.`);
     }
   };
