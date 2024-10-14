@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/table";
 import { fetchFilteredTransactions } from "@/lib/data/transactions";
 import dayjs from "dayjs";
-import { DeleteIncome, EditIncome } from "./buttons";
 import { FilterParams } from "@/types";
 import TransactionCard from "../transaction-card";
 import { CURRENCY } from "@/lib/constants";
 import { roundWithTwoDecimals } from "@/lib/utils";
+import { DeleteTransaction, EditTransaction } from "../transaction-buttons";
 
 interface Props {
   query: string;
@@ -57,8 +57,8 @@ export default async function IncomesTable({ query, filter }: Props) {
               <TableCell>{dayjs(income.date).format("DD MMM YY")}</TableCell>
               <TableCell>{income.note}</TableCell>
               <TableCell className="flex gap-3 items-center justify-end">
-                <EditIncome id={income.id} />
-                <DeleteIncome id={income.id} />
+                <EditTransaction id={income.id} type="income" />
+                <DeleteTransaction id={income.id} type="income" />
               </TableCell>
             </TableRow>
           ))}

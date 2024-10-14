@@ -1,3 +1,5 @@
+"use client";
+
 import { createExpense } from "@/app/actions/expensesActions";
 import { ITransactionCategory } from "@/types";
 import dayjs from "dayjs";
@@ -8,14 +10,31 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CURRENCY } from "@/lib/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Form({
   categories,
 }: {
   categories: ITransactionCategory[];
 }) {
+  const router = useRouter();
+
+  const createExpenseAndConfirm = (formData: FormData) => {
+    const expenseName = formData.get("category");
+    createExpense(formData)
+      .then(() => {
+        toast(`"${expenseName}" expense created successfully!`);
+        router.replace("/expenses");
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error(`Failed to create "${expenseName}" expense.`);
+      });
+  };
+
   return (
-    <form action={createExpense}>
+    <form action={createExpenseAndConfirm}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4 flex flex-col gap-2">
           <Label htmlFor="category">Choose category</Label>

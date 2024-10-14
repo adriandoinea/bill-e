@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import prisma from "@/db";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -68,7 +67,6 @@ export async function createExpense(formData: FormData) {
   }
   revalidatePath("/expenses");
   revalidatePath("/budgets");
-  redirect("/expenses");
 }
 
 export async function editExpense(id: string, formData: FormData) {
@@ -115,25 +113,6 @@ export async function editExpense(id: string, formData: FormData) {
       message: "Database Error: Failed to Create Expense.",
     };
   }
-
-  revalidatePath("/expenses");
-  revalidatePath("/budgets");
-  redirect("/expenses");
-}
-
-export async function deleteExpense(id: string) {
-  const session = await auth();
-  const userId = session?.user?.id;
-  if (!userId) {
-    throw new Error("User ID is required");
-  }
-
-  await prisma.expense.delete({
-    where: {
-      id,
-      userId,
-    },
-  });
 
   revalidatePath("/expenses");
   revalidatePath("/budgets");

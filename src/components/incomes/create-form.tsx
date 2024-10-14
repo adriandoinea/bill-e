@@ -1,3 +1,5 @@
+"use client";
+
 import { createIncome } from "@/app/actions/incomesActions";
 import { ITransactionCategory } from "@/types";
 import dayjs from "dayjs";
@@ -7,14 +9,31 @@ import CategorySelector from "../categories/category-selector";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { CURRENCY } from "@/lib/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Form({
   categories,
 }: {
   categories: ITransactionCategory[];
 }) {
+  const router = useRouter();
+
+  const createIncomeAndConfirm = (formData: FormData) => {
+    const incomeName = formData.get("category");
+    createIncome(formData)
+      .then(() => {
+        toast(`"${incomeName}" income created successfully!`);
+        router.replace("/incomes");
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error(`Failed to create "${incomeName}" income.`);
+      });
+  };
+
   return (
-    <form action={createIncome}>
+    <form action={createIncomeAndConfirm}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4 flex flex-col gap-2">
           <label htmlFor="category">Choose category</label>

@@ -4,7 +4,6 @@ import { editBudget } from "@/app/actions/budgetsActions";
 import { IBudget, ITransactionCategory } from "@/types";
 import { CircleDollarSign, RotateCcw } from "lucide-react";
 import Link from "next/link";
-import { useFormState } from "react-dom";
 import CategorySelector from "../categories/category-selector";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -17,6 +16,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { CURRENCY } from "@/lib/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function EditForm({
   categories,
@@ -25,11 +26,27 @@ export default function EditForm({
   categories: ITransactionCategory[];
   budget: IBudget;
 }) {
-  const editBudgetWithId = editBudget.bind(null, budget.id);
-  const [state, dispatch] = useFormState(editBudgetWithId, null);
+  const router = useRouter();
+
+  const editBudgetAndConfirm = (formData: FormData) => {
+    editBudget(budget.id, formData)
+      .then((data) => {
+        if (data?.message) {
+          toast.warning(data.message);
+        } else {
+          toast(`Budget edited successfully!`);
+          router.replace("/budgets");
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error(`Failed to edit budget.`);
+        return e;
+      });
+  };
+
   return (
-    <form action={dispatch}>
-      <div>{state?.message}</div>
+    <form action={editBudgetAndConfirm}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
           <Label htmlFor="category" className="mb-2">

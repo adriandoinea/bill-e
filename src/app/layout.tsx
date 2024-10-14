@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: { template: "Bill-e | %s", default: "Bill-e" },
@@ -26,6 +27,7 @@ export default async function RootLayout({
               <main className="h-full w-full flex-grow p-6 overflow-y-auto sm:p-12 2xl:px-28">
                 {children}
               </main>
+              <Toaster duration={3000} />
             </div>
           </ThemeProvider>
         </SessionProvider>

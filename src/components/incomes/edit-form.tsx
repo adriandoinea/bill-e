@@ -1,3 +1,5 @@
+"use client";
+
 import { editIncome } from "@/app/actions/incomesActions";
 import { IIncome, ITransactionCategory } from "@/types";
 import dayjs from "dayjs";
@@ -7,6 +9,8 @@ import CategorySelector from "../categories/category-selector";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { CURRENCY } from "@/lib/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function EditForm({
   categories,
@@ -15,9 +19,27 @@ export default function EditForm({
   categories: ITransactionCategory[];
   income: IIncome;
 }) {
-  const editIncomeWithId = editIncome.bind(null, income.id);
+  const router = useRouter();
+
+  const editIncomeAndConfirm = (formData: FormData) => {
+    editIncome(income.id, formData)
+      .then((data) => {
+        if (data?.message) {
+          toast.warning(data.message);
+        } else {
+          toast(`Income edited successfully!`);
+          router.replace("/incomes");
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error(`Failed to edit income.`);
+        return e;
+      });
+  };
+
   return (
-    <form action={editIncomeWithId}>
+    <form action={editIncomeAndConfirm}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">

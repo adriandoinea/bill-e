@@ -9,10 +9,10 @@ import {
 import { fetchFilteredTransactions } from "@/lib/data/transactions";
 import { FilterParams } from "@/types";
 import dayjs from "dayjs";
-import { DeleteExpense, EditExpense } from "./buttons";
 import TransactionCard from "../transaction-card";
 import { CURRENCY } from "@/lib/constants";
 import { roundWithTwoDecimals } from "@/lib/utils";
+import { DeleteTransaction, EditTransaction } from "../transaction-buttons";
 
 interface Props {
   query: string;
@@ -61,8 +61,8 @@ export default async function ExpensesTable({ query, filter }: Props) {
                 <TableCell>{expense.location as string}</TableCell>
               )}
               <TableCell className="flex gap-3 items-center justify-end">
-                <EditExpense id={expense.id} />
-                <DeleteExpense id={expense.id} />
+                <EditTransaction id={expense.id} type="expense" />
+                <DeleteTransaction id={expense.id} type="expense" />
               </TableCell>
             </TableRow>
           ))}

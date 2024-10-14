@@ -1,4 +1,5 @@
-import { editExpense } from "@/app/actions/expensesActions";
+"use client";
+
 import { IExpense, ITransactionCategory } from "@/types";
 import dayjs from "dayjs";
 import { CircleDollarSign, MapPin, StickyNote } from "lucide-react";
@@ -8,6 +9,9 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CURRENCY } from "@/lib/constants";
+import { toast } from "sonner";
+import { editExpense } from "@/app/actions/expensesActions";
+import { useRouter } from "next/navigation";
 
 export default function EditForm({
   categories,
@@ -16,9 +20,27 @@ export default function EditForm({
   categories: ITransactionCategory[];
   expense: IExpense;
 }) {
-  const editExpenseWithId = editExpense.bind(null, expense.id);
+  const router = useRouter();
+
+  const editExpenseAndConfirm = (formData: FormData) => {
+    editExpense(expense.id, formData)
+      .then((data) => {
+        if (data?.message) {
+          toast.warning(data.message);
+        } else {
+          toast(`Expense edited successfully!`);
+          router.replace("/expenses");
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error(`Failed to edit expense.`);
+        return e;
+      });
+  };
+
   return (
-    <form action={editExpenseWithId}>
+    <form action={editExpenseAndConfirm}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4 flex flex-col gap-2">
           <Label htmlFor="category">Choose category</Label>

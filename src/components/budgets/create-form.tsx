@@ -4,7 +4,6 @@ import { createBudget } from "@/app/actions/budgetsActions";
 import { ITransactionCategory } from "@/types";
 import { CircleDollarSign, RotateCcw } from "lucide-react";
 import Link from "next/link";
-import { useFormState } from "react-dom";
 import CategorySelector from "../categories/category-selector";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -17,16 +16,36 @@ import {
   SelectValue,
 } from "../ui/select";
 import { CURRENCY } from "@/lib/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Form({
   categories,
 }: {
   categories: ITransactionCategory[];
 }) {
-  const [state, dispatch] = useFormState(createBudget, null);
+  const router = useRouter();
+
+  const createBudgetAndConfirm = (formData: FormData) => {
+    const budgetName = formData.get("category");
+    createBudget(formData)
+      .then((data) => {
+        if (data?.message) {
+          toast.warning(data.message);
+        } else {
+          toast(`"${budgetName}" budget created successfully!`);
+          router.replace("/budgets");
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error(`Failed to create "${budgetName}" budget.`);
+        return e;
+      });
+  };
+
   return (
-    <form action={dispatch}>
-      <div>{state?.message}</div>
+    <form action={createBudgetAndConfirm}>
       <div className="rounded-md bg-accent p-4 md:p-6">
         <div className="mb-4">
           <Label htmlFor="category" className="mb-2 block text-sm font-medium">

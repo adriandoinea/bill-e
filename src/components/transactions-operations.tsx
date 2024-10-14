@@ -1,6 +1,6 @@
-import CreateTransaction from "@/components/create-transaction";
 import Filter from "@/components/filter";
 import Searchbar from "@/components/searchbar";
+import { CreateTransaction } from "./transaction-buttons";
 
 export default function TransactionsOperations({
   type,

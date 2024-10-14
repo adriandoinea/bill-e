@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/db";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import dayjs from "dayjs";
 import { auth } from "@/auth";
@@ -64,7 +63,6 @@ export async function createIncome(formData: FormData) {
     };
   }
   revalidatePath("/incomes");
-  redirect("/incomes");
 }
 
 export async function editIncome(id: string, formData: FormData) {
@@ -110,24 +108,6 @@ export async function editIncome(id: string, formData: FormData) {
       message: "Database Error: Failed to Create Income.",
     };
   }
-
-  revalidatePath("/incomes");
-  redirect("/incomes");
-}
-
-export async function deleteIncome(id: string) {
-  const session = await auth();
-  const userId = session?.user?.id;
-  if (!userId) {
-    throw new Error("User ID is required");
-  }
-
-  await prisma.income.delete({
-    where: {
-      id,
-      userId,
-    },
-  });
 
   revalidatePath("/incomes");
 }

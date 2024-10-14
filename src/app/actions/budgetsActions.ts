@@ -3,7 +3,6 @@
 import { auth } from "@/auth";
 import prisma from "@/db";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -18,10 +17,7 @@ const FormSchema = z.object({
 
 const CreateBudget = FormSchema.omit({ id: true, color: true });
 
-export async function createBudget(
-  prevState: { message: string } | null,
-  formData: FormData
-) {
+export async function createBudget(formData: FormData) {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
@@ -76,14 +72,9 @@ export async function createBudget(
   }
 
   revalidatePath("/budgets");
-  redirect("/budgets");
 }
 
-export async function editBudget(
-  id: string,
-  prevState: { message: string } | null,
-  formData: FormData
-) {
+export async function editBudget(id: string, formData: FormData) {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
@@ -143,24 +134,6 @@ export async function editBudget(
       message: "Database Error: Failed to Edit Budget.",
     };
   }
-
-  revalidatePath("/budgets");
-  redirect("/budgets");
-}
-
-export async function deleteBudget(id: string) {
-  const session = await auth();
-  const userId = session?.user?.id;
-  if (!userId) {
-    throw new Error("User ID is required");
-  }
-
-  await prisma.budget.delete({
-    where: {
-      userId,
-      id,
-    },
-  });
 
   revalidatePath("/budgets");
 }

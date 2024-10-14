@@ -1,10 +1,9 @@
 import { IExpense, IIncome } from "@/types";
 import { Card } from "./ui/card";
 import dayjs from "dayjs";
-import { DeleteExpense, EditExpense } from "./expenses/buttons";
-import { DeleteIncome, EditIncome } from "./incomes/buttons";
 import { cn, roundWithTwoDecimals } from "@/lib/utils";
 import { CURRENCY } from "@/lib/constants";
+import { DeleteTransaction, EditTransaction } from "./transaction-buttons";
 
 interface Props {
   transaction: IExpense | IIncome;
@@ -37,17 +36,14 @@ export default function TransactionCard({ transaction, className }: Props) {
         </div>
       )}
       <div className="flex justify-end gap-2 mt-2">
-        {transaction.category.type === "expense" ? (
-          <>
-            <EditExpense id={transaction.id} />
-            <DeleteExpense id={transaction.id} />
-          </>
-        ) : transaction.category.type === "income" ? (
-          <>
-            <EditIncome id={transaction.id} />
-            <DeleteIncome id={transaction.id} />
-          </>
-        ) : null}
+        <EditTransaction
+          id={transaction.id}
+          type={transaction.category.type as "expense" | "income"}
+        />
+        <DeleteTransaction
+          id={transaction.id}
+          type={transaction.category.type as "expense" | "income"}
+        />
       </div>
     </Card>
   );
