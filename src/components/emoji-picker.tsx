@@ -59,6 +59,7 @@ export default function EmojiPicker({
         {selectedValue || <SmilePlus size={20} />}
       </PopoverTrigger>
       <PopoverContent
+        disablePortal
         side="left"
         className="p-0 border-0 bg-transparent"
         onWheel={(e) => e.stopPropagation()}
