@@ -1,7 +1,7 @@
 import { getInsights } from "@/lib/data/transactions";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { cn } from "@/lib/utils";
+import { cn, roundWithTwoDecimals } from "@/lib/utils";
 import { CURRENCY } from "@/lib/constants";
 
 export default async function Insights({ className }: { className?: string }) {
@@ -60,7 +60,9 @@ export default async function Insights({ className }: { className?: string }) {
   const getBudgetMessage = () => {
     if (!budgetDetails || budgetDetails.spentPercent === 0) return null;
 
-    const spent = budgetDetails.initAmount - budgetDetails.currentAmount;
+    const spent = roundWithTwoDecimals(
+      budgetDetails.initAmount - budgetDetails.currentAmount
+    );
     return `You spent ${spent} ${CURRENCY} on ${budgetDetails.name} this month. That's ${budgetDetails.spentPercent}% of this category's budget.`;
   };
 

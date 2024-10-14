@@ -19,6 +19,7 @@ export default function BudgetCard({
 }: BudgetCardProps) {
   const roundedInitAmount = roundWithTwoDecimals(initialAmount);
   const roundedCurrentAmount = roundWithTwoDecimals(currentAmount);
+
   return (
     <div className="w-auto h-36 sm:w-56 sm:h-40 bg-accent dark:bg-background px-5 py-2 border-2 rounded-md flex flex-col flex-wrap justify-center items-center">
       <div className="w-full flex items-center justify-end gap-1">
@@ -41,7 +42,9 @@ export default function BudgetCard({
       <div className="w-full flex justify-between items-center">
         <div className="flex flex-col items-center">
           <div>Spent</div>
-          <div>{roundedInitAmount - roundedCurrentAmount}</div>
+          <div>
+            {roundWithTwoDecimals(roundedInitAmount - roundedCurrentAmount)}
+          </div>
         </div>
         <div className="text-4xl font-thin">|</div>
         <div className="flex flex-col items-center">
