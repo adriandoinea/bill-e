@@ -64,8 +64,8 @@ export default async function BudgetsDashboard({
             key={budget.id}
             id={budget.id}
             category={budget.category}
-            initialAmount={roundWithTwoDecimals(budget.initAmount / 100)}
-            currentAmount={roundWithTwoDecimals(budget.currentAmount / 100)}
+            initialAmount={budget.initAmount / 100}
+            currentAmount={budget.currentAmount / 100}
             color={budget.category.color}
           />
         ))}

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, roundWithTwoDecimals } from "@/lib/utils";
 import { DeleteBudget, EditBudget } from "./buttons";
 import { CURRENCY } from "@/lib/constants";
 
@@ -17,6 +17,8 @@ export default function BudgetCard({
   currentAmount,
   color,
 }: BudgetCardProps) {
+  const roundedInitAmount = roundWithTwoDecimals(initialAmount);
+  const roundedCurrentAmount = roundWithTwoDecimals(currentAmount);
   return (
     <div className="w-auto h-36 sm:w-56 sm:h-40 bg-accent dark:bg-background px-5 py-2 border-2 rounded-md flex flex-col flex-wrap justify-center items-center">
       <div className="w-full flex items-center justify-end gap-1">
@@ -33,19 +35,19 @@ export default function BudgetCard({
       <div className="text-center">
         <div>{category.name}</div>
         <div>
-          {initialAmount} {CURRENCY}
+          {roundedInitAmount} {CURRENCY}
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
         <div className="flex flex-col items-center">
           <div>Spent</div>
-          <div>{initialAmount - currentAmount}</div>
+          <div>{roundedInitAmount - roundedCurrentAmount}</div>
         </div>
         <div className="text-4xl font-thin">|</div>
         <div className="flex flex-col items-center">
           <div>Left</div>
-          <div className={cn({ "text-destructive": currentAmount < 0 })}>
-            {currentAmount}
+          <div className={cn({ "text-destructive": roundedCurrentAmount < 0 })}>
+            {roundedCurrentAmount}
           </div>
         </div>
       </div>
