@@ -47,3 +47,8 @@ export interface ILocalCategory {
 }
 
 export type FilterParams = { from?: string; to?: string };
+
+export interface CategoriesRequestBody {
+  type: "expense" | "income";
+  categories: ILocalCategory[];
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import { updateCategories } from "@/app/actions/categoriesActions";
 import {
   Dialog,
   DialogContent,
@@ -12,11 +11,13 @@ import {
 import { validateCategoriesFields } from "@/lib/categories-utils";
 import { cn } from "@/lib/utils";
 import { ILocalCategory, ITransactionCategory } from "@/types";
-import { Check, Pencil, Plus, Trash, X } from "lucide-react";
+import { Check, Loader2, Pencil, Plus, Trash, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import EmojiPicker from "../emoji-picker";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 interface Props {
   isOpen: boolean;
   onClose: Function;
@@ -43,8 +44,18 @@ export default function CategoryDialog({
   );
   const [localCategories, setLocalCategories] =
     useState<ILocalCategory[]>(initCategoriesState);
+  const [isLoading, setIsLoading] = useState(false);
   const prevCategoriesRef = useRef<ILocalCategory[]>([...initCategoriesState]);
   const categoryInputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
+
+  const hasUnsavedChanges = localCategories.some(
+    (categ) =>
+      categ.isEditing ||
+      categ.isDeletedLocally ||
+      categ.isAdded ||
+      categ.isUpdated
+  );
 
   const handleAddCategory = () => {
     const id =
@@ -154,7 +165,12 @@ export default function CategoryDialog({
     }
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
+    if (!hasUnsavedChanges) {
+      onClose();
+      return;
+    }
+
     const hasUnsavedFields = localCategories.some((categ) => categ.isEditing);
     const validatedFields = validateCategoriesFields(localCategories);
     if (!validatedFields.success) {
@@ -184,19 +200,57 @@ export default function CategoryDialog({
       !hasUnsavedFields ||
       confirm("Some categories are not confirmed. Do you want to save them?")
     ) {
-      updateCategories(type, localCategories);
-      onClose();
+      const addedCategories = localCategories.filter((categ) => categ.isAdded);
+      const updatedCategories = localCategories.filter(
+        (category) =>
+          category.isUpdated && !category.isDeletedLocally && !category.isAdded
+      );
+      const deletedCategories = localCategories.filter(
+        (categ) => categ.isDeletedLocally
+      );
+
+      try {
+        setIsLoading(true);
+
+        if (addedCategories.length > 0) {
+          await fetch("/api/categories/add", {
+            method: "POST",
+            body: JSON.stringify({ type, categories: addedCategories }),
+          });
+          toast("Categories added successfully!");
+        }
+
+        if (updatedCategories.length > 0) {
+          await fetch("/api/categories/update", {
+            method: "PUT",
+            body: JSON.stringify({ type, categories: updatedCategories }),
+          });
+          toast("Categories updated successfully!");
+        }
+
+        if (deletedCategories.length > 0) {
+          await fetch("/api/categories/delete", {
+            method: "DELETE",
+            body: JSON.stringify({ type, categories: deletedCategories }),
+          });
+          toast("Categories deleted successfully!");
+        }
+
+        router.refresh();
+        onClose();
+      } catch (e) {
+        console.error(e);
+        if (e && typeof e === "object") {
+          if ("message" in e) toast.error(e.message as string);
+          else toast.error("Something went wrong!");
+        }
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const handleCancelChanges = () => {
-    const hasUnsavedChanges = localCategories.some(
-      (categ) =>
-        categ.isEditing ||
-        categ.isDeletedLocally ||
-        categ.isAdded ||
-        categ.isUpdated
-    );
     if (
       !hasUnsavedChanges ||
       confirm(
@@ -233,7 +287,7 @@ export default function CategoryDialog({
   }, [isOpen, initCategoriesState]);
 
   return (
-    <Dialog modal open={isOpen} onOpenChange={() => onClose()}>
+    <Dialog modal open={isOpen} onOpenChange={handleCancelChanges}>
       <DialogContent
         className="sm:max-w-[425px]"
         onInteractOutside={(e) => e.preventDefault()}
@@ -245,6 +299,11 @@ export default function CategoryDialog({
 
         <form className="w-full" onSubmit={(e) => e.preventDefault()}>
           <div className="flex flex-col gap-4 w-full">
+            {isLoading && (
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-customAccent" />
+              </div>
+            )}
             {localCategories.map(
               (category) =>
                 !category.isDeletedLocally && (
@@ -346,10 +405,15 @@ export default function CategoryDialog({
             <Button
               className="bg-customAccent hover:bg-customAccent-foreground"
               onClick={handleCancelChanges}
+              disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button type="submit" onClick={handleSaveChanges}>
+            <Button
+              type="submit"
+              onClick={handleSaveChanges}
+              disabled={isLoading}
+            >
               Save
             </Button>
           </DialogFooter>
