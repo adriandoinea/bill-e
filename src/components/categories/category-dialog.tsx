@@ -403,13 +403,14 @@ export default function CategoryDialog({
 
           <DialogFooter className="mt-8 flex justify-end gap-1">
             <Button
-              className="bg-customAccent hover:bg-customAccent-foreground"
+              variant="outline"
               onClick={handleCancelChanges}
               disabled={isLoading}
             >
               Cancel
             </Button>
             <Button
+              variant="custom"
               type="submit"
               onClick={handleSaveChanges}
               disabled={isLoading}
