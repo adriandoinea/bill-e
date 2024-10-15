@@ -289,7 +289,7 @@ export default function CategoryDialog({
   return (
     <Dialog modal open={isOpen} onOpenChange={handleCancelChanges}>
       <DialogContent
-        className="sm:max-w-[425px]"
+        className="sm:max-w-[425px] max-h-[80vh] flex flex-col"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
@@ -297,8 +297,11 @@ export default function CategoryDialog({
           <DialogDescription>Edit categories for {type}s</DialogDescription>
         </DialogHeader>
 
-        <form className="w-full" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex flex-col gap-4 w-full">
+        <form
+          className="w-full flex-grow overflow-hidden flex flex-col"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <div className="flex flex-col flex-grow gap-4 pr-2 overflow-y-auto w-full">
             {isLoading && (
               <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-customAccent" />
@@ -349,7 +352,7 @@ export default function CategoryDialog({
                         onChange={(e) => handleCategoryChange(e, category.id)}
                       />
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 shrink-0">
                       {category.isEditing ? (
                         <>
                           <Button
@@ -392,32 +395,35 @@ export default function CategoryDialog({
                   </div>
                 )
             )}
-            <Button
-              className="w-full bg-customAccent hover:bg-customAccent-foreground"
-              size="icon"
-              onClick={handleAddCategory}
-            >
-              <Plus />
-            </Button>
           </div>
 
-          <DialogFooter className="mt-8 flex justify-end gap-1">
+          <div className="mt-4 flex flex-col gap-4">
             <Button
-              variant="outline"
-              onClick={handleCancelChanges}
-              disabled={isLoading}
+              variant="secondary"
+              className="w-full"
+              onClick={handleAddCategory}
             >
-              Cancel
+              <Plus className="mr-2 h-4 w-4" /> Add Category
             </Button>
-            <Button
-              variant="custom"
-              type="submit"
-              onClick={handleSaveChanges}
-              disabled={isLoading}
-            >
-              Save
-            </Button>
-          </DialogFooter>
+
+            <DialogFooter className="flex justify-end gap-1 px-0">
+              <Button
+                variant="outline"
+                onClick={handleCancelChanges}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="custom"
+                type="submit"
+                onClick={handleSaveChanges}
+                disabled={isLoading}
+              >
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
