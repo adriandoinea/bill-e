@@ -5,13 +5,13 @@ import dayjs from "dayjs";
 import { CircleDollarSign, MapPin, StickyNote } from "lucide-react";
 import Link from "next/link";
 import CategorySelector from "../categories/category-selector";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CURRENCY } from "@/lib/constants";
 import { toast } from "sonner";
 import { editExpense } from "@/app/actions/expensesActions";
 import { useRouter } from "next/navigation";
+import FormButton from "../form-button";
 
 export default function EditForm({
   categories,
@@ -117,12 +117,12 @@ export default function EditForm({
         >
           Cancel
         </Link>
-        <Button
+        <FormButton
           className="bg-customAccent hover:bg-customAccent-foreground transition duration-300"
           type="submit"
         >
           Update expense
-        </Button>
+        </FormButton>
       </div>
     </form>
   );

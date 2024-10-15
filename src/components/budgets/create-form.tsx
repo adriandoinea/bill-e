@@ -5,7 +5,6 @@ import { ITransactionCategory } from "@/types";
 import { CircleDollarSign, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import CategorySelector from "../categories/category-selector";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -18,6 +17,7 @@ import {
 import { CURRENCY } from "@/lib/constants";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import FormButton from "../form-button";
 
 export default function Form({
   categories,
@@ -106,12 +106,12 @@ export default function Form({
         >
           Cancel
         </Link>
-        <Button
+        <FormButton
           className="bg-customAccent hover:bg-customAccent-foreground transition duration-300"
           type="submit"
         >
           Create budget
-        </Button>
+        </FormButton>
       </div>
     </form>
   );
