@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Bill-e
 
-## Getting Started
+An intuitive and user-friendly expense tracker built with Next.js. This app helps users manage their finances by allowing them to track expenses and incomes, set budgets, and analyse transactions data through charts and insights.
+You can check out the live version at [bill-e.org](https://bill-e.org).
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Dashboard with Insights:** Get a view of your finances through charts and insights about your transactions and budgets.
+- **Add, Edit, Delete Transactions:** Track both expenses and incomes with ease.
+- **Transaction Filtering:** Filter transactions by specific periods and use the search functionality to find transactions by name, amount or other details you added.
+- **Budgets Management:** Set monthly/daily/weekly or yearly budgets to keep track of your spending.
+- **Customisable Categories:** Add and customise your own categories by choosing the icon and color.
+- **Authentication:** Secure login and authentication using [Auth.js (NextAuth)](https://authjs.dev/).
+- **Email Notifications:** Authentication emails are sent using [Resend](https://resend.com/).
+- **Database:** The data is stored in a MySQL database.
+- **Responsive Design:** The app is styled using [TailwindCSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/), ensuring a clean and responsive design across devices.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend:** Next.js, React, TypeScript
+- **Backend:** Next.js, Prisma ORM
+- **Authentication:** Auth.js (NextAuth)
+- **Database:** MySQL
+- **Styling:** TailwindCSS, shadcn/ui
+- **Deployment:** [Railway](https://railway.app/)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Setup & Installation
 
-## Learn More
+1. **Clone the repository:**
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   git clone https://github.com/adriandoinea/bill-e.git
+   cd bill-e
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install dependencies:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. **Environment Variables:**
+   Copy `.env.example` to `.env` and fill in your environment variables.<br><br>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Run the development server:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   npm run dev
+   ```
+
+5. **Open the app in your browser:**
+   Navigate to http://localhost:3000 to view the app.
+
+## Live Demo
+
+You can find the live app at [bill-e.org](https://bill-e.org).
