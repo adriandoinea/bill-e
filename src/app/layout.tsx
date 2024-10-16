@@ -5,10 +5,18 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/sonner";
+import type { Viewport } from "next";
 
 export const metadata: Metadata = {
   title: { template: "Bill-e | %s", default: "Bill-e" },
   description: "Expense tracker",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default async function RootLayout({
