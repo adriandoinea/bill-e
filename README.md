@@ -1,6 +1,6 @@
 # Bill-e
 
-An intuitive and user-friendly expense tracker built with Next.js. This app helps users manage their finances by allowing them to track expenses and incomes, set budgets, and analyse transactions data through charts and insights.
+An intuitive and user-friendly expense tracker built with Next.js. This app helps users manage their finances by allowing them to track expenses and incomes, set budgets, and analyse transactions data through charts and insights. <br>
 You can check out the live version at [bill-e.org](https://bill-e.org).
 
 ## Features
