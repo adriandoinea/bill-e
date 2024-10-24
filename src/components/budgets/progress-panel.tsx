@@ -25,7 +25,13 @@ export default async function ProgressPanel({
             <div className="w-48 truncate">{budget.category.name}</div>
             <div className="relative w-full flex items-center">
               <Progress value={value} color={budget.category.color} />
-              <div className="absolute left-1/2 text-primary">{value}%</div>
+              <div
+                className={cn("absolute left-1/2 text-primary", {
+                  "text-destructive": value > 100,
+                })}
+              >
+                {value}%
+              </div>
             </div>
           </div>
         );

@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "@/db";
+import { fetchFilteredBudgets } from "@/lib/data/budgets";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -59,14 +60,14 @@ export async function createExpense(formData: FormData) {
         User: { connect: { id: userId } },
       },
     });
+    revalidatePath("/expenses");
+    await fetchFilteredBudgets();
   } catch (error) {
     console.error(error);
     return {
       message: "Database Error: Failed to Create Expense.",
     };
   }
-  revalidatePath("/expenses");
-  revalidatePath("/budgets");
 }
 
 export async function editExpense(id: string, formData: FormData) {
@@ -107,13 +108,12 @@ export async function editExpense(id: string, formData: FormData) {
         },
       },
     });
+    revalidatePath("/expenses");
+    await fetchFilteredBudgets();
   } catch (error) {
     console.error(error);
     return {
       message: "Database Error: Failed to Create Expense.",
     };
   }
-
-  revalidatePath("/expenses");
-  revalidatePath("/budgets");
 }
