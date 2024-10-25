@@ -29,7 +29,7 @@ export function CreateTransaction({ type }: { type: Props["type"] }) {
 export function EditTransaction({ id, type }: Props) {
   return (
     <Link className="text-customAccent" href={`${type}s/${id}/edit`}>
-      <Pencil className="size-5 sm:size-6" />
+      <Pencil className="size-5" />
     </Link>
   );
 }
@@ -69,7 +69,7 @@ export function DeleteTransaction({ id, type }: Props) {
     <>
       <button className="text-destructive" onClick={handleOpenAlert}>
         <span className="sr-only">Delete</span>
-        <Trash className="size-5 sm:size-6" />
+        <Trash className="size-5" />
       </button>
 
       <Alert

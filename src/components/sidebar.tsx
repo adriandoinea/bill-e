@@ -114,7 +114,7 @@ export function Sidebar({ className }: { className?: string }) {
         </Link>
         <Link
           className={cn(DEFAULT_LINK_STYLE, {
-            [SELECTED_LINK_STYLE]: path === "/expenses",
+            [SELECTED_LINK_STYLE]: path.startsWith("/expenses"),
             [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/expenses"
@@ -130,7 +130,7 @@ export function Sidebar({ className }: { className?: string }) {
         </Link>
         <Link
           className={cn(DEFAULT_LINK_STYLE, {
-            [SELECTED_LINK_STYLE]: path === "/incomes",
+            [SELECTED_LINK_STYLE]: path.startsWith("/incomes"),
             [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/incomes"
@@ -146,7 +146,7 @@ export function Sidebar({ className }: { className?: string }) {
         </Link>
         <Link
           className={cn(DEFAULT_LINK_STYLE, {
-            [SELECTED_LINK_STYLE]: path === "/budgets",
+            [SELECTED_LINK_STYLE]: path.startsWith("/budgets"),
             [COLLAPSED_LINK_STYLE]: isCollapsed,
           })}
           href="/budgets"
