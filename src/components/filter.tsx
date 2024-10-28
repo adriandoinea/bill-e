@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn, convertDateToString, convertStringToDate } from "@/lib/utils";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -27,22 +27,29 @@ export default function Filter({
 
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
-  const strFrom = useMemo(() => {
+  const getDefaultDateRange = () => {
     const firstDayOfTheMonth = dayjs().startOf("month").toDate();
+    const lastDayOfTheMonth = dayjs().endOf("month").toDate();
+    return {
+      from: convertDateToString(firstDayOfTheMonth),
+      to: convertDateToString(lastDayOfTheMonth),
+    };
+  };
+
+  const strFrom = useMemo(() => {
     const paramFrom = params.get("dateFrom");
     if (paramFrom) {
       return paramFrom;
     }
-    return convertDateToString(firstDayOfTheMonth);
+    return getDefaultDateRange().from;
   }, [params]);
 
   const strTo = useMemo(() => {
-    const lastDayOfTheMonth = dayjs().endOf("month").toDate();
     const paramTo = params.get("dateTo");
     if (paramTo !== null) {
       return paramTo;
     }
-    return convertDateToString(lastDayOfTheMonth);
+    return getDefaultDateRange().to;
   }, [params]);
 
   const handleDateChange = (range?: DateRange) => {
@@ -54,10 +61,21 @@ export default function Filter({
     router.replace(`${pathname}?${params.toString()}`);
   };
 
+  const handleReset = () => {
+    const defaultRange = getDefaultDateRange();
+    params.set("dateFrom", defaultRange.from);
+    params.set("dateTo", defaultRange.to);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
   const selected = {
     from: convertStringToDate(strFrom),
     to: convertStringToDate(strTo),
   };
+
+  const isDefaultRange =
+    strFrom === getDefaultDateRange().from &&
+    strTo === getDefaultDateRange().to;
 
   useEffect(() => {
     const dateFrom = convertStringToDate(strFrom);
@@ -118,15 +136,25 @@ export default function Filter({
             onSelect={handleDateChange}
             numberOfMonths={isSmallScreen ? 1 : 2}
           />
-          <div className="p-3 border-t">
-            <div className="flex justify-between items-center">
-              <div className="text-sm">
+          <div className="p-3 border-t flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div className="text-sm w-full sm:w-auto flex justify-between sm:justify-start gap-2">
+              <span>
                 <strong>From:</strong> {strFrom}
-              </div>
-              <div className="text-sm">
+              </span>
+              <span className="sm:ml-2">
                 <strong>To:</strong> {strTo}
-              </div>
+              </span>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              disabled={isDefaultRange}
+              className="w-full sm:w-auto"
+            >
+              <X className="size-4 mr-2" />
+              Clear
+            </Button>
           </div>
         </PopoverContent>
       </Popover>
