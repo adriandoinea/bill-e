@@ -9,7 +9,7 @@ import {
 import { cn, convertDateToString, convertStringToDate } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Button } from "./ui/button";
 import dayjs from "dayjs";
@@ -24,6 +24,8 @@ export default function Filter({
     () => new URLSearchParams(searchParams),
     [searchParams]
   );
+
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const strFrom = useMemo(() => {
     const firstDayOfTheMonth = dayjs().startOf("month").toDate();
@@ -52,6 +54,11 @@ export default function Filter({
     router.replace(`${pathname}?${params.toString()}`);
   };
 
+  const selected = {
+    from: convertStringToDate(strFrom),
+    to: convertStringToDate(strTo),
+  };
+
   useEffect(() => {
     const dateFrom = convertStringToDate(strFrom);
     const dateTo = convertStringToDate(strTo);
@@ -64,10 +71,15 @@ export default function Filter({
     router.replace(`${pathname}?${params.toString()}`);
   }, [params, pathname, router, strFrom, strTo]);
 
-  const selected = {
-    from: convertStringToDate(strFrom),
-    to: convertStringToDate(strTo),
-  };
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isSmall = window.innerWidth < 640;
+      setIsSmallScreen(isSmall);
+    };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -104,8 +116,18 @@ export default function Filter({
             defaultMonth={selected.from}
             selected={selected}
             onSelect={handleDateChange}
-            numberOfMonths={2}
+            numberOfMonths={isSmallScreen ? 1 : 2}
           />
+          <div className="p-3 border-t">
+            <div className="flex justify-between items-center">
+              <div className="text-sm">
+                <strong>From:</strong> {strFrom}
+              </div>
+              <div className="text-sm">
+                <strong>To:</strong> {strTo}
+              </div>
+            </div>
+          </div>
         </PopoverContent>
       </Popover>
     </div>
