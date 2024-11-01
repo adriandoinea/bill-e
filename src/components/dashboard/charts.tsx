@@ -68,7 +68,7 @@ export async function DashboardPieChart({
   if (!hasExpenses) {
     return (
       <div className="h-full flex items-center">
-        No expenses added yet.
+        No expenses added this month.
         <Link
           className="text-customAccent rounded-full hover:bg-hoverColor p-1"
           href={"/expenses/create"}

@@ -277,8 +277,8 @@ export const getInsights = async () => {
 
   return {
     transactionsPercentageChange: {
-      expenses: expensePercentageChange,
-      income: incomePercentageChange,
+      expenses: currentMonthExpensesTotal > 0 ? expensePercentageChange : null,
+      income: currentMonthIncomeTotal > 0 ? incomePercentageChange : null,
     },
     budgetDetails,
   };

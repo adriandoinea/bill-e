@@ -71,7 +71,7 @@ export async function fetchFilteredBudgets(
 
   for (let budget of budgets) {
     const expensesForBudget = expenses[budget.category.name];
-    if (!expensesForBudget && budget.currentAmount > 0) {
+    if (!expensesForBudget) {
       await prisma.budget.update({
         where: { id: budget.id, userId },
         data: { currentAmount: budget.initAmount },
