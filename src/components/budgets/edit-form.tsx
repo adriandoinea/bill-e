@@ -3,7 +3,6 @@
 import { editBudget } from "@/app/actions/budgetsActions";
 import { IBudget, ITransactionCategory } from "@/types";
 import { CircleDollarSign, RotateCcw } from "lucide-react";
-import Link from "next/link";
 import CategorySelector from "../categories/category-selector";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -18,6 +17,7 @@ import { CURRENCY } from "@/lib/constants";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import FormButton from "../form-button";
+import { Button } from "../ui/button";
 
 export default function EditForm({
   categories,
@@ -102,12 +102,9 @@ export default function EditForm({
       </div>
 
       <div className="w-full mt-5 flex gap-4 justify-end items-center">
-        <Link
-          className="flex h-10 items-center rounded-md bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-          href="/budgets"
-        >
+        <Button variant="secondary" type="button" onClick={() => router.back()}>
           Cancel
-        </Link>
+        </Button>
         <FormButton
           className="bg-customAccent hover:bg-customAccent-foreground transition duration-300"
           type="submit"

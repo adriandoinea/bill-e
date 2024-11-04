@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, RotateCcw } from "lucide-react";
+import { AlertTriangle, RotateCcw, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Error({
   error,
@@ -12,6 +12,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -46,11 +47,14 @@ export default function Error({
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-end">
             <Button
-              asChild
               variant="secondary"
               className="w-full sm:w-40 order-1 sm:order-none"
+              onClick={() => {
+                router.back();
+              }}
             >
-              <Link href="/">Go to Dashboard</Link>
+              <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
+              Go back
             </Button>
             <Button
               onClick={() => reset()}
