@@ -20,10 +20,6 @@ export default function Filter({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const params = useMemo(
-    () => new URLSearchParams(searchParams),
-    [searchParams]
-  );
 
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -37,22 +33,24 @@ export default function Filter({
   };
 
   const strFrom = useMemo(() => {
-    const paramFrom = params.get("dateFrom");
+    const paramFrom = searchParams.get("dateFrom");
     if (paramFrom) {
       return paramFrom;
     }
     return getDefaultDateRange().from;
-  }, [params]);
+  }, [searchParams]);
 
   const strTo = useMemo(() => {
-    const paramTo = params.get("dateTo");
+    const paramTo = searchParams.get("dateTo");
     if (paramTo !== null) {
       return paramTo;
     }
     return getDefaultDateRange().to;
-  }, [params]);
+  }, [searchParams]);
 
   const handleDateChange = (range?: DateRange) => {
+    const params = new URLSearchParams(searchParams.toString());
+
     const formattedFrom = convertDateToString(range?.from);
     const formattedTo = convertDateToString(range?.to || range?.from);
 
@@ -62,6 +60,7 @@ export default function Filter({
   };
 
   const handleReset = () => {
+    const params = new URLSearchParams(searchParams.toString());
     const defaultRange = getDefaultDateRange();
     params.set("dateFrom", defaultRange.from);
     params.set("dateTo", defaultRange.to);
@@ -78,6 +77,7 @@ export default function Filter({
     strTo === getDefaultDateRange().to;
 
   useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
     const dateFrom = convertStringToDate(strFrom);
     const dateTo = convertStringToDate(strTo);
     params.set("dateFrom", strFrom);
@@ -87,7 +87,7 @@ export default function Filter({
       params.set("dateTo", strTo);
     }
     router.replace(`${pathname}?${params.toString()}`);
-  }, [params, pathname, router, strFrom, strTo]);
+  }, [pathname, router, searchParams, strFrom, strTo]);
 
   useEffect(() => {
     const checkScreenSize = () => {

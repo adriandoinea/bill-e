@@ -7,14 +7,14 @@ export default function Filter() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const params = new URLSearchParams(searchParams.toString());
     params.set("period", event.target.value);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
-  const value = params.get("period") || "monthly";
+  const value = searchParams.get("period") || "monthly";
 
   return (
     <select
