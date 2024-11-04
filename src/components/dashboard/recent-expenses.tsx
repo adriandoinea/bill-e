@@ -1,5 +1,4 @@
 import { getRecentExpenses } from "@/lib/data/transactions";
-import dayjs from "dayjs";
 import Link from "next/link";
 import {
   Card,
@@ -8,15 +7,20 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { cn } from "@/lib/utils";
+import { cn, convertDateToString } from "@/lib/utils";
 import { CURRENCY } from "@/lib/constants";
 
 export default async function RecentExpenses({
+  month,
+  year,
   className,
 }: {
+  month: number;
+  year: number;
   className?: string;
 }) {
-  const recentExpenses = await getRecentExpenses();
+  const recentExpenses = await getRecentExpenses({ month, year });
+
   return (
     <Card className={cn("h-full w-full overflow-auto", className)}>
       <CardHeader className="px-4 md:px-6">
@@ -34,7 +38,7 @@ export default async function RecentExpenses({
             <div
               key={transaction.id}
               className="flex items-center justify-between"
-              title={dayjs(transaction.date).format("DD-MM-YYYY")}
+              title={convertDateToString(transaction.date)}
             >
               <div className="font-medium">
                 {transaction.category.emoji} {transaction.categoryName}
@@ -45,7 +49,7 @@ export default async function RecentExpenses({
             </div>
           ))
         ) : (
-          <span>No expenses added yet.</span>
+          <span>No expenses added this month.</span>
         )}
       </CardContent>
     </Card>

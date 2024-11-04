@@ -210,16 +210,31 @@ export const getLineChartData = async (type: "expense" | "income") => {
   return result;
 };
 
-export const getRecentExpenses = async (take?: number) => {
+export const getRecentExpenses = async (
+  period: { month: number; year: number },
+  take?: number
+) => {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
     throw new Error("User ID is required");
   }
 
+  const currentMonth = dayjs().month() + 1;
+  const currentYear = dayjs().year();
+
+  if (period.month > currentMonth && period.year >= currentYear) {
+    throw new Error("Invalid date");
+  }
+
+  const { month, year } = period;
+  const gte = dayjs(`${year}-${month}-01`).startOf("month").toDate();
+  const lte = dayjs(`${year}-${month}-01`).endOf("month").toDate();
+
   return await prisma.expense.findMany({
     where: {
       userId,
+      date: { gte, lte },
     },
     orderBy: [{ date: "desc" }],
     take: take || 10,
@@ -227,23 +242,16 @@ export const getRecentExpenses = async (take?: number) => {
   });
 };
 
-export const getInsights = async () => {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentYear = currentDate.getFullYear();
-  const lastMonth = currentMonth > 1 ? currentMonth - 1 : 12;
-  const yearForLastMonth = currentMonth > 1 ? currentYear : currentYear - 1;
+export const getInsights = async (month: number, year: number) => {
+  const lastMonth = month > 1 ? month - 1 : 12;
+  const yearForLastMonth = month > 1 ? year : year - 1;
 
   const lastMonthExpensesTotal = await getMonthTotal(
     lastMonth,
     yearForLastMonth,
     "expense"
   );
-  const currentMonthExpensesTotal = await getMonthTotal(
-    currentMonth,
-    currentYear,
-    "expense"
-  );
+  const currentMonthExpensesTotal = await getMonthTotal(month, year, "expense");
   const expensePercentageChange = calculatePercentageChange(
     lastMonthExpensesTotal,
     currentMonthExpensesTotal
@@ -254,11 +262,7 @@ export const getInsights = async () => {
     yearForLastMonth,
     "income"
   );
-  const currentMonthIncomeTotal = await getMonthTotal(
-    currentMonth,
-    currentYear,
-    "income"
-  );
+  const currentMonthIncomeTotal = await getMonthTotal(month, year, "income");
   const incomePercentageChange = calculatePercentageChange(
     lastMonthIncomeTotal,
     currentMonthIncomeTotal

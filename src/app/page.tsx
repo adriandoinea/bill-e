@@ -5,6 +5,7 @@ import {
 import Insights from "@/components/dashboard/insights";
 import RecentExpenses from "@/components/dashboard/recent-expenses";
 import TransactionsTotals from "@/components/dashboard/transactions-totals";
+import MonthYearPicker from "@/components/month-year-picker";
 import {
   DashboardBottomSectionSkeleton,
   DashboardPieChartSkeleton,
@@ -13,23 +14,31 @@ import {
 } from "@/components/skeletons";
 import { Suspense } from "react";
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
+  const date = (await searchParams).date as string;
+  const month = date ? parseInt(date.split("-")[0]) : currentMonth;
+  const year = date ? parseInt(date.split("-")[1]) : currentYear;
+
   return (
     <div className="h-full flex flex-col gap-6">
-      <div className="text-2xl mb-3">Dashboard</div>
+      <div className="flex justify-between">
+        <div className="text-2xl mb-3">Dashboard</div>
+        <MonthYearPicker />
+      </div>
       <div className="flex flex-col gap-4">
         <Suspense
-          key={`${currentMonth}-${currentYear}`}
+          key={`${month}-${year}`}
           fallback={<TransactionsTotalsSkeleton />}
         >
-          <TransactionsTotals
-            currentMonth={currentMonth}
-            currentYear={currentYear}
-          />
+          <TransactionsTotals month={month} year={year} />
         </Suspense>
 
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-0">
@@ -40,24 +49,24 @@ export default async function Page() {
           </div>
 
           <Suspense
-            key={`${currentMonth}-${currentYear}`}
+            key={`${month}-${year}`}
             fallback={<DashboardPieChartSkeleton />}
           >
             <DashboardPieChart
               className="w-56 h-56 md:w-full md:h-full"
-              currentMonth={currentMonth}
-              currentYear={currentYear}
+              month={month}
+              year={year}
             />
           </Suspense>
         </div>
 
         <div className="max-h-80 md:max-h-60 flex flex-col md:flex-row gap-4 mb-2">
           <Suspense fallback={<DashboardBottomSectionSkeleton />}>
-            <RecentExpenses />
+            <RecentExpenses month={month} year={year} />
           </Suspense>
 
           <Suspense fallback={<DashboardBottomSectionSkeleton />}>
-            <Insights />
+            <Insights month={month} year={year} />
           </Suspense>
         </div>
       </div>

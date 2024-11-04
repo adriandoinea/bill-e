@@ -4,8 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { cn, roundWithTwoDecimals } from "@/lib/utils";
 import { CURRENCY } from "@/lib/constants";
 
-export default async function Insights({ className }: { className?: string }) {
-  const { transactionsPercentageChange, budgetDetails } = await getInsights();
+export default async function Insights({
+  month,
+  year,
+  className,
+}: {
+  month: number;
+  year: number;
+  className?: string;
+}) {
+  const { transactionsPercentageChange, budgetDetails } = await getInsights(
+    month,
+    year
+  );
 
   const getExpensesPercentChangeMessage = () => {
     const { expenses: percentageChange } = transactionsPercentageChange;
@@ -93,7 +104,7 @@ export default async function Insights({ className }: { className?: string }) {
             </div>
           </div>
         ) : (
-          <>Add more data to see insights.</>
+          <>Add more data for this month to see insights.</>
         )}
       </CardContent>
     </Card>

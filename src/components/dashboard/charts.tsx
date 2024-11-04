@@ -36,17 +36,17 @@ export async function DashboardLineChart({
 }
 
 export async function DashboardPieChart({
-  currentMonth,
-  currentYear,
+  month,
+  year,
   className,
 }: {
-  currentMonth: number;
-  currentYear: number;
+  month: number;
+  year: number;
   className?: string;
 }) {
   const monthlyDetailsByCategory = await getMonthTotalByCategory(
-    currentMonth,
-    currentYear,
+    month,
+    year,
     "expense"
   );
   const pieChartData = Object.entries(monthlyDetailsByCategory).map(

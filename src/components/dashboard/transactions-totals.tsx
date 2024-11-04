@@ -4,19 +4,12 @@ import { CURRENCY } from "@/lib/constants";
 import { roundWithTwoDecimals } from "@/lib/utils";
 
 interface Props {
-  currentMonth: number;
-  currentYear: number;
+  month: number;
+  year: number;
 }
-export default async function TransactionsTotals({
-  currentMonth,
-  currentYear,
-}: Props) {
-  const totalExpenses = await getMonthTotal(
-    currentMonth,
-    currentYear,
-    "expense"
-  );
-  const totalIncome = await getMonthTotal(currentMonth, currentYear, "income");
+export default async function TransactionsTotals({ month, year }: Props) {
+  const totalExpenses = await getMonthTotal(month, year, "expense");
+  const totalIncome = await getMonthTotal(month, year, "income");
   const netBalance = totalIncome - totalExpenses;
 
   return (
