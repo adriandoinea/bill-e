@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { AlertTriangle, RotateCcw, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -13,9 +12,6 @@ export default function Error({
   reset: () => void;
 }) {
   const router = useRouter();
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
 
   return (
     <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -29,23 +25,11 @@ export default function Error({
             Oops! Something went wrong
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            We apologize for the inconvenience. You can find more details below.
+            We apologize for the inconvenience.
           </p>
         </div>
         <div className="mt-8 space-y-6">
-          <div className="rounded-md bg-yellow-100 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-yellow-800">
-                  Error details
-                </h3>
-                <div className="mt-2 text-sm text-yellow-700">
-                  <p>{error.message || "An unexpected error occurred."}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-end">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               variant="secondary"
               className="w-full sm:w-40 order-1 sm:order-none"
