@@ -45,9 +45,7 @@ export default function Error({
               className="group relative w-full sm:w-40"
               variant="custom"
             >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <RotateCcw className="h-5 w-5" aria-hidden="true" />
-              </span>
+              <RotateCcw className="mr-2 h-4 w-4" aria-hidden="true" />
               Try again
             </Button>
           </div>
