@@ -69,7 +69,13 @@ export default async function Insights({
   };
 
   const getBudgetMessage = () => {
-    if (!budgetDetails || budgetDetails.spentPercent === 0) return null;
+    const currentMonth = new Date().getMonth() + 1;
+    if (
+      !budgetDetails ||
+      budgetDetails.spentPercent === 0 ||
+      currentMonth !== month
+    )
+      return null;
 
     const spent = roundWithTwoDecimals(
       budgetDetails.initAmount - budgetDetails.currentAmount
